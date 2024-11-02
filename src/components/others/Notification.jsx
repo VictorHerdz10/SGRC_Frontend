@@ -28,10 +28,9 @@ const Notification = () => {
     parcearDate,
     calcularTiempoTranscurrido,
     horaActual,
-    obtenerHoraActual
+    obtenerHoraActual,
   } = useValidation();
 
-  
   const obtenerNotificaciones = async () => {
     const token = localStorage.getItem("token");
     const config = {
@@ -66,7 +65,7 @@ const Notification = () => {
       const url = `contratos/marcar-leida/${notificationId}`;
       const response = await clienteAxios(url, config);
       setNotifications([]);
-      
+
       obtenerNotificaciones();
       toast.success(response.data.msg);
     } catch (error) {
@@ -76,7 +75,6 @@ const Notification = () => {
   };
 
   const handleshowNotification = () => {
-    
     setShowNotifications(!showNotifications);
     setTimeout(() => {
       setShowNotifications(false);
@@ -98,7 +96,7 @@ const Notification = () => {
       const response = await clienteAxios(url, config);
       obtenerNotificaciones();
       setNotifications([]);
-     
+
       setShowConfirmModal(false);
       toast.success(response.data.msg);
     } catch (error) {
@@ -129,38 +127,46 @@ const Notification = () => {
                 <IoClose size={20} />{" "}
               </p>
             </a>
-            {notifications.map((notification) => (
-              <div
-                key={notification._id}
-                className="flex items-center justify-between px-4 py-2 hover:bg-gray-100"
-              >
-                <div>
-                  <p className="text-sm text-gray-700">
-                    {notification.description}
-                  </p>
-                  <p className="text-xs text-gray-500">
-                    hace{" "}
-                    {calcularTiempoTranscurrido(
-                      restarCuatroHoras(new Date(notification.create)),
-                      horaatualcorr
-                    )}
-                  </p>
-                </div>
-                <div className="flex space-x-2">
-                  <FaEye
-                    className="text-blue-500 cursor-pointer"
-                    onClick={() => {
-                      setSelectedNotification(notification);
-                      setShowModal(true);
-                    }}
-                  />
-                  <FaTrash
-                    className="text-red-500 cursor-pointer"
-                    onClick={() => handleDeleteNotification(notification._id)}
-                  />
-                </div>
-              </div>
-            ))}
+            {notifications.length > 0 ? (
+              <>
+                {notifications.map((notification) => (
+                  <div
+                    key={notification._id}
+                    className="flex items-center justify-between px-4 py-2 hover:bg-gray-100"
+                  >
+                    <div>
+                      <p className="text-sm text-gray-700">
+                        {notification.description}
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        hace{" "}
+                        {calcularTiempoTranscurrido(
+                          restarCuatroHoras(new Date(notification.create)),
+                          horaatualcorr
+                        )}
+                      </p>
+                    </div>
+                    <div className="flex space-x-2">
+                      <FaEye
+                        className="text-blue-500 cursor-pointer"
+                        onClick={() => {
+                          setSelectedNotification(notification);
+                          setShowModal(true);
+                        }}
+                      />
+                      <FaTrash
+                        className="text-red-500 cursor-pointer"
+                        onClick={() =>
+                          handleDeleteNotification(notification._id)
+                        }
+                      />
+                    </div>
+                  </div>
+                ))}
+              </>
+            ) : (
+              <p className="text-clip text-gray-500">No hay notificaciones</p>
+            )}
             <button
               className="w-full text-center py-2 text-sm text-red-500 hover:bg-gray-100"
               onClick={() => setShowConfirmModal(true)}
