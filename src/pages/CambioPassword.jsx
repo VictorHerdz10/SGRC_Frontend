@@ -35,7 +35,7 @@ const handleSubmit  = async (e) => {
         },5000)
         
         } catch (error) {
-            console.log(error)
+            
             toast.error(error.respose.data.msg)
         }
 

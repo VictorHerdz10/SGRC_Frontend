@@ -41,7 +41,7 @@ const SignUp = () => {
           password,
           tipo_usuario: "visitante",
         });
-        console.log(respuesta.data);
+        
         toast.success(respuesta.data.msg);
         setTimeout(() => {
           setNombre("");

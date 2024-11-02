@@ -33,8 +33,6 @@ const PanelUsuario = () => {
 
   const handleSubmit = () => {
     // Manejar el envío del formulario aquí
-    console.log("Rol:", rol);
-    console.log("Directores seleccionados:", selectedDirector);
     // Limpiar el formulario
     setRol("");
     setSelectedDirector("");
@@ -82,9 +80,9 @@ const PanelUsuario = () => {
       const url = "usuario/obtener-usuarios";
       const respuesta = await clienteAxios(url, config);
       setUsers(respuesta.data);
-      console.log(respuesta.data);
+      
     } catch (error) {
-      console.log(error);
+      
     }
   };
   useEffect(() => {
@@ -113,7 +111,7 @@ const PanelUsuario = () => {
     const url = `usuario/eliminar-usuario/${userId}`;
     try {
       const respuesta = await clienteAxios.delete(url, config);
-      console.log(respuesta.data);
+      
 
       setShowComfirmDelete(false);
       setUserId("");
@@ -136,7 +134,7 @@ const PanelUsuario = () => {
         Authorization: `Bearer ${token}`,
       },
     };
-    console.log(userId);
+    
     try {
       const userToModify = users.find((user) => user._id === userId);
       if (!userToModify) {

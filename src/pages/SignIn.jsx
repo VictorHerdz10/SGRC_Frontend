@@ -34,7 +34,7 @@ const SignIn = () => {
       setEmail('');
       setPassword('');
       if (response.data.tipo_usuario === 'Admin_Gnl') {
-        navigate('/admin/registro-contrato');console.log('aqui')
+        navigate('/admin/registro-contrato');
     } else if (response.data.tipo_usuario === 'director') {
         navigate('/directivo/registro-contrato');
     } else if (response.data.tipo_usuario === 'especialista') {

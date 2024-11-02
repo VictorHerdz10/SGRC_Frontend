@@ -18,10 +18,7 @@ const RoleAssignmentModal = ({ showConfirmUpdate, setShowConfirmUpdate }) => {
   };
 
   const handleSubmit = () => {
-    // Manejar el envío del formulario aquí
-    console.log("Rol:", rol);
-    console.log("Director seleccionado:", selectedDirector);
-    
+    // Manejar el envío del formulario aquí   
     // Limpiar el formulario
     setRol('');
     setSelectedDirector('');

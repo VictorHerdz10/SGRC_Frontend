@@ -44,7 +44,7 @@ const Notification = () => {
       const response = await clienteAxios.get(url, config);
       await setNotifications(response.data);
     } catch (error) {
-      console.log(error);
+
     }
   };
 

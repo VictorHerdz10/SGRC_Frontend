@@ -154,7 +154,7 @@ const obtenerDirecciones = async()=>{
     await setDirecciones(response.data);
    
   } catch (error) {
-    console.log(error)
+    
   }
   }
 }
@@ -173,7 +173,7 @@ const obtenerEntidades = async()=>{
     await setEntidades(response.data);
     
   } catch (error) {
-    console.log(error)
+   
   }
   }
 }
@@ -192,7 +192,7 @@ const obtenerRegistros = async () => {
     const { data } = response;
     setContratos(data);
   } catch (error) {
-    console.log(error);
+    
   }
 }
 };

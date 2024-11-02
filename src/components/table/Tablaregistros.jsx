@@ -176,7 +176,7 @@ const ContractTable = () => {
     }
   };
   const handleFilter = async()=>{
-    console.log('aqui')
+   
     let query = {};
 
     if (filtarEstado) {
@@ -191,7 +191,7 @@ const ContractTable = () => {
       query.entidad = filtarEntidad;
     }
     if (Object.keys(query).some(key => query[key] !== '')) {
-      console.log(query);
+  
       const token = localStorage.getItem("token");
       const config = {
         headers: {
@@ -203,10 +203,10 @@ const ContractTable = () => {
       try {
         const url = `contratos/filtrar-contratos`;
         const response = await clienteAxios.post(url, query, config);
-        console.log(response.data);
+        
         setContratos(response.data);
       } catch (error) {
-        console.log(error);
+        
       }
     }
 
@@ -240,14 +240,14 @@ const ContractTable = () => {
     };
     try {
       const url = `facturas/eliminar-factura/${id}?numeroDictamen=${selectedInvoice.numeroDictamen}`;
-      console.log(id, selectedInvoice.numeroDictamen);
+      
       const response = await clienteAxios.delete(url, config);
       toast.success(response.data.msg);
       setShowModal(false);
       obtenerRegistros();
       setId("");
     } catch (error) {
-      console.log(error);
+      
       toast.error(error.response.data.msg);
     }
   };
@@ -256,7 +256,7 @@ const ContractTable = () => {
     e.preventDefault();
     errores = validarInput(numeroDictamenNew, "text", "");
     errores2 = validarInput(monto, "number", "");
-    console.log(errores, errores2);
+    
 
     setErrorMonto({});
     setErrorText(errores || "");
@@ -299,7 +299,7 @@ const ContractTable = () => {
       setNumeroDictamen("");
       obtenerRegistros();
     } catch (error) {
-      console.log(error);
+      
       toast.error(error.response.data.msg);
     }
   };
@@ -307,7 +307,7 @@ const ContractTable = () => {
     e.preventDefault();
     errores = validarInput(numeroDictamen, "text", "");
     errores2 = validarInput(monto, "number", "");
-    console.log(errores, errores2);
+    
     setErrorMonto({});
     setErrorText(errores || "");
     setErrorText1(errores2 || "");
@@ -350,7 +350,7 @@ const ContractTable = () => {
       setShowModalCreate(false);
       obtenerRegistros();
     } catch (error) {
-      console.log(error);
+      
       toast.error(error.response.data.msg);
     }
   };
@@ -365,7 +365,7 @@ const ContractTable = () => {
     }
 
     if (type === "delete") {
-      console.log(invoice);
+      
       obtenerFactura(invoice);
       setNumeroDictamen(selectedInvoice.numeroDictamen);
       setMonto(selectedInvoice.monto);
@@ -390,7 +390,7 @@ const ContractTable = () => {
       );
       const factura = response.data;
       await setSelectedInvoice(factura);
-      console.log(factura);
+      
     } catch (error) {
       console.error(error);
     }

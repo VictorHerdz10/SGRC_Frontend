@@ -49,7 +49,6 @@ const PanelEntidad = () => {
         obtenerEntidades();
       }, 4000);
     } catch (error) {
-      console.log(error);
       toast.error(error.response.data.msg);
     }
   };
