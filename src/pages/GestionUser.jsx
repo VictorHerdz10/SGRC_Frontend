@@ -85,7 +85,7 @@ const GestionUser = () => {
                   htmlFor="token"
                   className="block text-gray-700 text-sm font-semibold mb-1"
                 >
-                  Token de Acceso
+                  Token de acceso valido por 4 horas
                 </label>
                 <input
                   type="text"
