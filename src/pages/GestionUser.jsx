@@ -31,7 +31,7 @@ const GestionUser = () => {
       };
       try {
         const uri = `usuario/poner-token`;
-        const response = await clienteAxios.post(uri, { toke:acessToken }, config);
+        const response = await clienteAxios.post(uri, { token:acessToken }, config);
         toast.success(response.data.msg);
         setMostrarModal(false);
         setAccesToken('')
