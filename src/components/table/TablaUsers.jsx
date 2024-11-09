@@ -178,7 +178,7 @@ const PanelUsuario = () => {
                   <th className="py-2 px-4 border-b border-r">
                     Correo electrónico
                   </th>
-                  <th className="py-2 px-4 border-b border-r">Role</th>
+                  <th className="py-2 px-4 border-b border-r">Rol</th>
                   <th className="py-2 px-4 border-b border-r ">Acciones</th>
                 </tr>
               </thead>
