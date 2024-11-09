@@ -17,8 +17,30 @@ import fs from "fs/promises";
 import clienteAxios from "../../axios/axios";
 import useValidation from "../../hooks/useValidation";
 import { HiMiniAdjustmentsHorizontal } from "react-icons/hi2";
+import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
+
 
 const ContractTable = () => {
+  const {
+    validarInput,
+    obtenerRegistros,
+    contratos,
+    setContratos,
+    entidades,
+    direcciones,
+    selectContrato,
+    setSelectContrato,
+    setShowForm,
+    isEditing,
+    setIsEditing
+  } = useValidation();
+  let errores, errores2;
+  const [totalItems, setTotalItems] = useState(contratos.length);
+  const [pageSize, setPageSize] = useState(10);
+  const totalPages = Math.ceil(contratos.length / pageSize);
+  const [currentPage, setCurrentPage] = useState(Math.ceil(totalItems / pageSize));
+  console.log(currentPage)
+  const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState("");
   const [selectedInvoice, setSelectedInvoice] = useState(null);
@@ -38,6 +60,38 @@ const ContractTable = () => {
   const [filtarDireccion, setFiltrarDireccion] = useState("");
   const [filtarEntidad, setFiltrarEntidad] = useState("");
   const [filtarEstado, setFiltrarEstado] = useState("");
+  const indexOfLastItem = currentPage * pageSize;
+  const indexOfFirstItem = indexOfLastItem - pageSize;
+  const currentItems = contratos.slice(indexOfFirstItem, indexOfLastItem);
+  const calculatePageIndex = (page, itemIndex) => {
+    return page * pageSize + itemIndex -10;
+  };
+ 
+  const handlePageChange = async (pageNumber) => {
+    setLoading(true);
+    setCurrentPage(pageNumber);
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    setLoading(false);
+  };
+
+  const renderPageNumbers = () => {
+    const pageNumbers = [];
+    for (let i = 1; i <= totalPages; i++) {
+      pageNumbers.push(
+        <button
+          key={i}
+          onClick={() => handlePageChange(i)}
+          aria-label={`Go to page ${i}`}
+          className={`px-3 py-1 mx-1 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 ${currentPage === i
+            ? "bg-blue-500 text-white"
+            : "bg-gray-100 hover:bg-gray-200 text-gray-700"}`}
+        >
+          {i}
+        </button>
+      );
+    }
+    return pageNumbers;
+  };
 
   const parseDuration = (duration)=> {
     const regex = /(\d+)\s*(months?|years?)/;
@@ -67,21 +121,6 @@ const ContractTable = () => {
   }
   }
 
-
-  const {
-    validarInput,
-    obtenerRegistros,
-    contratos,
-    setContratos,
-    entidades,
-    direcciones,
-    selectContrato,
-    setSelectContrato,
-    setShowForm,
-    isEditing,
-    setIsEditing
-  } = useValidation();
-  let errores, errores2;
 
   const handleDownload = (id) => {
     const descargas = contratos.filter((contrato) => contrato._id === id);
@@ -583,6 +622,11 @@ const ContractTable = () => {
           </button>
         </div>
         <div className="overflow-x-auto">
+        {loading ? (
+          <div className="flex justify-center items-center min-h-[400px]">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+          </div>
+        ) : (
           <table className="min-w-full bg-white shadow-md rounded-lg">
             <thead className="bg-gray-100">
               <tr>
@@ -649,9 +693,9 @@ const ContractTable = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {contratos.map((contract, index) => (
+              {currentItems.map((contract, index) => (
                 <tr className="border-l border-r" key={contract._id}>
-                  <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{calculatePageIndex(currentPage, index) + 1}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {contract.tipoDeContrato}
                   </td>
@@ -815,6 +859,7 @@ const ContractTable = () => {
               ))}
             </tbody>
           </table>
+          )}
           {showModalUpdate && (
             <>
               <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
@@ -1051,6 +1096,38 @@ const ContractTable = () => {
             </div>
           )}
         </div>
+        <div className="flex flex-col sm:flex-row justify-between items-center mt-4 space-y-4 sm:space-y-0">
+        <div className="text-sm text-gray-700">
+        Mostrando {indexOfFirstItem + 1} a la {" "}
+          {Math.min(indexOfLastItem, contratos.length)} de {contratos.length} entradas
+        </div>
+
+        <div className="flex items-center space-x-2">
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            aria-label="Previous page"
+            className={`flex items-center px-3 py-1 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 ${currentPage === 1
+              ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+              : "bg-gray-100 hover:bg-gray-200 text-gray-700"}`}
+          >
+            <FiChevronLeft className="mr-1" /> Anterior
+          </button>
+
+          <div className="hidden sm:flex">{renderPageNumbers()}</div>
+
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            aria-label="Next page"
+            className={`flex items-center px-3 py-1 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 ${currentPage === totalPages
+              ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+              : "bg-gray-100 hover:bg-gray-200 text-gray-700"}`}
+          >
+            Próximo <FiChevronRight className="ml-1" />
+          </button>
+        </div>
+      </div>
       </div>
       {showModal && <Modal />}
     </>
