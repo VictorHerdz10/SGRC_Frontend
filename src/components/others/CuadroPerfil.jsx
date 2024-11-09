@@ -23,7 +23,7 @@ const{auth}=useAuth();
       <span>{perfil.nombre}</span>
     </div>                  
           </Link>)}
-          {auth.tipo_usuario==="director" && (<Link to="/director/mi-perfil" className="btn-sm  ml-3">
+          {auth.tipo_usuario==="director" && (<Link to="/directivo/mi-perfil" className="btn-sm  ml-3">
           <div className="flex items-center space-x-2">
       <img
         src={perfil.foto_perfil}
