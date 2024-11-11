@@ -38,8 +38,7 @@ const ContractTable = () => {
   const [totalItems, setTotalItems] = useState(contratos.length);
   const [pageSize, setPageSize] = useState(10);
   const totalPages = Math.ceil(contratos.length / pageSize);
-  const [currentPage, setCurrentPage] = useState(Math.ceil(totalItems / pageSize));
-  console.log(currentPage)
+  const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState("");
@@ -64,7 +63,7 @@ const ContractTable = () => {
   const indexOfFirstItem = indexOfLastItem - pageSize;
   const currentItems = contratos.slice(indexOfFirstItem, indexOfLastItem);
   const calculatePageIndex = (page, itemIndex) => {
-    return page * pageSize + itemIndex -10;
+    return (page-1) * pageSize + itemIndex;
   };
  
   const handlePageChange = async (pageNumber) => {
