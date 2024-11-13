@@ -65,7 +65,7 @@ const ContractTable = () => {
   const calculatePageIndex = (page, itemIndex) => {
     return (page-1) * pageSize + itemIndex;
   };
- 
+ console.log(contratos)
   const handlePageChange = async (pageNumber) => {
     setLoading(true);
     setCurrentPage(pageNumber);
@@ -462,9 +462,8 @@ const ContractTable = () => {
                   Fecha:{" "}
                   <span className="text-gray-600">
                     {parcearDate(
-                      restarCuatroHoras(
                         new Date(selectedInvoice?.fechaCreacion)
-                      )
+                      
                     )}
                   </span>
                 </p>
@@ -494,9 +493,8 @@ const ContractTable = () => {
                   Fecha de creación:{" "}
                   <span className="text-gray-600">
                     {parcearDate(
-                      restarCuatroHoras(
                         new Date(contrato.info?.fechaDeCreacion)
-                      )
+                      
                     )}
                   </span>
                 </p>
@@ -510,9 +508,8 @@ const ContractTable = () => {
                   Fecha de modificación:{" "}
                   <span className="text-gray-600">
                     {parcearDate(
-                      restarCuatroHoras(
                         new Date(contrato.info?.fechaDeModificacion)
-                      )
+                      
                     )}
                   </span>
                 </p>
@@ -708,21 +705,18 @@ const ContractTable = () => {
                     {contract.direccionEjecuta}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {parcearDate(
-                      restarCuatroHoras(new Date(contract.aprobadoPorCC))
+                    {parcearDate(new Date(contract.aprobadoPorCC)
                     )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {parcearDate(restarCuatroHoras(new Date(contract.firmado)))}
+                    {parcearDate(new Date(contract.firmado))}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {parcearDate(
-                      restarCuatroHoras(new Date(contract.entregadoJuridica))
+                    {parcearDate(new Date(contract.entregadoJuridica)
                     )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {parcearDate(
-                      restarCuatroHoras(new Date(contract.fechaRecibido))
+                    {parcearDate(new Date(contract.fechaRecibido)
                     )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
@@ -800,8 +794,7 @@ const ContractTable = () => {
                     {parseDuration(contract.vigencia)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {parcearDate(
-                      restarCuatroHoras(new Date(contract.fechaVencimiento))
+                    {parcearDate(new Date(contract.fechaVencimiento)
                     )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
