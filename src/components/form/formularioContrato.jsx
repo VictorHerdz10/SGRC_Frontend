@@ -142,6 +142,9 @@ const FormularioContrato = () => {
       Authorization: `Bearer ${token}`,
     },
   };
+  try {
+    
+  
   if(isEditing){
     const url = `contratos/actualizar-registro-contrato/${selectContrato._id}`
     const response =  await clienteAxios.put(url,formData,config);
@@ -194,6 +197,9 @@ const FormularioContrato = () => {
     toast.error(error.response.data.msg)
     
   }}
+} catch (error) {
+  toast.error(error.response.data.msg)
+}
   };
 
   return (
