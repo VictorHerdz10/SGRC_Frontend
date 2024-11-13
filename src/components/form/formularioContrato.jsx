@@ -205,7 +205,7 @@ const FormularioContrato = () => {
   return (
     <>
       <h1 className="text-3xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400">
-        Gestion los Registros{" "}
+        Gestión de los Registros{" "}
       </h1>
 
       <button
@@ -236,7 +236,7 @@ const FormularioContrato = () => {
             className="max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl bg-white shadow-xl rounded px-6 pt-6 pb-8 mb-4"
           >
             <h2 className="text-3xl font-bold text-indigo-600 mb-8 text-center mx-auto">
-              {isEditing ? 'Actualizando registro de contrato' : 'Registra un nuevo Contrato'}
+              {isEditing ? 'Actualizar el registro de contrato' : 'Registrar un nuevo contrato'}
             </h2>
 
             

@@ -48,15 +48,19 @@ const {
                 </div>
               </div>
 
-              <div className="mb-8">
-                <h2 className="font-semibold">Fecha de Vencimiento:</h2>
-                <p>
-                  {parcearDate(
+              <div className="grid grid-cols-2 gap-4 mb-8">
+                <div className="flex flex-col">
+                  <h2 className="font-semibold">Fecha de Vencimiento:</h2>
+                  <p>{parcearDate(
                     restarCuatroHoras(
                       new Date(selectedNotification.fechaVencimiento)
                     )
-                  )}
-                </p>
+                  )}</p>
+                </div>
+                <div className="flex flex-col">
+                  <h2 className="font-semibold">Valor Disponible:</h2>
+                  <p>{selectedNotification.valorDisponible}</p>
+                </div>
               </div>
 
               <div className="mb-8">

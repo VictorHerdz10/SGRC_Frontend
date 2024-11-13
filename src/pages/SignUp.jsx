@@ -189,23 +189,7 @@ const SignUp = () => {
                       </span>
                     )}
                   </div>
-                  <div className="flex flex-wrap -mx-3 mb-4">
-                    <div className="w-full px-3">
-                      <div className="flex justify-between">
-                        <label className="flex items-center">
-                          <input
-                            type="checkbox"
-                            className="form-checkbox"
-                            checked={check}
-                            onChange={(e) => setCheck(e.target.value)}
-                          />
-                          <span className="text-gray-600 ml-2">
-                            Registrame como visitante
-                          </span>
-                        </label>
-                      </div>
-                    </div>
-                  </div>
+                  
                   <div className="flex flex-wrap -mx-3 mt-6">
                     <div className="w-full px-3">
                       <button className="btn text-white bg-blue-600 hover:bg-blue-700 w-full">

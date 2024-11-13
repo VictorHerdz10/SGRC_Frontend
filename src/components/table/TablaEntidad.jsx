@@ -194,7 +194,7 @@ const PanelEntidad = () => {
               >
                 <FaPlus className="h-3 w-2" />
                 <span className="text-sm">
-                  Agregar nueva Entidad
+                  Agregar nueva entidad
                 </span>
               </button>
             </div>

@@ -156,7 +156,7 @@ const SideMenu = () => {
             </button>
             <h2 className="text-xl font-bold mb-4">Advertencia</h2>
             <p className="text-gray-600 mb-6">
-              Estas seguro que queres cerrar sesión?
+            ¿Estas seguro que queres cerrar sesión?
             </p>
             <div className="flex justify-end space-x-4">
               <button

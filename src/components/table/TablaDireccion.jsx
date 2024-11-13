@@ -195,7 +195,7 @@ const PanelDireccion = () => {
               >
                 <FaPlus className="h-3 w-2" />
                 <span className="text-sm">
-                  Agregar nueva Dirección Ejecutiva
+                  Agregar nueva dirección ejecutiva
                 </span>
               </button>
             </div>
