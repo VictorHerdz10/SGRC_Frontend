@@ -42,7 +42,11 @@ const FormularioContrato = () => {
   const{validarInput,direcciones,entidades,file,obtenerRegistros,setFile,showForm,setShowForm,setSelectContrato,selectContrato,formatDate,setIsEditing,isEditing}=useValidation();
 
   const loadContractData = (contract) => {
+    if(contract.vigencia!==''){
     const [part1, part2] = contract.vigencia.split(' ');
+    setTimeVigencia(part2);
+    setVigencia(part1);
+  }
     setTipoDeContrato(contract.tipoDeContrato);
     setObjetoDelContrato(contract.objetoDelContrato);
     setEntidad(contract.entidad);
@@ -52,10 +56,9 @@ const FormularioContrato = () => {
     setEntregadoJuridica(formatDate(contract.entregadoJuridica));
     setFechaRecibido(formatDate(contract.fechaRecibido));
     setValor(contract.valor);
-    setVigencia(part1);
     setEstado(contract.estado);
     setNumeroDictamen(contract.numeroDictamen);
-    setTimeVigencia(part2);
+    
   };
   useEffect(()=>{
     if (showForm) {
