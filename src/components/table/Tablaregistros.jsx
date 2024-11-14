@@ -454,7 +454,7 @@ const ContractTable = () => {
               <div>
                 <div></div>
                 <p className="font-semibold ">
-                  Número de Dictamen:{" "}
+                  Número de factura:{" "}
                   <span className="text-gray-600">
                     {selectedInvoice?.numeroDictamen}
                   </span>
@@ -881,20 +881,20 @@ const ContractTable = () => {
                     <IoClose size={24} />
                   </button>
                   <h3 className="text-xl font-semibold mb-4">
-                    Actualizar Factura
+                    Actualizar factura
                   </h3>
                   <div className="mb-4">
                     <label
                       htmlFor="numeroDictamen"
                       className="block text-gray-700 text-sm font-semibold mb-1"
                     >
-                      Número Dictamen
+                      Número de factura
                     </label>
                     <input
                       type="text"
                       id="numeroDictamen"
                       name="numeroDictamen"
-                      placeholder="Número Dictamen"
+                      placeholder="Número de factura"
                       value={numeroDictamenNew}
                       onChange={(e) => setNumeroDictamenNew(e.target.value)}
                       className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -990,13 +990,13 @@ const ContractTable = () => {
                       htmlFor="numeroDictamen"
                       className="block text-gray-700 text-sm font-semibold mb-1"
                     >
-                      Número Dictamen
+                      Número de factura
                     </label>
                     <input
                       type="text"
                       id="numeroDictamen"
                       name="numeroDictamen"
-                      placeholder="Número Dictamen"
+                      placeholder="Número de factura"
                       value={numeroDictamen}
                       onChange={(e) => setNumeroDictamen(e.target.value)}
                       className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"

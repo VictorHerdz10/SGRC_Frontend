@@ -17,7 +17,7 @@ import useValidation from "../hooks/useValidation";
 import clienteAxios from "../axios/axios";
 const UserProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
-  const { perfil, obtenerPerfil, validarInput } = useValidation();
+  const { perfil, obtenerPerfil, validarInput,obtenerEntidades,obtenerDirecciones } = useValidation();
   const formData = new FormData();
   const [errorName, setErrorName] = useState("");
   const [errorCargo, setErrorCargo] = useState("");
@@ -156,7 +156,7 @@ const UserProfile = () => {
     }
 
     // Agregar los valores al FormData
-    formData.append("nombre", userDetails.name);
+    formData.append("nombre", userDetails.name.trim());
     formData.append("cargo", userDetails.position);
     formData.append("telefono", userDetails.phone);
     if (imageFile) {
@@ -182,6 +182,8 @@ const UserProfile = () => {
             const url = `usuario/actualizar-perfil`;
             const response = await clienteAxios.put(url, formData, config);
             toast.success(response.data.msg);
+            obtenerDirecciones();
+            obtenerEntidades();
           } catch (error) {
             toast.error(error.response.data.msg);
           }
@@ -206,6 +208,9 @@ const UserProfile = () => {
             const url = `usuario/actualizar-perfil`;
             const response = await clienteAxios.put(url, formData, config);
             toast.success(response.data.msg);
+            obtenerDirecciones();
+            obtenerEntidades();
+
           } catch (error) {
             toast.error(error.response.data.msg);
           }
@@ -230,6 +235,8 @@ const UserProfile = () => {
             config
           );
           toast.success(response.data.msg);
+          obtenerDirecciones();
+          obtenerEntidades();
         } catch (error) {
           toast.error(error.response.data.msg);
         }

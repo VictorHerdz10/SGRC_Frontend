@@ -7,7 +7,7 @@ import {
   FaEdit,
   FaUserPlus,
 } from "react-icons/fa";
-import {toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { IoClose } from "react-icons/io5";
 import clienteAxios from "../../axios/axios";
@@ -78,7 +78,7 @@ const PanelDireccion = () => {
           config
         );
         setShowModal(false);
-        setNewDireccion('');
+        setNewDireccion("");
         toast.success(respuesta.data.msg);
         setTimeout(() => {
           obtenerDirecciones();
@@ -111,7 +111,7 @@ const PanelDireccion = () => {
         config
       );
       setShowModalUpdate(false);
-      setDireccionUpdate('');
+      setDireccionUpdate("");
       toast.success(respuesta.data.msg);
       setTimeout(() => {
         obtenerDirecciones();
@@ -137,7 +137,11 @@ const PanelDireccion = () => {
                   <th className="py-2 px-4 border-l border-b border-r">
                     Dirección Ejecutiva
                   </th>
-                  {auth.tipo_usuario==='Admin_Gnl' ? <th className="py-2 px-4 border-b border-r">Creado Por</th> : ''}
+                  {auth.tipo_usuario === "Admin_Gnl" ? (
+                    <th className="py-2 px-4 border-b border-r">Creado Por</th>
+                  ) : (
+                    ""
+                  )}
                   <th className="py-2 px-4 border-b border-r">
                     Fecha de Creado
                   </th>
@@ -156,9 +160,13 @@ const PanelDireccion = () => {
                     <td className="py-2 px-4 border-b border-r ">
                       {direccion.direccionEjecutiva}
                     </td>
-                    {auth.tipo_usuario==='Admin_Gnl' ? <td className="py-2 px-4 border-b border-r">
-                      {direccion.nombreEjecutivo}
-                    </td> : ''}
+                    {auth.tipo_usuario === "Admin_Gnl" && (
+                      <td className="py-2 px-4 border-b border-r">
+                        {auth.nombre === direccion.nombreEjecutivo
+                          ? `${direccion.nombreEjecutivo} (Yo)`
+                          : direccion.nombreEjecutivo}
+                      </td>
+                    )}
                     <td className="py-2 px-4 border-b border-r text-center">
                       {parcearDate(new Date(direccion.creado))}
                     </td>
@@ -263,7 +271,7 @@ const PanelDireccion = () => {
                     setErrorText("");
                     setDireccionUpdate("");
                     setDireccionId("");
-                    setNewDireccion('');
+                    setNewDireccion("");
                   }}
                   className="px-10 py-2 text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
                 >
@@ -283,11 +291,12 @@ const PanelDireccion = () => {
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
             <div className="relative w-full max-w-md p-6 bg-white rounded-lg shadow-xl animate-fadeIn">
               <button
-                onClick={() => {setShowModalUpdate(false)
-                    setErrorText("");
-                    setDireccionUpdate("");
-                    setDireccionId("");
-                    setNewDireccion('');
+                onClick={() => {
+                  setShowModalUpdate(false);
+                  setErrorText("");
+                  setDireccionUpdate("");
+                  setDireccionId("");
+                  setNewDireccion("");
                 }}
                 className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors"
                 aria-label="Close confirmation"
@@ -322,7 +331,7 @@ const PanelDireccion = () => {
                     setErrorText("");
                     setDireccionUpdate("");
                     setDireccionId("");
-                    setNewDireccion('');
+                    setNewDireccion("");
                   }}
                   className="px-4 py-2 text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
                 >

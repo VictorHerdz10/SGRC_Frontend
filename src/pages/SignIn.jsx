@@ -28,7 +28,7 @@ const SignIn = () => {
     }
 
     try {
-      const response = await clienteAxios.post("usuario/login", {email,password});
+      const response = await clienteAxios.post("usuario/login", {email:email.trim(),password:password.trim()});
       localStorage.setItem('token',response.data.token);
       setAuth(response.data);
       setEmail('');

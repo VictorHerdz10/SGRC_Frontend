@@ -119,8 +119,8 @@ const FormularioContrato = () => {
     let vigenciaReal = `${vigencia} ${timeVigencia}`;    const formData = new FormData();
 
         // Agregar los valores al FormData
-        formData.append('tipoDeContrato', tipoDeContrato);
-        formData.append('objetoDelContrato', objetoDelContrato);
+        formData.append('tipoDeContrato', tipoDeContrato.trim());
+        formData.append('objetoDelContrato', objetoDelContrato.trim());
         formData.append('entidad', entidad);
         formData.append('direccionEjecuta', direccionEjecuta);
         formData.append('aprobadoPorCC', aprobadoPorCC);
@@ -130,7 +130,7 @@ const FormularioContrato = () => {
         formData.append('valor', valor);
         formData.append('vigencia', vigenciaReal);
         formData.append('estado', estado);
-        formData.append('numeroDictamen', numeroDictamen);
+        formData.append('numeroDictamen', numeroDictamen.trim());
      // Agregar el archivo al FormData
      if (file) {
       formData.append('subirPDF', file);

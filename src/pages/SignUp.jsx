@@ -57,9 +57,9 @@ const SignUp = () => {
     } else {
       try {
         const respuesta = await clienteAxios.post("/usuario", {
-          nombre,
-          email,
-          password,
+          nombre:nombre.trim(),
+          email:email.trim(),
+          password:password.trim(),
         });
 
         toast.success(respuesta.data.msg);

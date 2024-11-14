@@ -136,7 +136,9 @@ const PanelEntidad = () => {
                   <th className="py-2 px-4 border-l border-b border-r">
                     Entidad
                   </th>
-                  {auth.tipo_usuario==='Admin_Gnl' ? <th className="py-2 px-4 border-b border-r">Creado Por</th> : ''}
+                  <th className="py-2 px-4 border-b border-r">
+                    Creado Por
+                    </th> 
                   <th className="py-2 px-4 border-b border-r">
                     Fecha de Creado
                   </th>
@@ -155,9 +157,9 @@ const PanelEntidad = () => {
                     <td className="py-2 px-4 border-b border-r ">
                       {entidad.entidad}
                     </td>
-                    {auth.tipo_usuario==='Admin_Gnl' ? <td className="py-2 px-4 border-b border-r">
-                      {entidad.nombreEjecutivo}
-                    </td> : ''}
+                    <td className="py-2 px-4 border-b border-r">
+                      {auth.nombre===entidad.nombreEjecutivo? `${entidad.nombreEjecutivo} (Yo)`:entidad.nombreEjecutivo}
+                    </td>
                     <td className="py-2 px-4 border-b border-r text-center">
                       {parcearDate(new Date(entidad.creado))}
                     </td>
