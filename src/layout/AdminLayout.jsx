@@ -1,6 +1,7 @@
 import { Outlet, Navigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import useValidation from "../hooks/useValidation";
+import Cerrar from "../components/modals/CerrarSesion";
 
 const RutaProtegida = () => {
   const { auth, cargando } = useAuth();
@@ -14,7 +15,8 @@ const RutaProtegida = () => {
     parcearDate,
     calcularTiempoTranscurrido,
     horaActual,
-    obtenerHoraActual
+    obtenerHoraActual,
+    showConfirmModal
   } = useValidation();
 
   if (cargando) return "cargando...";
@@ -79,6 +81,9 @@ const RutaProtegida = () => {
             </div>
           </div>
         </div>
+      )}
+      {showConfirmModal && (
+        <Cerrar/>
       )}
     </div>
   );

@@ -17,6 +17,7 @@ const ValidationProvider = ({ children }) => {
 const[selectContrato,setSelectContrato]=useState({});
 const [showForm, setShowForm] = useState(false);
 const[isEditing,setIsEditing]=useState(false);
+const [showConfirmModal, setShowConfirmModal] = useState(false);
   // 1. Obtener la hora actual
   function obtenerHoraActual() {
     return new Date();
@@ -241,7 +242,9 @@ obtenerRegistros();
         setShowForm,
         formatDate,
         setIsEditing,
-        isEditing
+        isEditing,
+        showConfirmModal,
+        setShowConfirmModal
 
       }}
     >
