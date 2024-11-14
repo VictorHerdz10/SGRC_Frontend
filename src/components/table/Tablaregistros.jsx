@@ -1098,7 +1098,7 @@ const ContractTable = () => {
         </div>
         <div className="flex flex-col sm:flex-row justify-between items-center mt-4 space-y-4 sm:space-y-0">
         <div className="text-sm text-gray-700">
-        Mostrando {indexOfFirstItem + 1} a la {" "}
+        Mostrando {contratos.length === 0 ? indexOfFirstItem : indexOfFirstItem + 1} a la {" "}
           {Math.min(indexOfLastItem, contratos.length)} de {contratos.length} entradas
         </div>
 
