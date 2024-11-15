@@ -57,7 +57,7 @@ const GestionUser = () => {
         <PanelUsuario/>
        {auth?.tipo_usuario === 'Admin_Gnl'? <button
             onClick={()=>setMostrarModal(true)}
-            className="bg-blue-500 w-50 text-white py-2 px-4 rounded-md hover:bg-blue-700  transition duration-200"
+            className="bg-blue-600 w-50 text-white py-2 px-4 rounded-md hover:bg-blue-800  transition duration-200"
           >
             Colocar Token de Archivos
           </button> : ''}

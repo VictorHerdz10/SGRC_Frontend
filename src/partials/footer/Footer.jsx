@@ -40,7 +40,7 @@ function Footer() {
           <div className="mt-8 text-center text-sm text-gray-500">
   &copy; {new Date().getFullYear()}
   <div  className="inline-flex items-center ml-2 pr-1">
-    <Link to="/" className="mr-2">
+    <p className="mr-2">
       <svg className="w-4 h-4" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <radialGradient cx="21.152%" cy="86.063%" fx="21.152%" fy="86.063%" r="79.941%" id="footer-logo">
@@ -51,7 +51,7 @@ function Footer() {
         </defs>
         <rect width="32" height="32" rx="16" fill="url(#footer-logo)" fillRule="nonzero" />
       </svg>
-    </Link>
+    </p>
     <h1 className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400">DGS</h1>
   </div>
   Todos los derechos reservados.

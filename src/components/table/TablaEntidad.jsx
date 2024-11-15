@@ -192,10 +192,10 @@ const PanelEntidad = () => {
             <div className=" flex justify-items-start">
               <button
                 onClick={() => setShowModal(true)}
-                className="flex items-center mt-3 space-x-1 px-1 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+                className="flex items-center mt-3 space-x-1 px-1 py-1 bg-blue-600 text-white rounded hover:bg-blue-800"
               >
                 <FaPlus className="h-3 w-2" />
-                <span className="text-sm">
+                <span className="text-sm text-white">
                   Agregar nueva entidad
                 </span>
               </button>

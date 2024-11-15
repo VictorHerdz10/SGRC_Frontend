@@ -105,7 +105,7 @@ const SideMenu = () => {
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <h1
             className={`font-semibold text-gray-800 transition-opacity duration-200 ${
-              isOpen ? "opacity-100" : "opacity-0 hidden"
+              isOpen ? "" : "opacity-0 hidden"
             }`}
           >
             Panel de Administración
@@ -137,7 +137,7 @@ const SideMenu = () => {
                   </span>
                   <span
                     className={`ml-3 font-medium transition-opacity duration-200 ${
-                      isOpen ? "opacity-100" : "opacity-0 hidden"
+                      isOpen ? "text-gray-800" : "opacity-0 hidden"
                     }`}
                   >
                     {item.label}
