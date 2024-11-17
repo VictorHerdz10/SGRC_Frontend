@@ -237,7 +237,7 @@ const PanelEntidad = () => {
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white p-6 rounded-lg w-96">
               <h3 className="text-lg font-semibold mb-4">
-                Registra una nueva Entidad
+                Registrar una nueva entidad
               </h3>
               <div className="mb-4">
                 <label
@@ -274,7 +274,7 @@ const PanelEntidad = () => {
                   onClick={(e) => handleCrearEntidad(e)}
                   className="px-10 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
                 >
-                  Crear
+                  Registrar
                 </button>
               </div>
             </div>
