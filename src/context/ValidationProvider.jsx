@@ -172,7 +172,7 @@ const obtenerEntidades = async()=>{
     const url = '/entidad/obtener-entidades';
     const response = await clienteAxios(url, config);
     await setEntidades(response.data);
-    
+    console.log('opteniendo')
   } catch (error) {
    
   }
@@ -199,7 +199,8 @@ const obtenerRegistros = async () => {
 };
 
   useEffect(()=>{
-
+setDirecciones([]);
+setEntidades([]);
 obtenerDirecciones();
 obtenerEntidades();
 obtenerPerfil();

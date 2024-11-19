@@ -32,7 +32,7 @@ const handleSubmit  = async (e) => {
         toast.success(respuesta.data.msg);
         setTimeout(()=>{
             navigate(`/auth/signin`)
-        },5000)
+        },500)
         
         } catch (error) {
             

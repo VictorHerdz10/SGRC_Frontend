@@ -254,7 +254,7 @@ const UserProfile = () => {
         obtenerPerfil();
         setPreviewImage(null);
         setIsEditing(false);
-      }, 1500);
+      },500);
   };
 
   const togglePasswordVisibility = (field) => {

@@ -24,7 +24,7 @@ const ResetPassword = () => {
       toast.success(response.data.msg);
       setTimeout(() => {
         setShowModalValidation(true);
-      }, 2000);
+      }, 1000);
     } catch (error) {
       toast.error(error.response.data.msg);
     }

@@ -40,14 +40,15 @@ const PanelEntidad = () => {
         Authorization: `Bearer ${token}`,
       },
     };
-    const url = `entidad/eliminar-entidad/${id}`;
+    
     try {
+      if (token && auth) {
+      const url = `entidad/eliminar-entidad/${id}`;
       const response = await clienteAxios.delete(url, config);
       setShowComfirmDelete(false);
+      obtenerEntidades();
       toast.success(response.data.msg);
-      setTimeout(() => {
-        obtenerEntidades();
-      }, 4000);
+      }
     } catch (error) {
       toast.error(error.response.data.msg);
     }
@@ -80,9 +81,8 @@ const PanelEntidad = () => {
         setShowModal(false);
         setNewEntidad('');
         toast.success(respuesta.data.msg);
-        setTimeout(() => {
             obtenerEntidades();
-        }, 4000);
+        
       }
     } catch (error) {
       toast.error(error.response.data.msg);
@@ -112,9 +112,9 @@ const PanelEntidad = () => {
       setShowModalUpdate(false);
       setEntidadUpdate('');
       toast.success(respuesta.data.msg);
-      setTimeout(() => {
+      
         obtenerEntidades();
-      }, 4000);
+    
     } catch (error) {
       console.error("Error al actualizar rol:", error.message);
       toast.error(error.response.data.msg);
@@ -224,7 +224,10 @@ const PanelEntidad = () => {
                   Cancel
                 </button>
                 <button
-                  onClick={() => handleDeleteEntidad(entidadId)}
+                  onClick={() =>{handleDeleteEntidad(entidadId);
+                    
+                    
+                  }}
                   className="px-4 py-2 text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors"
                 >
                   Eliminar

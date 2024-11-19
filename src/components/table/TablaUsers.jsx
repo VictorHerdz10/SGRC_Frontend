@@ -116,9 +116,7 @@ const PanelUsuario = () => {
       setShowComfirmDelete(false);
       setUserId("");
       toast.success(respuesta.data.msg);
-      setTimeout(() => {
         obtenerUsuarios();
-      }, 4000);
     } catch (error) {
       toast.success(error.response.data.msg);
     }
@@ -150,9 +148,7 @@ const PanelUsuario = () => {
         );
         setShowComfirmUpdate(false);
         toast.success(respuesta.data.msg);
-        setTimeout(() => {
           obtenerUsuarios();
-        }, 4000);
       }
     } catch (error) {
       console.error("Error al asignar rol:", error.message);

@@ -27,7 +27,7 @@ const ValidationModal = () =>{
             setTimeout(()=>{
               navigate(`/auth/change-pass/${code}`)
 
-            },4000)
+            },500)
           } catch (error) {
             toast.error(error.response.data.msg)
             

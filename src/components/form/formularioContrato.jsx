@@ -167,7 +167,7 @@ const FormularioContrato = () => {
       setFile(null)
       setSelectContrato({});
       setIsEditing(false);
-      ;},5000)
+      ;},500)
 
   }else {
   try {
@@ -191,7 +191,7 @@ const FormularioContrato = () => {
     obtenerRegistros();
     setShowForm(false);
     setFile(null);
-    ;},5000)
+    ;},500)
   } catch (error) {
     console.error(error);
     toast.error(error.response.data.msg)

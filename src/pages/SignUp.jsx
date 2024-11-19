@@ -50,7 +50,7 @@ const SignUp = () => {
           setRepetirPassword("");
           setCheck(false);
           navigate("/auth/signin");
-        }, 3000);
+        }, 1000);
       } catch (error) {
         toast.error(error.response.data.msg);
       }
@@ -70,7 +70,7 @@ const SignUp = () => {
         setRepetirPassword("");
         setCheck(false);
         navigate("/auth/signin");
-        },3000)
+        },1000)
         
       } catch (error) {
         toast.error(error.response.data.msg);

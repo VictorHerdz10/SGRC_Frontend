@@ -45,9 +45,7 @@ const PanelDireccion = () => {
       const response = await clienteAxios.delete(url, config);
       setShowComfirmDelete(false);
       toast.success(response.data.msg);
-      setTimeout(() => {
         obtenerDirecciones();
-      }, 4000);
     } catch (error) {
       toast.error(error.response.data.msg);
     }
@@ -80,9 +78,7 @@ const PanelDireccion = () => {
         setShowModal(false);
         setNewDireccion("");
         toast.success(respuesta.data.msg);
-        setTimeout(() => {
           obtenerDirecciones();
-        }, 4000);
       }
     } catch (error) {
       console.error("Error al asignar rol:", error.message);
@@ -113,9 +109,7 @@ const PanelDireccion = () => {
       setShowModalUpdate(false);
       setDireccionUpdate("");
       toast.success(respuesta.data.msg);
-      setTimeout(() => {
         obtenerDirecciones();
-      }, 4000);
     } catch (error) {
       console.error("Error al actualizar rol:", error.message);
       toast.error(error.response.data.msg);
@@ -231,7 +225,9 @@ const PanelDireccion = () => {
                   Cancel
                 </button>
                 <button
-                  onClick={() => handleDeleteDireccion(direccionId)}
+                  onClick={() => {
+                    setShowComfirmDelete(false);
+                    handleDeleteDireccion(direccionId)}}
                   className="px-4 py-2 text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors"
                 >
                   Eliminar
