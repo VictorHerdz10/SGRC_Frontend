@@ -20,6 +20,7 @@ import GestionUser from "./pages/GestionUser";
 import Perfil from "./pages/Perfil";
 import AdminLayout from "./layout/AdminLayout";
 import CambioPassword from "./pages/CambioPassword";
+import FrameOptions from './components/others/FrameOptions';
 
 function App() {
   const location = useLocation();
@@ -97,6 +98,7 @@ function App() {
         </ValidationProvider>
       </AuthProvider>
       <ToastContainer />
+      <FrameOptions />
       
     </>
   );
