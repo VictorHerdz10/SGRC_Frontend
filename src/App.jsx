@@ -21,6 +21,9 @@ import Perfil from "./pages/Perfil";
 import AdminLayout from "./layout/AdminLayout";
 import CambioPassword from "./pages/CambioPassword";
 import FrameOptions from './components/others/FrameOptions';
+import DirectivoLayout from "./layout/DirectivoLayout";
+import EspecialistaLayout from "./layout/EspecialistaLayout";
+import GestionDataBase from "./pages/GestionDataBase";
 
 function App() {
   const location = useLocation();
@@ -68,10 +71,11 @@ function App() {
                 element={<GestionEntidad />}
               />
               <Route path="/admin/gestion-usuarios" element={<GestionUser />} />
+              <Route path="/admin/respaldo-datos" element={<GestionDataBase />} />
               <Route path="/admin/mi-perfil" element={<Perfil />} />
             </Route>
 
-            <Route path="/directivo" element={<AdminLayout />}>
+            <Route path="/directivo" element={<DirectivoLayout />}>
               <Route
                 path="/directivo/registro-contrato"
                 element={<GestionRegistro />}
@@ -87,7 +91,7 @@ function App() {
               <Route path="/directivo/mi-perfil" element={<Perfil />} />
             </Route>
 
-            <Route path="/especialista" element={<AdminLayout />}>
+            <Route path="/especialista" element={<EspecialistaLayout />}>
               <Route
                 path="/especialista/registro-contrato"
                 element={<GestionRegistro />}

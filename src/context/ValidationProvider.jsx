@@ -1,4 +1,4 @@
-import { useState,useEffect, createContext } from "react";
+import { useState, useEffect, createContext } from "react";
 import clienteAxios from "../axios/axios";
 import useAuth from "../hooks/useAuth";
 const ValidationContext = createContext();
@@ -8,27 +8,28 @@ const ValidationProvider = ({ children }) => {
   const [file, setFile] = useState(null);
   const [isOpen, setIsOpen] = useState(true);
   const [contratos, setContratos] = useState([]);
-  const[direcciones,setDirecciones]=useState([])
-  const[entidades,setEntidades]=useState([])
-  const[perfil,setPerfil]=useState({});
+  const [direcciones, setDirecciones] = useState([]);
+  const [entidades, setEntidades] = useState([]);
+  const [perfil, setPerfil] = useState({});
   const { auth } = useAuth();
   const [showModal, setShowModal] = useState(false);
   const [selectedNotification, setSelectedNotification] = useState(null);
-const[selectContrato,setSelectContrato]=useState({});
-const [showForm, setShowForm] = useState(false);
-const[isEditing,setIsEditing]=useState(false);
-const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [selectContrato, setSelectContrato] = useState({});
+  const [showForm, setShowForm] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [backupHistory, setBackupHistory] = useState([]);
   // 1. Obtener la hora actual
   function obtenerHoraActual() {
     return new Date();
   }
-  const formatDate=(isoDate)=> {
+  const formatDate = (isoDate) => {
     // Extraer la parte de fecha del string ISO 8601
-    const datePart = isoDate.split('T')[0];
-    
+    const datePart = isoDate.split("T")[0];
+
     // Formatear la fecha para el input tipo date
-    return new Date(datePart).toISOString().split('T')[0];
-  }
+    return new Date(datePart).toISOString().split("T")[0];
+  };
   // 2. Restar 4 horas de una fecha base
   const restarCuatroHoras = (fechaBase) => {
     const offset = -4;
@@ -79,18 +80,21 @@ const [showConfirmModal, setShowConfirmModal] = useState(false);
   }
 
   const validarInput = (valor, tipo, valor1) => {
-    
     if (valor === "") {
-        return "Este campo no puede estar vacio";
-      }
-    
+      return "Este campo no puede estar vacio";
+    }
+
     if (tipo === "email") {
       if (!/^[A-Z0-9._%+-]+@[A-Z0-9-]+\.[A-Z]{2,}$/i.test(valor)) {
         return "Formato de email invalido";
       }
     }
-    if (tipo === 'telefono') {
-      if (!/^(?:\+?(\d{1,3}[-\s.]*)?\(\d{3}\)[-\s.]*(\d{3})[-\s.]*(\d{4})|\(\d{3}[-\s.]*\d{3}[-\s.]*\d{4}|\d{7}|\d{10}|(\d{3}[-\s.]*(\d{3}|\d{4}))|(\d{3}[-\s.]*(\d{3}|\d{4})))$/.test(valor)) {
+    if (tipo === "telefono") {
+      if (
+        !/^(?:\+?(\d{1,3}[-\s.]*)?\(\d{3}\)[-\s.]*(\d{3})[-\s.]*(\d{4})|\(\d{3}[-\s.]*\d{3}[-\s.]*\d{4}|\d{7}|\d{10}|(\d{3}[-\s.]*(\d{3}|\d{4}))|(\d{3}[-\s.]*(\d{3}|\d{4})))$/.test(
+          valor
+        )
+      ) {
         return "El formato del teléfono es inválido. Ejemplo: +1234567890 o (123) 456-7890";
       }
     }
@@ -104,23 +108,23 @@ const [showConfirmModal, setShowConfirmModal] = useState(false);
         return "Las contraseñas no coinciden";
       }
     }
-    if(tipo ==='vigencia' && !/^\d+$/.test(valor) ){
-      return 'Solo se permiten números';
+    if (tipo === "vigencia" && !/^\d+$/.test(valor)) {
+      return "Solo se permiten números";
     }
-    if (tipo === 'date') {
+    if (tipo === "date") {
       const fecha = new Date(valor);
-      
+
       if (isNaN(fecha.getTime())) {
-        return 'Por favor, ingrese una fecha válida.';
-      } 
+        return "Por favor, ingrese una fecha válida.";
+      }
     }
     // Validación para campos de texto que deben ser números positivos
-  if (tipo === 'number' && !/^\+?\d+$/.test(valor)) {
-    return 'Solo se permiten números positivos.';
-  }
+    if (tipo === "number" && !/^\+?\d+$/.test(valor)) {
+      return "Solo se permiten números positivos.";
+    }
     return "";
   };
-  const obtenerPerfil= async()=>{
+  const obtenerPerfil = async () => {
     const token = localStorage.getItem("token");
     const config = {
       headers: {
@@ -129,83 +133,90 @@ const [showConfirmModal, setShowConfirmModal] = useState(false);
       },
     };
     if (token && auth) {
-try {
-  const url = '/usuario/obtener-perfil';
-  const response = await clienteAxios(url, config);
-  await setPerfil(response.data);
-  
-} catch (error) {
-  
-}
+      try {
+        const url = "/usuario/obtener-perfil";
+        const response = await clienteAxios(url, config);
+        await setPerfil(response.data);
+      } catch (error) {}
     }
-}
+  };
 
-const obtenerDirecciones = async()=>{
-  const token = localStorage.getItem("token");
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
+  const obtenerDirecciones = async () => {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    if (token && auth) {
+      try {
+        const url = "/direccion/obtener-direcciones";
+        const response = await clienteAxios(url, config);
+        await setDirecciones(response.data);
+      } catch (error) {}
+    }
   };
-  if (token && auth) {
-  try {
-    const url = '/direccion/obtener-direcciones';
-    const response = await clienteAxios(url, config);
-    await setDirecciones(response.data);
-   
-  } catch (error) {
-    
-  }
-  }
-}
-const obtenerEntidades = async()=>{
-  const token = localStorage.getItem("token");
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
+  const obtenerEntidades = async () => {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    if (token && auth) {
+      try {
+        const url = "/entidad/obtener-entidades";
+        const response = await clienteAxios(url, config);
+        await setEntidades(response.data);
+      } catch (error) {}
+    }
   };
-  if (token && auth) {
-  try {
-    const url = '/entidad/obtener-entidades';
-    const response = await clienteAxios(url, config);
-    await setEntidades(response.data);
-  } catch (error) {
-   
-  }
-  }
-}
-const obtenerRegistros = async () => {
-  const token = localStorage.getItem("token");
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
+  const obtenerRegistros = async () => {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    if (token && auth) {
+      try {
+        const url = "contratos/listar-registro-contratos";
+        const response = await clienteAxios(url, config);
+        const { data } = response;
+        setContratos(data);
+      } catch (error) {}
+    }
   };
-  if (token && auth) {
-  try {
-    const url = "contratos/listar-registro-contratos";
-    const response = await clienteAxios(url, config);
-    const { data } = response;
-    setContratos(data);
-  } catch (error) {
-    
-  }
-}
-};
+  const obtenerBackup = async () => {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    if (token && auth) {
+      try {
+        const url = "/backup/obtener-datos-backup";
+        const response = await clienteAxios(url, config);
+        const { data } = response;
+        setBackupHistory(data);
+      } catch (error) {}
+    }
+  };
 
-  useEffect(()=>{
-setDirecciones([]);
-setEntidades([]);
-obtenerDirecciones();
-obtenerEntidades();
-obtenerPerfil();
-obtenerRegistros();
-  },[auth])
-  
+  useEffect(() => {
+    setDirecciones([]);
+    setEntidades([]);
+    obtenerDirecciones();
+    obtenerEntidades();
+    obtenerPerfil();
+    obtenerRegistros();
+    obtenerBackup();
+  }, [auth]);
 
   return (
     <ValidationContext.Provider
@@ -244,8 +255,10 @@ obtenerRegistros();
         setIsEditing,
         isEditing,
         showConfirmModal,
-        setShowConfirmModal
-
+        setShowConfirmModal,
+        backupHistory,
+        setBackupHistory,
+        obtenerBackup,
       }}
     >
       {children}

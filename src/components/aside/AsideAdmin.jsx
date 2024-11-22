@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { FaUsersCog, FaUserCircle,FaBuilding, FaIndustry} from "react-icons/fa";
+import { FaUsersCog, FaUserCircle,FaBuilding, FaIndustry,FaDatabase} from "react-icons/fa";
 import { RiDashboardFill, RiLogoutBoxRLine } from "react-icons/ri";
 import { BsFileEarmarkText } from "react-icons/bs";
 import useValidation from "../../hooks/useValidation";
@@ -48,6 +48,11 @@ const SideMenu = () => {
       label: "Gestión de Usuarios",
       icon: <FaUsersCog className="text-xl" />,
       path: "/admin/gestion-usuarios",
+    }, {
+      id: "backup",
+      label: "Copia de Seguridad",
+      icon: <FaDatabase className="text-xl" />,
+      path: "/admin/respaldo-datos",
     },
     {
       id: "profile",

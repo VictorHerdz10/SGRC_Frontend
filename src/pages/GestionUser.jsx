@@ -7,7 +7,6 @@ import { IoClose } from "react-icons/io5";
 import clienteAxios from "../axios/axios";
 import { toast } from "react-toastify";
 import useAuth from "../hooks/useAuth";
-
 const GestionUser = () => {
   const{auth}=useAuth();
     const{isOpen,validarInput}=useValidation();
