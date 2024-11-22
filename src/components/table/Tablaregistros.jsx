@@ -72,7 +72,9 @@ const ContractTable = () => {
     await new Promise((resolve) => setTimeout(resolve, 500));
     setLoading(false);
   };
-
+  function getElementsInRange(array, start, end) {
+    return array.slice(start - 1, end);
+  }
   const renderPageNumbers = () => {
     const pageNumbers = [];
     for (let i = 1; i <= totalPages; i++) {
@@ -1114,7 +1116,7 @@ const ContractTable = () => {
             <FiChevronLeft className="mr-1" /> Anterior
           </button>
 
-          <div className="hidden sm:flex">{renderPageNumbers()}</div>
+          <div className="hidden sm:flex">{getElementsInRange(renderPageNumbers(),currentPage,currentPage + 9)}</div>
 
           <button
             onClick={() => handlePageChange(currentPage + 1)}
