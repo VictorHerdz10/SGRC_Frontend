@@ -53,6 +53,7 @@ const BackupComponent = () => {
             "No tienes conexión a internet para realizar la copia de seguridad",
             "error"
             );
+            setIsLoading(false);
             return;
     }
     try {
@@ -79,6 +80,8 @@ const BackupComponent = () => {
             "No tienes conexión a internet para restablecer esta copia de seguridad",
             "error"
             );
+            setShowRestoreModal(false);
+            setIsLoading(false);
             return;
     }
     try {
@@ -111,6 +114,8 @@ const BackupComponent = () => {
             "No tienes conexión a internet para eliminar la copia de seguridad",
             "error"
             );
+            setShowEliminarModal(false);
+            setIsLoading(false);
             return;
     }
     try {
