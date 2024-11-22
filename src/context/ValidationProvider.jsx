@@ -215,7 +215,7 @@ const ValidationProvider = ({ children }) => {
     obtenerEntidades();
     obtenerPerfil();
     obtenerRegistros();
-   // obtenerBackup();
+    obtenerBackup();
   }, [auth]);
 
   return (

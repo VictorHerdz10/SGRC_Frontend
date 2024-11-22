@@ -1,4 +1,4 @@
-import BackupComponent from "../components/others/backup";
+import BackupComponent from "../components/others/Backup";
 import AsideAdmin from "../components/aside/AsideAdmin";
 import HeaderAdmin from '../partials/headers/HeaderAuth';
 import useValidation from "../hooks/useValidation";
