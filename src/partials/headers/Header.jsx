@@ -1,8 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import ThemeToggle from '../../components/others/ThemeToggle';
 
 
 function Header() {
+  const[mobile,setMobile]=useState(false)
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 768) {
+    setMobile(true);
+      }
+
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize();
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const [top, setTop] = useState(true);
 
@@ -46,7 +61,7 @@ function Header() {
           {/* Site navigation */}
           <nav className="flex flex-grow">
             <ul className="flex flex-grow justify-end flex-wrap items-center">
-              <li>
+            {!mobile && (<> <li>
                 <Link to="/auth/signin" className="font-medium text-gray-600 hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out">Iniciar sesión</Link>
               </li>
               <li>
@@ -57,10 +72,9 @@ function Header() {
                   </svg>                  
                 </Link>
               </li>
+              </>)}
             </ul>
             
-        
-    
 
           </nav>
 

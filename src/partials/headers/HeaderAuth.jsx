@@ -6,9 +6,23 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import useValidation from '../../hooks/useValidation';
 import useAuth from '../../hooks/useAuth';
-import Notification from '../../components/others/Notification'
-import CuadroPerfil from '../../components/others/CuadroPerfil'
+import Notification from '../../components/others/Notification';
+import CuadroPerfil from '../../components/others/CuadroPerfil';
 const HeaderAuth=()=> {
+  const[mobile,setMobile]=useState(false)
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 768) {
+    setMobile(true);
+      }
+
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize();
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 const{isOpen}=useValidation();
 const{auth}=useAuth();
 
@@ -40,7 +54,7 @@ if(auth.tipo_usuario ==='Admin_Gnl'){
   return (
     <>
     <header className={`fixed w-full z-30 md:bg-opacity-90 transition duration-300 ease-in-out rounded-full border-gray-100 ${!top && 'bg-white backdrop-blur-sm shadow-lg'}`}>
-      <div className={`container mx-0  px-5  sm:pr-10 ${isOpen ? "lg:pr-56 sm:pr-60 md:pr-24":''} `}  >
+      <div className={`container mx-0 px-5 ${isOpen ? "lg:pr-56 sm:pr-60 md:pr-24":'pr-10'} `}  >
         <div className="flex items-center justify-between h-16 md:h-20 p-10">
 
           {/* Site branding */}
@@ -68,13 +82,15 @@ if(auth.tipo_usuario ==='Admin_Gnl'){
           </div>
           {/* Site navigation */}
           <nav className=" flex-grow md:flex ">
-            <ul className="flex flex-grow justify-end flex-wrap items-center ml-5 p-10">
-              <li>
+            <ul className={mobile ?'flex flex-grow justify-end flex-wrap items-center ml-5 pl-10 lg:pr-8':'flex flex-grow justify-end flex-wrap items-center ml-5 p-10 lg:pl-8'}>
+              <li
+              className={mobile ?'pr-6':''}>
               {auth.tipo_usuario!=='visitante' &&(<Notification/>)}
-                </li>
-              <li>
+                </li >
+              {!mobile && (<li>
                 <CuadroPerfil/>
-              </li>
+              </li>)}
+              
             </ul>
 
           </nav>

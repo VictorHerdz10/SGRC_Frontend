@@ -556,7 +556,7 @@ const ContractTable = () => {
 
   return (
     <>
-      <div className="container mx-auto p-4 ">
+      <div className="container mx-auto p-4 pr-12">
         <h1 className="text-3xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400">
           Listado de Contratos{" "}
         </h1>

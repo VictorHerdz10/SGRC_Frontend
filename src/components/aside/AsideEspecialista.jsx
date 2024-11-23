@@ -44,7 +44,21 @@ const SideMenu = () => {
   ];
 
   const isActiveMenuItem = useActiveMenu();
+  
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 1024) {
+        setIsOpen(false);
+        setShowConfirmModal(false);
+      }
 
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize();
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   useEffect(() => {
     const currentActiveItem = menuItems.find((item) =>
       isActiveMenuItem(item.path)
@@ -95,6 +109,7 @@ const SideMenu = () => {
             onClick={() => setIsOpen(!isOpen)}
             className="p-2 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
             aria-label="Toggle menu"
+            disabled={window.innerWidth <= 1024}
           >
             <RiDashboardFill className="text-xl text-gray-600" />
           </button>

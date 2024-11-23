@@ -10,8 +10,9 @@ const SideMenu = () => {
   const [activeItem, setActiveItem] = useState("dashboard");
   const menuRef = useRef(null);
   const navigate = useNavigate();
- 
-
+  const refreshPage = () => {
+    window.location.reload();
+  };
   const useActiveMenu = () => {
     const location = useLocation();
 
@@ -33,7 +34,7 @@ const SideMenu = () => {
     },
     {
       id: "direccion-empresarial",
-      label: "Gestión de Dirección Empresarial",
+      label: "Gestión de Dirección Ejecutiva",
       icon: <FaBuilding className="text-xl" />,
       path: "/admin/gestion-direccion-empresarial",
     },
@@ -50,7 +51,7 @@ const SideMenu = () => {
       path: "/admin/gestion-usuarios",
     }, {
       id: "backup",
-      label: "Copia de Seguridad",
+      label: "Gestión de Copias de Seguridad",
       icon: <FaDatabase className="text-xl" />,
       path: "/admin/respaldo-datos",
     },
@@ -91,6 +92,21 @@ const SideMenu = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 1024) {
+        setIsOpen(false);
+        setShowConfirmModal(false);
+      }
+
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize();
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const handleMenuClick = (itemId, path) => {
     if (itemId === "logout") {
       setShowConfirmModal(true);
@@ -119,6 +135,7 @@ const SideMenu = () => {
             onClick={() => setIsOpen(!isOpen)}
             className="p-2 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
             aria-label="Toggle menu"
+            disabled={window.innerWidth <= 1024}
           >
             <RiDashboardFill className="text-xl text-gray-600" />
           </button>
@@ -152,7 +169,9 @@ const SideMenu = () => {
             ))}
           </ul>
         </nav>
+        
       </div>
+      
     </div>
   );
 };

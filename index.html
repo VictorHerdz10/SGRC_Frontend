@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" >
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/src/images/icon.jpg" />
@@ -8,7 +8,34 @@
     <meta name="frame-ancestors" content="DENY">
     <meta name="description" content="Conozca más sobre DGS y sus servicios en esta página inicial. Acceda fácilmente a información importante y recursos útiles para su necesidades diarias." />
   </head>
-  <body class="font-inter antialiased bg-white text-gray-900 tracking-tight">   
+  <body class="font-inter antialiased bg-white text-gray-900 tracking-tight">
+    <script>
+      (function() {
+        function addDataThemeAttribute() {
+          const body = document.body;
+          if (!body.hasAttribute('data-theme')) {
+            body.setAttribute('data-theme', 'light');
+          }
+        }
+      
+        function toggleDarkMode() {
+          const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          
+          document.documentElement.setAttribute('data-theme', prefersDarkMode ? 'dark' : 'light');
+          
+          // Actualizar el estado local storage
+          localStorage.setItem('theme', prefersDarkMode ? 'dark' : 'light');
+        }
+      
+        // Agregar el atributo data-theme al cargar el DOM
+        document.addEventListener('DOMContentLoaded', addDataThemeAttribute);
+      
+        // Ejecutar la función toggleDarkMode al cargar el DOM
+        document.addEventListener('DOMContentLoaded', toggleDarkMode);
+      })();
+      </script>
+      
+       
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

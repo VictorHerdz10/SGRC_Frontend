@@ -24,6 +24,7 @@ import FrameOptions from './components/others/FrameOptions';
 import DirectivoLayout from "./layout/DirectivoLayout";
 import EspecialistaLayout from "./layout/EspecialistaLayout";
 import GestionDataBase from "./pages/GestionDataBase";
+import ThemeToggle from "./components/others/ThemeToggle";
 
 function App() {
   const location = useLocation();
@@ -103,7 +104,7 @@ function App() {
       </AuthProvider>
       <ToastContainer />
       <FrameOptions />
-      
+      <ThemeToggle/>
     </>
   );
 }
