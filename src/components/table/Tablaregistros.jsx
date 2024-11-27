@@ -400,21 +400,23 @@ const ContractTable = () => {
     }
   };
 
-  const handleModal = (type, invoice, id) => {
-    setModalType(type);
+  const handleModal = async(type, invoice, id) => {
+    try {
+    await setModalType(type);
     if (type === "view") {
-      obtenerFactura(invoice);
+      await obtenerFactura(invoice);
     }
     if (type === "info") {
       setContrato(invoice);
     }
 
     if (type === "delete") {
-      
-      obtenerFactura(invoice);
+      await obtenerFactura(invoice);
       setNumeroDictamen(selectedInvoice.numeroDictamen);
       setMonto(selectedInvoice.monto);
     }
+  } catch (error) {
+  }
 
     setShowModal(true);
   };
