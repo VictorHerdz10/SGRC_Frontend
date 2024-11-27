@@ -32,7 +32,8 @@ const ContractTable = () => {
     setSelectContrato,
     setShowForm,
     isEditing,
-    setIsEditing
+    setIsEditing,
+    obtenerNotificaciones
   } = useValidation();
   let errores, errores2;
   const [totalItems, setTotalItems] = useState(contratos.length);
@@ -286,6 +287,7 @@ const ContractTable = () => {
       toast.success(response.data.msg);
       setShowModal(false);
       obtenerRegistros();
+      obtenerNotificaciones();
       setId("");
     } catch (error) {
       
@@ -339,6 +341,7 @@ const ContractTable = () => {
       setMonto("");
       setNumeroDictamen("");
       obtenerRegistros();
+      obtenerNotificaciones();
     } catch (error) {
       
       toast.error(error.response.data.msg);
@@ -390,6 +393,7 @@ const ContractTable = () => {
       setNumeroDictamen("");
       setShowModalCreate(false);
       obtenerRegistros();
+      obtenerNotificaciones();
     } catch (error) {
       
       toast.error(error.response.data.msg);
@@ -584,7 +588,7 @@ const ContractTable = () => {
             onChange={(e) => setFiltrarEntidad(e.target.value)}
             className="rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
           >
-            <option value=" ">Filtar por Entidad.</option>
+            <option value=" ">Filtar por entidad</option>
             {entidades.map((entidad) => (
               <option key={entidad._id} value={entidad.entidad}>
                 {entidad.entidad}

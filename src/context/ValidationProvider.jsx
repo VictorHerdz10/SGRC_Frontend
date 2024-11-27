@@ -19,6 +19,7 @@ const ValidationProvider = ({ children }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [backupHistory, setBackupHistory] = useState([]);
+  const [notifications, setNotifications] = useState([]);
   // 1. Obtener la hora actual
   function obtenerHoraActual() {
     return new Date();
@@ -124,6 +125,22 @@ const ValidationProvider = ({ children }) => {
     }
     return "";
   };
+  const obtenerNotificaciones = async () => {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    try {
+      const url = "contratos/notificacion-contratos";
+      const response = await clienteAxios.get(url, config);
+      await setNotifications(response.data);
+    } catch (error) {
+
+    }
+  };
   const obtenerPerfil = async () => {
     const token = localStorage.getItem("token");
     const config = {
@@ -216,6 +233,7 @@ const ValidationProvider = ({ children }) => {
     obtenerPerfil();
     obtenerRegistros();
     obtenerBackup();
+    obtenerNotificaciones();
   }, [auth]);
 
   return (
@@ -259,6 +277,9 @@ const ValidationProvider = ({ children }) => {
         backupHistory,
         setBackupHistory,
         obtenerBackup,
+        obtenerNotificaciones,
+        notifications,
+        setNotifications
       }}
     >
       {children}

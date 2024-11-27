@@ -16,7 +16,7 @@ import useValidation from "../../hooks/useValidation";
 
 const Notification = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [notifications, setNotifications] = useState([]);
+  
   const [showNotifications, setShowNotifications] = useState(false);
   const {
     showModal,
@@ -29,28 +29,10 @@ const Notification = () => {
     calcularTiempoTranscurrido,
     horaActual,
     obtenerHoraActual,
+    setNotifications,
+    notifications,
+    obtenerNotificaciones
   } = useValidation();
-
-  const obtenerNotificaciones = async () => {
-    const token = localStorage.getItem("token");
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    };
-    try {
-      const url = "contratos/notificacion-contratos";
-      const response = await clienteAxios.get(url, config);
-      await setNotifications(response.data);
-    } catch (error) {
-
-    }
-  };
-
-  useEffect(() => {
-    obtenerNotificaciones();
-  }, [localStorage.getItem("token")]);
 
   const handleDeleteNotification = async (notificationId) => {
     const token = localStorage.getItem("token");
