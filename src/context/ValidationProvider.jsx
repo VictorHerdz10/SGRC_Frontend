@@ -81,6 +81,12 @@ const ValidationProvider = ({ children }) => {
   }
 
   const validarInput = (valor, tipo, valor1) => {
+    if (tipo === "number") {
+      const regex = /^[1-9]\d*$/;
+      if (!regex.test(valor)) {
+        return "Solo se permiten números enteros positivos";
+      }
+    }
     if (valor === "") {
       return "Este campo no puede estar vacio";
     }
@@ -119,10 +125,7 @@ const ValidationProvider = ({ children }) => {
         return "Por favor, ingrese una fecha válida.";
       }
     }
-    // Validación para campos de texto que deben ser números positivos
-    if (tipo === "number" && !/^\+?\d+$/.test(valor)) {
-      return "Solo se permiten números positivos.";
-    }
+    
     return "";
   };
   const obtenerNotificaciones = async () => {

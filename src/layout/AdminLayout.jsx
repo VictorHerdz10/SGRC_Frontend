@@ -48,7 +48,7 @@ const RutaProtegida = () => {
               </div>
               <div className="grid grid-cols-2 gap-4 mb-8">
                 <div className="flex flex-col">
-                  <h2 className="font-semibold">Fecha de Vencimiento:</h2>
+                  <h2 className="font-semibold">Fecha de vencimiento:</h2>
                   <p>{parcearDate(
                     restarCuatroHoras(
                       new Date(selectedNotification.fechaVencimiento)
@@ -56,7 +56,7 @@ const RutaProtegida = () => {
                   )}</p>
                 </div>
                 <div className="flex flex-col">
-                  <h2 className="font-semibold">Valor Disponible:</h2>
+                  <h2 className="font-semibold">Monto disponible:</h2>
                   <p>{selectedNotification.valorDisponible}</p>
                 </div>
               </div>

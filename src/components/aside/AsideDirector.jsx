@@ -32,13 +32,13 @@ const SideMenu = () => {
     },
     {
       id: "direccion-empresarial",
-      label: "Gestión de Dirección Ejecutiva",
+      label: "Gestión de Direcciones Ejecutivas",
       icon: <FaBuilding className="text-xl" />,
       path: "/directivo/gestion-direccion-empresarial",
     },
     {
       id: "entidad",
-      label: "Gestión de Entidad",
+      label: "Gestión de Entidades",
       icon: <FaIndustry className="text-xl" />,
       path: "/directivo/gestion-entidad",
     },
