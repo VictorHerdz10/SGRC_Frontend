@@ -11,21 +11,20 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { IoClose } from "react-icons/io5";
 import clienteAxios from "../../axios/axios";
-import { data } from "autoprefixer";
 import useAuth from "../../hooks/useAuth";
-import RoleAssignmentModal from "../modals/AsignarModal";
+import useValidation from "../../hooks/useValidation";
 
 const PanelUsuario = () => {
   const { auth } = useAuth();
   const [userId, setUserId] = useState("");
   const [actual, setUsuarioActual] = useState();
-  const [users, setUsers] = useState([]);
   const [rol, setRol] = useState();
   const [showConfirmUpdate, setShowComfirmUpdate] = useState(false);
   const [showConfirmDelete, setShowComfirmDelete] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [directores, setDirectores] = useState([]);
   const [selectedDirector, setSelectedDirector] = useState("");
+  const{users,obtenerUsuarios} =useValidation();
 
   const handleDirectorChange = (directorId) => {
     setSelectedDirector(directorId);
@@ -54,40 +53,10 @@ const PanelUsuario = () => {
         return "Especialista ";
       case "Admin_Gnl":
         return "Administrador del Sistema";
-      case "visitante":
-        return "Visitante";
       default:
         return "Sin Asignar";
     }
   };
-  const tipoUsuarioMap = {
-    Admin_Mant: "Director de Inversiones y Mantenimiento",
-    Espe_Mant: "Especialista de Inversiones y Mantenimiento",
-    Admin_Ser: "Director de Servicios Generales",
-    Espe_Ser: "Especialista de Servicios Generales",
-    visitante: "Visitante",
-  };
-
-  const obtenerUsuarios = async () => {
-    const token = localStorage.getItem("token");
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    };
-    try {
-      const url = "usuario/obtener-usuarios";
-      const respuesta = await clienteAxios(url, config);
-      setUsers(respuesta.data);
-      
-    } catch (error) {
-      
-    }
-  };
-  useEffect(() => {
-    obtenerUsuarios();
-  }, []);
 
   const handleViewUser = (selectedUserId) => {
     // Buscar el usuario en el arreglo users

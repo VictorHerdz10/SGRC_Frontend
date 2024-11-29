@@ -24,7 +24,7 @@ const BackupComponent = () => {
     message: "",
     type: "",
   });
-  const { backupHistory, obtenerBackup,obtenerDirecciones,obtenerEntidades,obtenerPerfil,obtenerRegistros } = useValidation();
+  const { backupHistory, obtenerBackup} = useValidation();
   function formatFileSize(bytes) {
     const KB = 1024;
     const MB = KB * 1024;
@@ -89,11 +89,8 @@ const BackupComponent = () => {
       const url = `/backup/restore-db`;
       setShowRestoreModal(false);
       const response = await clienteAxios.post(url,{dropboxPath:dropboxPath},config);
-      obtenerDirecciones();
-      obtenerEntidades();
-      obtenerPerfil();
-      obtenerRegistros();
       showNotification(response.data.msg, "success");
+      obtenerBackup();
     } catch (err) {
       showNotification(err.response.data.msg, "error");
     } finally {

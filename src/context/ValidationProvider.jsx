@@ -20,6 +20,7 @@ const ValidationProvider = ({ children }) => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [backupHistory, setBackupHistory] = useState([]);
   const [notifications, setNotifications] = useState([]);
+  const [users, setUsers] = useState([]);
   // 1. Obtener la hora actual
   function obtenerHoraActual() {
     return new Date();
@@ -128,6 +129,23 @@ const ValidationProvider = ({ children }) => {
     
     return "";
   };
+  const obtenerUsuarios = async () => {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    try {
+      const url = "usuario/obtener-usuarios";
+      const respuesta = await clienteAxios(url, config);
+      setUsers(respuesta.data);
+      
+    } catch (error) {
+      
+    }
+  };
   const obtenerNotificaciones = async () => {
     const token = localStorage.getItem("token");
     const config = {
@@ -228,17 +246,6 @@ const ValidationProvider = ({ children }) => {
     }
   };
 
-  useEffect(() => {
-    setDirecciones([]);
-    setEntidades([]);
-    obtenerDirecciones();
-    obtenerEntidades();
-    obtenerPerfil();
-    obtenerRegistros();
-    obtenerBackup();
-    obtenerNotificaciones();
-  }, [auth]);
-
   return (
     <ValidationContext.Provider
       value={{
@@ -282,7 +289,11 @@ const ValidationProvider = ({ children }) => {
         obtenerBackup,
         obtenerNotificaciones,
         notifications,
-        setNotifications
+        setNotifications,
+        obtenerUsuarios,
+        users,
+        setUsers,
+        setPerfil
       }}
     >
       {children}

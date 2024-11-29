@@ -1,12 +1,30 @@
 import { useState, useEffect, useRef } from "react";
-import { FaUsersCog, FaUserCircle,FaBuilding, FaIndustry} from "react-icons/fa";
+import {
+  FaUsersCog,
+  FaUserCircle,
+  FaBuilding,
+  FaIndustry,
+} from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import { RiDashboardFill, RiLogoutBoxRLine } from "react-icons/ri";
 import { BsFileEarmarkText } from "react-icons/bs";
 import useValidation from "../../hooks/useValidation";
 import { useLocation, useNavigate } from "react-router-dom";
 const SideMenu = () => {
-  const { isOpen, setIsOpen,setShowConfirmModal } = useValidation();
+  const {
+    isOpen,
+    setIsOpen,
+    setShowConfirmModal,
+    obtenerDirecciones,
+    obtenerEntidades,
+    obtenerPerfil,
+    obtenerRegistros,
+    setDirecciones,
+    setEntidades,
+    setContratos,
+    obtenerNotificaciones,
+    setPerfil,
+  } = useValidation();
   const [activeItem, setActiveItem] = useState("dashboard");
   const menuRef = useRef(null);
   const navigate = useNavigate();
@@ -22,6 +40,74 @@ const SideMenu = () => {
     };
 
     return isActiveMenuItem;
+  };
+  const usePageReloadDetection = () => {
+    useEffect(() => {
+      const executeOnPageReload = async () => {
+        try {
+          switch (window.location.pathname) {
+            case "/admin/registro-contrato":
+              console.log('aqui en registro')
+              await obtenerRegistros();
+              await obtenerDirecciones();
+              await obtenerNotificaciones();
+              await obtenerEntidades();
+              await obtenerPerfil();
+              await setBackupHistory([]);
+              await setUsers([]);
+              break;
+            case "/admin/gestion-direccion-empresarial":
+              await obtenerDirecciones();
+              await obtenerNotificaciones();
+              await obtenerPerfil();
+              await setEntidades([]);
+              await setContratos([]);
+              await setBackupHistory([]);
+              await setUsers([]);
+              break;
+            case "/admin/gestion-entidad":
+              await obtenerEntidades();
+              await obtenerNotificaciones();
+              await obtenerPerfil();
+              await setDirecciones([]);
+              await setContratos([]);
+              await setBackupHistory([]);
+              await setUsers([]);
+              break;
+            case "/admin/mi-perfil":
+              await obtenerPerfil();
+              await obtenerNotificaciones();
+              await setDirecciones([]);
+              await setEntidades([]);
+              await setContratos([]);
+              await setBackupHistory([]);
+              await setUsers([]);
+              break;
+            default:
+              console.log('No route matched');
+          }
+        } catch (error) {
+          console.error('Error during page reload operations:', error);
+        }
+      };
+  
+      executeOnPageReload();
+  
+      window.addEventListener('beforeunload', () => {
+        localStorage.setItem('pageReloaded', 'true');
+      });
+  
+      if (localStorage.getItem('pageReloaded') === 'true') {
+        executeOnPageReload();
+        localStorage.removeItem('pageReloaded');
+      }
+  
+      return () => {
+        window.removeEventListener('beforeunload', () => {});
+      };
+    }, []);
+  
+    return null; // Esta función no devuelve nada, solo ejecuta efectos secundarios
   };
   const menuItems = [
     {
@@ -54,23 +140,23 @@ const SideMenu = () => {
       icon: <RiLogoutBoxRLine className="text-xl" />,
     },
   ];
+
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth <= 1024) {
         setIsOpen(false);
         setShowConfirmModal(false);
       }
-
     };
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
     handleResize();
 
-    return () => window.removeEventListener('resize', handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const isActiveMenuItem = useActiveMenu();
-
+usePageReloadDetection();
   useEffect(() => {
     const currentActiveItem = menuItems.find((item) =>
       isActiveMenuItem(item.path)
@@ -93,9 +179,46 @@ const SideMenu = () => {
     };
   }, []);
 
-  const handleMenuClick = (itemId, path) => {
+  const handleMenuClick = async (itemId, path) => {
     if (itemId === "logout") {
       setShowConfirmModal(true);
+    }
+    if (itemId === "records") {
+      await obtenerRegistros();
+      await obtenerDirecciones();
+      await obtenerNotificaciones();
+      await obtenerPerfil();
+      await obtenerEntidades();
+      await setBackupHistory([]);
+      await setUsers([]);
+    }
+    if (itemId === "direccion-empresarial") {
+      await obtenerDirecciones();
+      await obtenerNotificaciones();
+      await obtenerPerfil();
+      await setEntidades([]);
+      await setContratos([]);
+      await setBackupHistory([]);
+      await setUsers([]);
+    }
+    if (itemId === "entidad") {
+      await obtenerEntidades();
+      await obtenerNotificaciones();
+      await obtenerPerfil();
+      await setDirecciones([]);
+      await setContratos([]);
+      await setBackupHistory([]);
+      await setUsers([]);
+    }
+
+    if (itemId === "profile") {
+      await obtenerPerfil();
+      await obtenerNotificaciones();
+      await setDirecciones([]);
+      await setEntidades([]);
+      await setContratos([]);
+      await setBackupHistory([]);
+      await setUsers([]);
     }
     setActiveItem(itemId);
     navigate(path);
@@ -156,7 +279,6 @@ const SideMenu = () => {
           </ul>
         </nav>
       </div>
-     
     </div>
   );
 };

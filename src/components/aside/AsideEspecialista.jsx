@@ -1,12 +1,30 @@
 import { useState, useEffect, useRef } from "react";
-import { FaUsersCog, FaUserCircle,FaBuilding, FaIndustry} from "react-icons/fa";
+import {
+  FaUsersCog,
+  FaUserCircle,
+  FaBuilding,
+  FaIndustry,
+} from "react-icons/fa";
 
 import { RiDashboardFill, RiLogoutBoxRLine } from "react-icons/ri";
 import { BsFileEarmarkText } from "react-icons/bs";
 import useValidation from "../../hooks/useValidation";
 import { useLocation, useNavigate } from "react-router-dom";
 const SideMenu = () => {
-  const { isOpen, setIsOpen,setShowConfirmModal } = useValidation();
+  const {
+    isOpen,
+    setIsOpen,
+    setShowConfirmModal,
+    obtenerNotificaciones,
+    obtenerPerfil,
+    obtenerRegistros,
+    setContratos,
+    setPerfil,
+    setDirecciones,
+    setEntidades,
+    obtenerDirecciones,
+    obtenerEntidades,
+  } = useValidation();
   const [activeItem, setActiveItem] = useState("dashboard");
   const menuRef = useRef(null);
   const navigate = useNavigate();
@@ -22,6 +40,56 @@ const SideMenu = () => {
     };
 
     return isActiveMenuItem;
+  };
+  const usePageReloadDetection = () => {
+    useEffect(() => {
+      const executeOnPageReload = async () => {
+        try {
+          switch (window.location.pathname) {
+            case "/admin/registro-contrato":
+              console.log('aqui en registro')
+              await obtenerRegistros();
+              await obtenerDirecciones();
+              await obtenerNotificaciones();
+              await obtenerEntidades();
+              await obtenerPerfil();
+              await setBackupHistory([]);
+              await setUsers([]);
+              break;
+            case "/admin/mi-perfil":
+              await obtenerPerfil();
+              await obtenerNotificaciones();
+              await setDirecciones([]);
+              await setEntidades([]);
+              await setContratos([]);
+              await setBackupHistory([]);
+              await setUsers([]);
+              break;
+            default:
+              
+          }
+        } catch (error) {
+          console.error('Error during page reload operations:', error);
+        }
+      };
+  
+      executeOnPageReload();
+  
+      window.addEventListener('beforeunload', () => {
+        localStorage.setItem('pageReloaded', 'true');
+      });
+  
+      if (localStorage.getItem('pageReloaded') === 'true') {
+        executeOnPageReload();
+        localStorage.removeItem('pageReloaded');
+      }
+  
+      return () => {
+        window.removeEventListener('beforeunload', () => {});
+      };
+    }, []);
+  
+    return null; // Esta función no devuelve nada, solo ejecuta efectos secundarios
   };
   const menuItems = [
     {
@@ -42,22 +110,21 @@ const SideMenu = () => {
       icon: <RiLogoutBoxRLine className="text-xl" />,
     },
   ];
-
+  usePageReloadDetection();
   const isActiveMenuItem = useActiveMenu();
-  
+
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth <= 1024) {
         setIsOpen(false);
         setShowConfirmModal(false);
       }
-
     };
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
     handleResize();
 
-    return () => window.removeEventListener('resize', handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
   useEffect(() => {
     const currentActiveItem = menuItems.find((item) =>
@@ -81,9 +148,23 @@ const SideMenu = () => {
     };
   }, []);
 
-  const handleMenuClick = (itemId, path) => {
+  const handleMenuClick = async (itemId, path) => {
     if (itemId === "logout") {
       setShowConfirmModal(true);
+    }
+    if (itemId === "records") {
+      await obtenerRegistros();
+      await obtenerDirecciones();
+      await obtenerNotificaciones();
+      await obtenerEntidades();
+      await obtenerPerfil();
+    }
+    if (itemId === "profile") {
+      await obtenerPerfil();
+      await obtenerNotificaciones();
+      await setDirecciones([]);
+      await setEntidades([]);
+      await setContratos([]);
     }
     setActiveItem(itemId);
     navigate(path);
@@ -144,7 +225,6 @@ const SideMenu = () => {
           </ul>
         </nav>
       </div>
-      
     </div>
   );
 };
