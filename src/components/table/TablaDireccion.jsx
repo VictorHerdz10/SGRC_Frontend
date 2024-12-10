@@ -132,15 +132,15 @@ const PanelDireccion = () => {
                     Dirección Ejecutiva
                   </th>
                   {auth.tipo_usuario === "Admin_Gnl" ? (
-                    <th className="py-2 px-4 border-b border-r">Creado Por</th>
+                    <th className="py-2 px-4 border-b border-r">Creado por</th>
                   ) : (
                     ""
                   )}
                   <th className="py-2 px-4 border-b border-r">
-                    Fecha de Creado
+                    Fecha de creado
                   </th>
                   <th className="py-2 px-4 border-b border-r ">
-                    Fecha de Modificado
+                    Fecha de modificado
                   </th>
                   <th className="py-2 px-4 border-b border-r ">Acciones</th>
                 </tr>

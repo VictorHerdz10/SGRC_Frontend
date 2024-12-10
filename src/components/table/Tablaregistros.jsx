@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useRevalidator } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   FaEye,
   FaTrash,
@@ -7,16 +7,16 @@ import {
   FaFileDownload,
   FaPlus,
   FaPencilAlt,
-  FaInfoCircle,
+  FaInfoCircle,FaFilePdf, FaFileExcel, FaSearch
 } from "react-icons/fa";
+import jsPDF from "jspdf";
+import 'jspdf-autotable';
+import * as XLSX from "xlsx";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
 import { IoClose } from "react-icons/io5";
-import fs from "fs/promises";
 import clienteAxios from "../../axios/axios";
 import useValidation from "../../hooks/useValidation";
-import { HiMiniAdjustmentsHorizontal } from "react-icons/hi2";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
 
@@ -347,6 +347,56 @@ const ContractTable = () => {
       toast.error(error.response.data.msg);
     }
   };
+  const exportToPDF = () => {
+    try {
+      const doc = new jsPDF();
+      
+      // Asegurarnos de que contratos esté definido
+      if (!contratos || contratos.length === 0) {
+        throw new Error("No se encontraron contratos para exportar");
+      }
+  
+      // Obtener las columnas y filas
+      const tableColumn = Object.keys(contratos[0]);
+      const tableRows = contratos.map(row => Object.values(row));
+  
+      // Crear la tabla en el documento
+      doc.autoTable({
+        head: [tableColumn],
+        body: tableRows,
+        styles: {
+          fontStyle: 'bold',
+          fontSize: 12,
+          fillColor: [255, 255, 204], // Color de fondo para encabezado
+          textColor: [0, 0, 0], // Color de texto
+          halign: 'center', // Alinear horizontalmente
+          valign: 'middle'   // Alinear verticalmente
+        },
+        theme: 'plain'
+      });
+  
+      // Guardar el PDF
+      doc.save("table_data.pdf");
+  
+      toast.success("PDF exportado exitosamente!");
+    } catch (error) {
+      console.error("Error al exportar PDF:", error);
+      toast.error("Ocurrió un error al exportar PDF. Por favor, inténtelo nuevamente.");
+    }
+  };
+
+  const exportToExcel = () => {
+    try {
+      const ws = XLSX.utils.json_to_sheet(contratos);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Table Data");
+      XLSX.writeFile(wb, "table_data.xlsx");
+      toast.success("Excel exportado exitosamente!");
+    } catch (error) {
+      toast.error("Error al exportar excel!");
+      console.error("Excel Export Error:", error);
+    }
+  };
   const handleCreate = async (e) => {
     e.preventDefault();
     errores = validarInput(numeroDictamen, "text", "");
@@ -627,6 +677,18 @@ const ContractTable = () => {
             className="bg-gray-200 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 transition duration-200"
           >
             Limpiar Filtros
+          </button>
+          <button
+            onClick={exportToPDF}
+            className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+          >
+            <FaFilePdf /> Export PDF
+          </button>
+          <button
+            onClick={exportToExcel}
+            className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+          >
+            <FaFileExcel /> Export Excel
           </button>
         </div>
         <div className="overflow-x-auto">
