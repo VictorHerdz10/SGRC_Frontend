@@ -51,7 +51,6 @@ const SideMenu = () => {
         try {
           switch (window.location.pathname) {
             case "/admin/registro-contrato":
-              console.log('aqui en registro')
               await obtenerRegistros();
               await obtenerDirecciones();
               await obtenerNotificaciones();

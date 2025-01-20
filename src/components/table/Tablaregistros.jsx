@@ -348,6 +348,8 @@ const ContractTable = () => {
     }
   };
   const exportToPDF = () => {
+    toast.info("Esta funcionalidad esta en construcción");
+    return;
     try {
       const doc = new jsPDF();
       
@@ -386,6 +388,8 @@ const ContractTable = () => {
   };
 
   const exportToExcel = () => {
+    toast.info("Esta funcionalidad esta en construcción");
+  return;
     try {
       const ws = XLSX.utils.json_to_sheet(contratos);
       const wb = XLSX.utils.book_new();
@@ -769,7 +773,7 @@ const ContractTable = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     {contract.tipoDeContrato}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-6 py-4  max-w-xs ">
                     {contract.objetoDelContrato}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
