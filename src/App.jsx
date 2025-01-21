@@ -25,6 +25,7 @@ import DirectivoLayout from "./layout/DirectivoLayout";
 import EspecialistaLayout from "./layout/EspecialistaLayout";
 import GestionDataBase from "./pages/GestionDataBase";
 import ThemeToggle from "./components/others/ThemeToggle";
+import NotFound from "./pages/404";
 
 function App() {
   const location = useLocation();
@@ -50,55 +51,67 @@ function App() {
         <ValidationProvider>
           <Routes>
             <Route exact path="/" element={<Home />} />
+            
+            {/* Rutas para redirigir a 404 si se intenta acceder directamente a los layouts */}
+            <Route path="/admin" element={<NotFound />} />
+            <Route path="/auth" element={<NotFound />} />
+            <Route path="/directivo" element={<NotFound />} />
+            <Route path="/especialista" element={<NotFound />} />
 
             <Route path="/auth" element={<AuthLayout />}>
-              <Route path="/auth/signin" element={<SignIn />} />
-              <Route path="/auth/signup" element={<SignUp />} />
-              <Route path="/auth/reset-password" element={<ResetPassword />} />
-              <Route path="/auth/change-pass/:token" element={<CambioPassword />} />
+              <Route path="signin" element={<SignIn />} />
+              <Route path="signup" element={<SignUp />} />
+              <Route path="reset-password" element={<ResetPassword />} />
+              <Route path="change-pass/:token" element={<CambioPassword />} />
             </Route>
 
             <Route path="/admin" element={<AdminLayout />}>
               <Route
-                path="/admin/registro-contrato"
+                path="registro-contrato"
                 element={<GestionRegistro />}
               />
               <Route
-                path="/admin/gestion-direccion-empresarial"
+                path="gestion-direccion-empresarial"
                 element={<GestionDireccion />}
               />
               <Route
-                path="/admin/gestion-entidad"
+                path="gestion-entidad"
                 element={<GestionEntidad />}
               />
-              <Route path="/admin/gestion-usuarios" element={<GestionUser />} />
-              <Route path="/admin/respaldo-datos" element={<GestionDataBase />} />
-              <Route path="/admin/mi-perfil" element={<Perfil />} />
+              <Route path="gestion-usuarios" element={<GestionUser />} />
+              <Route path="respaldo-datos" element={<GestionDataBase />} />
+              <Route path="mi-perfil" element={<Perfil />} />
             </Route>
 
             <Route path="/directivo" element={<DirectivoLayout />}>
               <Route
-                path="/directivo/registro-contrato"
+                path="registro-contrato"
                 element={<GestionRegistro />}
               />
               <Route
-                path="/directivo/gestion-direccion-empresarial"
+                path="gestion-direccion-empresarial"
                 element={<GestionDireccion />}
               />
               <Route
-                path="/directivo/gestion-entidad"
+                path="gestion-entidad"
                 element={<GestionEntidad />}
               />
-              <Route path="/directivo/mi-perfil" element={<Perfil />} />
+              <Route path="mi-perfil" element={<Perfil />} />
             </Route>
 
             <Route path="/especialista" element={<EspecialistaLayout />}>
               <Route
-                path="/especialista/registro-contrato"
+                path="registro-contrato"
                 element={<GestionRegistro />}
               />
-              <Route path="/especialista/mi-perfil" element={<Perfil />} />
+              <Route path="mi-perfil" element={<Perfil />} />
             </Route>
+            {/* Rutas para redirigir a 404 si se intenta acceder directamente a los layouts */}
+            <Route path="/admin" element={<NotFound />} />
+            <Route path="/auth" element={<NotFound />} />
+            <Route path="/directivo" element={<NotFound />} />
+            <Route path="/especialista" element={<NotFound />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </ValidationProvider>
       </AuthProvider>
