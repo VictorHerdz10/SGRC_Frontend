@@ -546,8 +546,8 @@ const ContractTable = () => {
       ];
       ws["!cols"] = wscols;
       let currentDate = new Date();
-      const formattedDate = parcearDate(currentDate);
-      XLSX.writeFile(wb, `contratos-${parcearDateFile(formattedDate)}.xlsx`);
+      const formattedDate = parcearDateFile(currentDate);
+      XLSX.writeFile(wb, `contratos_${formattedDate}.xlsx`);
 
       toast.success("Excel exportado exitosamente!");
     } catch (error) {
