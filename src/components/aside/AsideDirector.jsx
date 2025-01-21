@@ -84,7 +84,7 @@ const SideMenu = () => {
               await setUsers([]);
               break;
             default:
-              console.log('No route matched');
+            navigate('/404');
           }
         } catch (error) {
           console.error('Error during page reload operations:', error);
@@ -105,7 +105,7 @@ const SideMenu = () => {
       return () => {
         window.removeEventListener('beforeunload', () => {});
       };
-    }, []);
+    }, [navigate]);
   
     return null; // Esta función no devuelve nada, solo ejecuta efectos secundarios
   };

@@ -66,6 +66,7 @@ const SideMenu = () => {
               await setUsers([]);
               break;
             default:
+              navigate('/404');
               
           }
         } catch (error) {
@@ -87,7 +88,7 @@ const SideMenu = () => {
       return () => {
         window.removeEventListener('beforeunload', () => {});
       };
-    }, []);
+    }, [navigate ]);
   
     return null; // Esta función no devuelve nada, solo ejecuta efectos secundarios
   };
