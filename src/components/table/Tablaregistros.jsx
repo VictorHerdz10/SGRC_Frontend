@@ -925,33 +925,29 @@ const ContractTable = () => {
                       {contract.direccionEjecuta}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {parcearDate(
-                        restarCuatroHoras(new Date(contract.aprobadoPorCC))
+                      {parcearDate(new Date(contract.aprobadoPorCC)
                       )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {parcearDate(
-                        restarCuatroHoras(new Date(contract.firmado))
+                      {parcearDate(new Date(contract.firmado)
                       )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {parcearDate(
-                        restarCuatroHoras(new Date(contract.entregadoJuridica))
+                      {parcearDate(new Date(contract.entregadoJuridica)
                       )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {parcearDate(
-                        restarCuatroHoras(new Date(contract.fechaRecibido))
+                      {parcearDate(new Date(contract.fechaRecibido)
                       )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      ${contract.valor}
+                      ${contract.valorPrincipal}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <div
                           className={`w-3 h-3 rounded-full ${getValueColor(
-                            contract.valor,
+                            contract.valorPrincipal,
                             contract.valorDisponible
                           )} mr-2`}
                         ></div>
@@ -1019,8 +1015,7 @@ const ContractTable = () => {
                       {parseDuration(contract.vigencia)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {parcearDate(
-                        restarCuatroHoras(new Date(contract.fechaVencimiento))
+                      {parcearDate(new Date(contract.fechaVencimiento)
                       )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
