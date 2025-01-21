@@ -2,7 +2,7 @@ import { Outlet, Navigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import useValidation from "../hooks/useValidation";
 import Cerrar from "../components/modals/CerrarSesion";
-
+import BackupWarning from "../components/others/WarningBackup";
 const RutaProtegida = () => {
   const { auth, cargando } = useAuth();
   const {
@@ -85,6 +85,7 @@ const RutaProtegida = () => {
       {showConfirmModal && (
         <Cerrar/>
       )}
+      <BackupWarning />
     </div>
   );
 };
