@@ -347,6 +347,7 @@ const ContractTable = () => {
   };
   const exportToPDF = (contratos) => {
     toast.info("Esta funcionalidad no esta disponible por el momento");
+    return;
     try {
       const doc = new jsPDF();
 
