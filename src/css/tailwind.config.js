@@ -112,13 +112,41 @@ module.exports = {
       scale: {
         '98': '.98'
       },
-      animation: {
-        float: 'float 3s ease-in-out infinite',
+      animation: {float: 'float 3s ease-in-out infinite',
+        fadeIn: 'fadeIn 1s ease-in-out',
+        slideIn: 'slideIn 0.5s ease-out',
+        bounce: 'bounce 1s infinite',
+        jump: 'jump 0.5s ease-in-out infinite',
+        typing: 'typing 2s steps(20, end), blink-caret 0.75s step-end infinite',
       },
       keyframes: {
         float: {
-          '0%, 100%': { transform: 'translateY(0)', },
-          '50%': { transform: 'translateY(-5%)', },
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-5%)' },
+        },
+        fadeIn: {
+          '0%': { opacity: 0 },
+          '100%': { opacity: 1 },
+        },
+        slideIn: {
+          '0%': { transform: 'translateY(-100%)', opacity: 0 },
+          '100%': { transform: 'translateY(0)', opacity: 1 },
+        },
+        bounce: {
+          '0%, 100%': { transform: 'translateY(-25%)', animationTimingFunction: 'cubic-bezier(0.8,0,1,1)' },
+          '50%': { transform: 'translateY(0)', animationTimingFunction: 'cubic-bezier(0,0,0.2,1)' },
+        },
+        jump: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-20%)' },
+        },
+        typing: {
+          '0%': { width: '0%' },
+          '100%': { width: '36%' },
+        },
+        'blink-caret': {
+          '0%, 100%': { borderColor: 'transparent' },
+          '50%': { borderColor: 'white' },
         },
       },
       zIndex: {
@@ -133,6 +161,7 @@ module.exports = {
     boxShadow: ['responsive', 'hover', 'focus', 'focus-within'],
     opacity: ['responsive', 'hover', 'focus', 'group-hover'],
   },
+  
   plugins: [
     require('@tailwindcss/forms'),
   ],
