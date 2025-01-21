@@ -23,6 +23,7 @@ const BackupComponent = () => {
   const [dropboxPath, setDropboxPath] = useState('');
   const [id, setId] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoading1, setIsLoading1] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [notification, setNotification] = useState({
     show: false,
@@ -76,7 +77,7 @@ const BackupComponent = () => {
   };
 
   const handleLocalBackup = async () => {
-    setIsLoading(true);
+    setIsLoading1(true);
     const token = localStorage.getItem("token");
     const config = {
       headers: {
@@ -92,7 +93,7 @@ const BackupComponent = () => {
     } catch (err) {
       showNotification(err.response.data.msg, "error");
     } finally {
-      setIsLoading(false);
+      setIsLoading1(false);
     }
   };
 
@@ -207,41 +208,6 @@ const BackupComponent = () => {
       formatFileSize(backup.size).toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleUploadBackup = async (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const zip = new JSZip();
-    setIsLoading(true);
-
-    try {
-      const zipContent = await zip.loadAsync(file);
-      const backupData = {};
-
-      for (const fileName of Object.keys(zipContent.files)) {
-        const fileData = await zipContent.files[fileName].async('string');
-        const tableName = fileName.replace('.json', '');
-        backupData[tableName] = JSON.parse(fileData);
-      }
-
-      const token = localStorage.getItem("token");
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
-      const url = "/backup/restore-backup-local";
-      await clienteAxios.post(url, backupData, config);
-      showNotification("Copia de seguridad restaurada con éxito", "success");
-    } catch (err) {
-      showNotification("Error al restaurar la copia de seguridad", "error");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   return (
     <>
       <div className="p-6 max-w-6xl mx-auto">
@@ -270,7 +236,7 @@ const BackupComponent = () => {
   className="relative inline-flex items-center px-8 py-4 ml-4 bg-gradient-to-r from-green-500 to-teal-600 text-white font-bold rounded-lg shadow-lg transition-all duration-300 hover:from-green-600 hover:to-teal-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95 sm:ml-4"
   aria-label="Local Backup Now"
 >
-  {isLoading ? (
+  {isLoading1 ? (
     <>
       <CgSpinner className="animate-spin -ml-1 mr-2 h-6 w-6" />
       Procesando...
@@ -282,7 +248,7 @@ const BackupComponent = () => {
     </>
   )}
 </button>
-          <FileUploadInput showNotification={showNotification} setIsLoading={setIsLoading} />
+          <FileUploadInput showNotification={showNotification} />
         </div>
 
         {notification.show && (

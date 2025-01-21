@@ -4,7 +4,7 @@ import useValidation from "../../hooks/useValidation";
 import JSZip from "jszip";
 import clienteAxios from '../../axios/axios';
 
-const FileUploadInput = ({ showNotification, setIsLoading }) => {
+const FileUploadInput = ({ showNotification }) => {
   const { file, setFile } = useValidation();
   const [error, setError] = useState("");
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -48,7 +48,6 @@ const FileUploadInput = ({ showNotification, setIsLoading }) => {
 
   const handleUploadBackup = async () => {
     const zip = new JSZip();
-    setIsLoading(true);
   
     try {
       const zipContent = await zip.loadAsync(file);
@@ -78,9 +77,7 @@ const FileUploadInput = ({ showNotification, setIsLoading }) => {
     } catch (err) {
         console.log(err.response);
       showNotification("Error al restaurar la copia de seguridad", "error");
-    } finally {
-      setIsLoading(false);
-    }
+    } 
   };
 
   return (

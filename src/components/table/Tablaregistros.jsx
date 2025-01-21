@@ -68,6 +68,15 @@ const ContractTable = () => {
   const calculatePageIndex = (page, itemIndex) => {
     return (page - 1) * pageSize + itemIndex;
   };
+  const parcearDateFile = (date) => {
+    const dia = String(date.getDate()).padStart(2, "0");
+    const mes = String(date.getMonth() + 1).padStart(2, "0"); // Aseguramos que el mes tenga dos dígitos
+    const ano = date.getFullYear();
+    const horas = String(date.getHours()).padStart(2, "0");
+    const minutos = String(date.getMinutes()).padStart(2, "0");
+    const segundos = String(date.getSeconds()).padStart(2, "0");
+    return `${dia}${mes}${ano}_${horas}${minutos}${segundos}`;
+  };
 
   const handlePageChange = async (pageNumber) => {
     setLoading(true);
@@ -536,7 +545,9 @@ const ContractTable = () => {
         { wch: 30 }, // Ancho de la columna 16
       ];
       ws["!cols"] = wscols;
-      XLSX.writeFile(wb, "contratos.xlsx");
+      let currentDate = new Date();
+      const formattedDate = parcearDate(currentDate);
+      XLSX.writeFile(wb, `contratos-${parcearDateFile(formattedDate)}.xlsx`);
 
       toast.success("Excel exportado exitosamente!");
     } catch (error) {
