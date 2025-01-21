@@ -20,37 +20,23 @@ const GestionRegistro = () => {
   return (
 <>
 
-<div className="flex">
-  <div className={  isOpen ? "p-4 ml-10 w-64" : "p-4 w-20" }>
-  {auth.tipo_usuario === 'Admin_Gnl' ? <AsideAdmin /> :
-   auth.tipo_usuario === 'director' ? <AsideDirector /> :
-   auth.tipo_usuario === 'especialista' ? <AsideEspecialista /> :
-   ''}</div>
-  <div className="w-full flex flex-col">
-    <div className="w-full p-4 ">
-      <HeaderAdmin/>
+<div className="flex h-screen overflow-hidden">
+      <div className={isOpen ? "w-64" : "w-20"}>
+        {auth.tipo_usuario === 'Admin_Gnl' ? <AsideAdmin /> :
+          auth.tipo_usuario === 'director' ? <AsideDirector /> :
+            auth.tipo_usuario === 'especialista' ? <AsideEspecialista /> :
+              ''}
+      </div>
+      <div className="flex flex-col flex-1 min-w-0">
+        <div className="sticky top-0 w-full p-4 bg-white dark:bg-gray-900 bg-opacity-10 z-10 mb-10">
+          <HeaderAdmin />
+        </div>
+        <div className="flex-1 p-6 bg-white dark:bg-gray-900 overflow-y-auto space-y-6">
+          <FormularioContrato />
+          <ContractTable />
+        </div>
+      </div>
     </div>
-    
-    <div className="w-full p-6 ml-0 mt-20 col-span-10 bg-white dark:bg-gray-900 overflow-y-auto">
-      <FormularioContrato/>
-  
-    </div>
-    
-    
-  </div>
-</div>
-<div  className="flex">
-  <div className={  isOpen ? "p-20 ml-20 w-64" :
-  "p-9 w-20" }>
-    </div>
-    <div className="w-full flex flex-col">
-    
-    <div className="w-full p-6 ml-0 mt-20 col-span-10 bg-white dark:bg-gray-900 overflow-y-auto">
-      <ContractTable/>
-  </div>
-    </div>
-  </div>
-
      </>   
     
   );
