@@ -65,7 +65,7 @@ const GestionUser = () => {
     </div>
     {mostrarModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="relative w-full max-w-md p-6 bg-white rounded-lg shadow-xl animate-fadeIn">
+            <div className="relative w-full max-w-md p-6 bg-white rounded-lg shadow-xl animate-slideIn">
               <button
                 onClick={() => {setMostrarModal(false)
                     setAccesToken("");
