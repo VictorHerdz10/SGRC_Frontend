@@ -78,4 +78,4 @@ Asegúrate de configurar las variables de entorno en un archivo .env en la raíz
 VITE_BACKEND_URL=http://localhost:4000
 ```
 ## Autores
-- [Juan Carlos](https://github.com/VictorHerdz10)
+- [Victor Hernández](https://github.com/VictorHerdz10)
