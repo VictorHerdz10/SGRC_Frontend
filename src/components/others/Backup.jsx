@@ -215,7 +215,7 @@ const BackupComponent = () => {
         <button
   onClick={handleBackup}
   disabled={isLoading}
-  className="relative inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold rounded-lg shadow-lg transition-all duration-300 hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95 mb-4 sm:mb-0"
+  className="relative inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold rounded-lg shadow-lg transition-all duration-300 hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95 mb-4 sm:mb-4 md:mb-0 md:mr-4 lg:mr-4"
   aria-label="Backup Now"
 >
   {isLoading ? (
@@ -233,7 +233,7 @@ const BackupComponent = () => {
 <button
   onClick={handleLocalBackup}
   disabled={isLoading}
-  className="relative inline-flex items-center px-8 py-4 ml-4 bg-gradient-to-r from-green-500 to-teal-600 text-white font-bold rounded-lg shadow-lg transition-all duration-300 hover:from-green-600 hover:to-teal-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95 sm:ml-4"
+  className="relative inline-flex items-center px-8 py-4 bg-gradient-to-r from-green-500 to-teal-600 text-white font-bold rounded-lg shadow-lg transition-all duration-300 hover:from-green-600 hover:to-teal-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95 mb-4 sm:mb-4 md:mb-0 lg:ml-4"
   aria-label="Local Backup Now"
 >
   {isLoading1 ? (
@@ -364,7 +364,7 @@ const BackupComponent = () => {
       </div>
       {showEliminarModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="relative w-full max-w-md p-6 bg-white rounded-lg shadow-xl animate-fadeIn">
+          <div className="relative w-full max-w-md p-6 bg-white rounded-lg shadow-xl animate-slideIn">
             <button
               onClick={() => {
                 setId('');
@@ -401,7 +401,7 @@ const BackupComponent = () => {
       )}
       {showRestoreModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="relative w-full max-w-md p-6 bg-white rounded-lg shadow-xl animate-fadeIn">
+          <div className="relative w-full max-w-md p-6 bg-white rounded-lg shadow-xl animate-slideIn">
             <button
               onClick={() => {
                 setDropboxPath('');

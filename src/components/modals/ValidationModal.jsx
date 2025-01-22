@@ -41,7 +41,7 @@ const ValidationModal = () =>{
       <>
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <form noValidate onSubmit={handleSubmitValidate}>
-      <div className="relative w-full max-w-md p-6 bg-white rounded-lg shadow-xl animate-fadeIn">
+      <div className="relative w-full max-w-md p-6 bg-white rounded-lg shadow-xl animate-slideIn">
         
         <h2 className="text-xl font-bold mb-4">Enter Verification Code</h2>
         <p className="text-gray-600 mb-4">Please enter the 8-digit code sent to your email</p>

@@ -3,30 +3,26 @@ import AsideAdmin from "../components/aside/AsideAdmin";
 import HeaderAdmin from '../partials/headers/HeaderAuth';
 import useValidation from "../hooks/useValidation";
 
-const GestionDataBase = ()=>{
+const GestionDataBase = () => {
+  const { isOpen } = useValidation();
 
-    const{isOpen}=useValidation();
-
-
-    return (
+  return (
     <>
-  <div className="flex">
-    <div className={  isOpen ? "p-4 ml-10 w-64" : "p-4 w-20" }>
-      <AsideAdmin/>
-    </div>
-    <div className="w-full flex flex-col">
-      <div className={`w-full p-4 `} >
-        <HeaderAdmin/>
+      <div className="flex h-screen overflow-hidden">
+        <div className={isOpen ? "w-64" : "w-20"}>
+          <AsideAdmin />
+        </div>
+        <div className="flex flex-col flex-1 min-w-0">
+          <div className="sticky top-0 w-full p-4 bg-white dark:bg-gray-900 bg-opacity-10 z-10">
+            <HeaderAdmin />
+          </div>
+          <div className="flex-1 p-6 bg-white dark:bg-gray-900 overflow-y-auto">
+            <BackupComponent />
+          </div>
+        </div>
       </div>
-      
-      <div className={`w-full p-6  ml-0 mt-20 col-span-10 bg-white dark:bg-gray-900 overflow-y-auto`}>
-        <BackupComponent/>
-       
-      </div>
-      
-    </div>
-  </div>
-         
-    </>);
-}
+    </>
+  );
+};
+
 export default GestionDataBase;

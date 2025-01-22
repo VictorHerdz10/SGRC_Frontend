@@ -22,7 +22,7 @@ const {
   if(cargando) return 'cargando...';
  
   return (
-    <div>
+    <div className="min-w-screen-md">
       
         
        {auth?._id ? <Outlet/>:<Navigate to="/auth/signin"/>}

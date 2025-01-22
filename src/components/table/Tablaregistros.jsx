@@ -664,7 +664,7 @@ const ContractTable = () => {
   const Modal = () => {
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-white p-8 rounded-lg max-w-md w-full">
+        <div className="bg-white p-8 rounded-lg max-w-md w-full animate-slideIn">
           <h2 className="text-2xl font-bold mb-4">
             {modalType === "view" && "Detalles de la Factura"}
             {modalType === "delete" && "Eliminar Factura"}
