@@ -112,7 +112,7 @@ const HeaderAuth = () => {
               >
                 {" "}
                 <h2 className="bg-clip-text h3 text-transparent bg-gradient-to-r from-blue-500 to-teal-400">
-                  DGS
+                  SGC
                 </h2>
               </Link>
             </div>

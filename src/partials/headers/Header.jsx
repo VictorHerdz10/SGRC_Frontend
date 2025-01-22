@@ -39,7 +39,7 @@ function Header() {
           <div className="flex-shrink-0 flex items-center">
           <div className="flex-shrink-0 mr-4">
             {/* Logo */}
-            <Link to="/" className="block" aria-label="Cruip">
+            <Link to="/" className="block" aria-label="Cruip" onClick={()=>window.scroll({top:'0',behavior:"smooth"})}>
               <svg className="w-8 h-8" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                   <radialGradient cx="21.152%" cy="86.063%" fx="21.152%" fy="86.063%" r="79.941%" id="header-logo">
@@ -55,7 +55,7 @@ function Header() {
             
           </div>
            <Link to="/"  className="text-lg font-bold text-gray-800 transition duration-300 ease-in-out hover:text-gray 
-           900"> <h2 className="bg-clip-text h3 text-transparent bg-gradient-to-r from-blue-500 to-teal-400">DGS</h2></Link>
+           900"> <h2 className="bg-clip-text h3 text-transparent bg-gradient-to-r from-blue-500 to-teal-400">SGC</h2></Link>
          
           </div>
           {/* Site navigation */}

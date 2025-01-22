@@ -175,7 +175,7 @@ const SignUp = () => {
                         <span className="text-red-600">*</span>
                       </label>
                       <input
-                        id="password"
+                        id="repetirpassword"
                         type="password"
                         className="form-input w-full text-gray-800"
                         placeholder="Repita su contraseña"
