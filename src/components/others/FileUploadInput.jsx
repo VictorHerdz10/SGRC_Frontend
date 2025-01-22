@@ -48,17 +48,17 @@ const FileUploadInput = ({ showNotification }) => {
 
   const handleUploadBackup = async () => {
     const zip = new JSZip();
-  
+
     try {
       const zipContent = await zip.loadAsync(file);
       const backupData = {};
-  
+
       for (const fileName of Object.keys(zipContent.files)) {
         const fileData = await zipContent.files[fileName].async('string');
         const tableName = fileName.replace('.json', '');
         backupData[tableName] = JSON.parse(fileData);
       }
-  
+
       const token = localStorage.getItem("token");
       const config = {
         headers: {
@@ -66,25 +66,30 @@ const FileUploadInput = ({ showNotification }) => {
           Authorization: `Bearer ${token}`,
         },
       };
-       console.log(backupData);
       const url = "/backup/restaurar-backup-local";
       await clienteAxios.post(url, backupData, config);
       showNotification("Copia de seguridad restaurada con éxito", "success");
-  
+
       // Limpiar el input de archivo
       setFile(null);
       setUploadProgress(0);
     } catch (err) {
-        console.log(err.response);
+      console.log(err.response);
       showNotification("Error al restaurar la copia de seguridad", "error");
-    } 
+    }
+  };
+
+  const handleCancelUpload = () => {
+    setFile(null);
+    setUploadProgress(0);
+    setError("");
   };
 
   return (
     <div className="w-full max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
       <div>
         <label htmlFor="file-upload" className="block mb-2 font-medium text-gray-700">
-          Elige un archivo
+          Elige un archivo zip
         </label>
         <div className="relative">
           <input
@@ -113,16 +118,32 @@ const FileUploadInput = ({ showNotification }) => {
           ></div>
         </div>
       )}
-      {uploadProgress === 100 && (
+      {file && uploadProgress === 100 && (
         <>
           <p className="text-sm text-green-600">¡Archivo cargado exitosamente!</p>
-          <button
-            onClick={handleUploadBackup}
-            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Restaurar copia de seguridad
-          </button>
+          <div className="flex justify-between mt-4">
+            <button
+              onClick={handleUploadBackup}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Restaurar
+            </button>
+            <button
+              onClick={handleCancelUpload}
+              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+            >
+              Cancelar
+            </button>
+          </div>
         </>
+      )}
+      {file && uploadProgress < 100 && (
+        <button
+          onClick={handleCancelUpload}
+          className="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+        >
+          Cancelar
+        </button>
       )}
     </div>
   );
