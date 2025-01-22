@@ -418,13 +418,22 @@ const ContractTable = () => {
       XLSX.utils.book_append_sheet(wb, ws, "Contratos");
 
       // Título del documento
-      const title = `REGISTROS DE CONTRATOS DE LA DIRECCIÓN GENERAL DE SERCIVIOS DE LA UNIVERCIDAD DE CIENCIAS INFORMÁTICAS`;
-      XLSX.utils.sheet_add_aoa(ws, [[title]], { origin: "G1" }); // Centrar el título en la columna G
+      const title = `REGISTROS DE CONTRATOS`;
+      XLSX.utils.sheet_add_aoa(ws, [[title]], { origin: "E1" }); // Centrar el título en la columna G
       ws["!merges"] = [{ s: { r: 0, c: 4 }, e: { r: 0, c: 8 } }]; // Combinar celdas para el título
 
       // Filtrar y transformar los datos
       const filteredContratos = contratos.map((contrato, index) => {
-        const { _id, info, subirPDF, __v, factura, ...rest } = contrato;
+        const {
+          _id,
+          info,
+          subirPDF,
+          __v,
+          factura,
+          dropboxPath,
+          originalName,
+          ...rest
+        } = contrato;
 
         // Convertir los encabezados a mayúsculas y agregar índice
         const transformedContrato = {
@@ -936,20 +945,16 @@ const ContractTable = () => {
                       {contract.direccionEjecuta}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {parcearDate(new Date(contract.aprobadoPorCC)
-                      )}
+                      {parcearDate(new Date(contract.aprobadoPorCC))}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {parcearDate(new Date(contract.firmado)
-                      )}
+                      {parcearDate(new Date(contract.firmado))}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {parcearDate(new Date(contract.entregadoJuridica)
-                      )}
+                      {parcearDate(new Date(contract.entregadoJuridica))}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {parcearDate(new Date(contract.fechaRecibido)
-                      )}
+                      {parcearDate(new Date(contract.fechaRecibido))}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       ${contract.valorPrincipal}
@@ -1026,8 +1031,7 @@ const ContractTable = () => {
                       {parseDuration(contract.vigencia)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {parcearDate(new Date(contract.fechaVencimiento)
-                      )}
+                      {parcearDate(new Date(contract.fechaVencimiento))}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       {contract.estado}
@@ -1046,7 +1050,6 @@ const ContractTable = () => {
                         <FaPencilAlt
                           className="text-blue-500  cursor-pointer"
                           onClick={() => {
-                            window.scrollTo({ top: 0, behavior: "smooth" });
                             setShowForm(true);
                             setSelectContrato(contract);
                             setIsEditing(true);
@@ -1089,7 +1092,7 @@ const ContractTable = () => {
           {showModalUpdate && (
             <>
               <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                <div className="relative w-full max-w-md p-6 bg-white rounded-lg shadow-xl animate-fadeIn">
+                <div className="relative w-full max-w-md p-6 bg-white rounded-lg shadow-xl animate-slideIn">
                   <button
                     onClick={() => {
                       setShowModalUpdate(false);
@@ -1192,7 +1195,7 @@ const ContractTable = () => {
           {showModalCreate && (
             <>
               <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                <div className="relative w-full max-w-md p-6 bg-white rounded-lg shadow-xl animate-fadeIn">
+                <div className="relative w-full max-w-md p-6 bg-white rounded-lg shadow-xl animate-slideIn">
                   <button
                     onClick={() => {
                       setShowModalCreate(false);
@@ -1292,7 +1295,7 @@ const ContractTable = () => {
           )}
           {showEliminarModal && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-              <div className="relative w-full max-w-md p-6 bg-white rounded-lg shadow-xl animate-fadeIn">
+              <div className="relative w-full max-w-md p-6 bg-white rounded-lg shadow-xl animate-slideIn">
                 <button
                   onClick={() => setShowEliminarModal(false)}
                   className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors"
