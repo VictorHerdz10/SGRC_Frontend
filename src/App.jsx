@@ -26,6 +26,7 @@ import EspecialistaLayout from "./layout/EspecialistaLayout";
 import GestionDataBase from "./pages/GestionDataBase";
 import ThemeToggle from "./components/others/ThemeToggle";
 import NotFound from "./pages/404";
+import GestionTrazas from "./pages/GestionTrazas";
 
 function App() {
   const location = useLocation();
@@ -66,6 +67,7 @@ function App() {
             </Route>
 
             <Route path="/admin" element={<AdminLayout />}>
+            <Route path="gestion-trazas" element={<GestionTrazas />} />
               <Route
                 path="registro-contrato"
                 element={<GestionRegistro />}

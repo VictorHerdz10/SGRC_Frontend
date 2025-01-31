@@ -21,6 +21,7 @@ const ValidationProvider = ({ children }) => {
   const [backupHistory, setBackupHistory] = useState([]);
   const [notifications, setNotifications] = useState([]);
   const [users, setUsers] = useState([]);
+  const[trazas,setTrazas]=useState([]);
   // 1. Obtener la hora actual
   function obtenerHoraActual() {
     return new Date();
@@ -207,7 +208,7 @@ const ValidationProvider = ({ children }) => {
       try {
         const url = "/entidad/obtener-entidades";
         const response = await clienteAxios(url, config);
-        await setEntidades(response.data);
+        setEntidades(response.data);
       } catch (error) {}
     }
   };
@@ -242,6 +243,23 @@ const ValidationProvider = ({ children }) => {
         const response = await clienteAxios(url, config);
         const { data } = response;
         setBackupHistory(data);
+      } catch (error) {}
+    }
+  };
+  const obtenerTrazas = async () => {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    if (token && auth) {
+      try {
+        const url = "/trazas";
+        const response = await clienteAxios(url, config);
+        const { data } = response;
+        setTrazas(data);
       } catch (error) {}
     }
   };
@@ -293,7 +311,10 @@ const ValidationProvider = ({ children }) => {
         obtenerUsuarios,
         users,
         setUsers,
-        setPerfil
+        setPerfil,
+        obtenerTrazas,
+        setTrazas,
+        trazas
       }}
     >
       {children}

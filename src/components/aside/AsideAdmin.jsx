@@ -5,6 +5,7 @@ import {
   FaBuilding,
   FaIndustry,
   FaDatabase,
+  FaListAlt
 } from "react-icons/fa";
 import { RiDashboardFill, RiLogoutBoxRLine } from "react-icons/ri";
 import { BsFileEarmarkText } from "react-icons/bs";
@@ -28,6 +29,8 @@ const SideMenu = () => {
     obtenerNotificaciones,
     setUsers,
     setPerfil,
+    obtenerTrazas,
+    setTrazas
   } = useValidation();
   const [activeItem, setActiveItem] = useState("dashboard");
   const menuRef = useRef(null);
@@ -58,6 +61,7 @@ const SideMenu = () => {
               await obtenerPerfil();
               await setBackupHistory([]);
               await setUsers([]);
+              await setTrazas([]);
               break;
             case "/admin/gestion-direccion-empresarial":
               await obtenerDirecciones();
@@ -67,6 +71,7 @@ const SideMenu = () => {
               await setContratos([]);
               await setBackupHistory([]);
               await setUsers([]);
+              await setTrazas([]);
               break;
             case "/admin/gestion-entidad":
               await obtenerEntidades();
@@ -76,6 +81,7 @@ const SideMenu = () => {
               await setContratos([]);
               await setBackupHistory([]);
               await setUsers([]);
+              await setTrazas([]);
               break;
             case "/admin/gestion-usuarios":
               await obtenerUsuarios();
@@ -85,6 +91,7 @@ const SideMenu = () => {
               await setEntidades([]);
               await setContratos([]);
               await setBackupHistory([]);
+              await setTrazas([])
               break;
             case "/admin/respaldo-datos":
               await obtenerBackup();
@@ -94,10 +101,22 @@ const SideMenu = () => {
               await setEntidades([]);
               await setContratos([]);
               await setUsers([]);
+              await setTrazas([]);
               break;
             case "/admin/mi-perfil":
               await obtenerPerfil();
               await obtenerNotificaciones();
+              await setDirecciones([]);
+              await setEntidades([]);
+              await setContratos([]);
+              await setBackupHistory([]);
+              await setUsers([]);
+              await setTrazas([]);
+              break;
+              case "/admin/gestion-trazas":
+              await obtenerPerfil();
+              await obtenerNotificaciones();
+              await obtenerTrazas();
               await setDirecciones([]);
               await setEntidades([]);
               await setContratos([]);
@@ -154,6 +173,12 @@ const SideMenu = () => {
       label: "Gestión de Usuarios",
       icon: <FaUsersCog className="text-xl" />,
       path: "/admin/gestion-usuarios",
+    },
+    {
+      id: "trazas",
+      label: "Gestión de Trazas",
+      icon: <FaListAlt className="text-xl" />, // Ícono para la gestión de trazas
+      path: "/admin/gestion-trazas", // Ruta para la gestión de trazas
     },
     {
       id: "backup",
