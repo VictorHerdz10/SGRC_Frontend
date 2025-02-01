@@ -354,57 +354,162 @@ const ContractTable = () => {
       toast.error(error.response.data.msg);
     }
   };
-  const exportToPDF = (contratos) => {
-    toast.info("Esta funcionalidad no esta disponible por el momento");
-    return;
-    try {
-      const doc = new jsPDF();
+// Función para parcear la vigencia
+const parcearVigencia = (vigencia) => {
+  if (typeof vigencia !== "string") return vigencia;
 
-      // Asegurarnos de que contratos esté definido
-      if (!contratos || contratos.length === 0) {
-        throw new Error("No se encontraron contratos para exportar");
-      }
+  let newValue = vigencia;
 
-      // Título del documento
-      const title = `Registros de Contratos de la Dirección Ejecutiva `;
-      doc.setFontSize(16);
-      doc.text(title, 20, 20);
+  if (vigencia.toLowerCase().includes("months")) {
+    newValue = vigencia.replace("months", "meses");
+  } else if (vigencia.toLowerCase().includes("years")) {
+    newValue = vigencia.replace("years", "años");
+  } else if (vigencia.toLowerCase().includes("month")) {
+    newValue = vigencia.replace("month", "mes");
+  } else if (vigencia.toLowerCase().includes("year")) {
+    newValue = vigencia.replace("year", "año");
+  }
 
-      // Obtener las columnas y filas
-      const tableColumn = Object.keys(contratos[0] || {});
-      const tableRows = contratos.map((row) => Object.values(row || {}));
+  // Verificar singular/plural
+  if (vigencia.startsWith("1 ")) {
+    newValue = newValue.replace("meses", "mes").replace("años", "año");
+  }
 
-      // Crear la tabla en el documento
-      doc.autoTable({
-        startY: 30, // Espacio después del título
-        head: [tableColumn],
-        body: tableRows,
-        styles: {
-          fontSize: 10,
-          cellPadding: 3,
-          halign: "center",
-          valign: "middle",
-        },
-        headStyles: {
-          fillColor: [22, 160, 133],
-          textColor: [255, 255, 255],
-          fontSize: 12,
-          fontStyle: "bold",
-        },
-        theme: "striped",
-      });
+  return newValue;
+};
 
-      // Guardar el PDF
-      doc.save("contratos.pdf");
+// Función para formatear las facturas con saltos de línea
+const formatearFacturas = (facturas) => {
+  console.log(facturas);
+    if (!facturas || !Array.isArray(facturas)) return "N/A";
 
-      toast.success("PDF exportado exitosamente!");
-    } catch (error) {
-      console.error("Error al exportar PDF:", error);
-      toast.error(
-        "Ocurrió un error al exportar PDF. Por favor, inténtelo nuevamente."
-      );
-    }
-  };
+  return facturas
+    .map((f) => `${f.numeroDictamen || "N/A"}: $${f.monto || "0"}`)
+    .join("\n"); // Usar saltos de línea para separar las facturas
+};
+
+const exportToPDF = (contratos) => {
+  try {
+    // Crear el documento en formato horizontal (landscape)
+    const doc = new jsPDF({
+      orientation: "landscape",
+      unit: "mm",
+      format: "a4",
+    });
+
+    // Título del documento
+    const title = "Registros de Contratos de la Dirección General de Servicios";
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const textWidth =
+      (doc.getStringUnitWidth(title) * doc.internal.getFontSize()) /
+      doc.internal.scaleFactor;
+    const textOffset = (pageWidth - textWidth) / 2;
+    doc.text(title, textOffset, 10);
+    doc.setFont("helvetica", "normal");
+
+    // Definir las columnas de la tabla
+    const tableColumn = [
+      "No.",
+      "Tipo de Contrato",
+      "Objeto del Contrato",
+      "Entidad",
+      "Dirección que lo ejecuta",
+      "Aprobado por el CC",
+      "Firmado",
+      "Entregado al área jurídica",
+      "Fecha Recibido",
+      "Monto",
+      "Monto Disponible",
+      "Monto Gastado",
+      "Facturas",
+      "Vigencia",
+      "Fecha Vencimiento",
+      "Estado",
+      "No. de Dictamen",
+    ];
+
+    // Mapear los datos de los contratos a las filas de la tabla
+    const tableRows = contratos.map((contrato, index) => [
+      index + 1,
+      contrato.tipoDeContrato || "N/A",
+      contrato.objetoDelContrato || "N/A",
+      contrato.entidad || "N/A",
+      contrato.direccionEjecuta || "N/A",
+      parcearDate(contrato.aprobadoPorCC) || "N/A",
+      parcearDate(contrato.firmado) || "N/A",
+      parcearDate(contrato.entregadoJuridica) || "N/A",
+      parcearDate(contrato.fechaRecibido) || "N/A",
+      `$${contrato.valorPrincipal || "0"}`,
+      `$${contrato.valorDisponible || "0"}`,
+      `$${contrato.valorGastado || "0"}`,
+      formatearFacturas(contrato.factura), // Formatear facturas con saltos de línea
+      parcearVigencia(contrato.vigencia), // Parcear vigencia
+      parcearDate(contrato.fechaVencimiento) || "N/A",
+      contrato.estado || "N/A",
+      contrato.numeroDictamen || "N/A",
+    ]);
+
+    // Crear la tabla en el documento
+    doc.autoTable({
+      startY: 15,
+      head: [tableColumn],
+      body: tableRows,
+      styles: {
+        fontSize: 6,
+        cellPadding: 1,
+        halign: "center",
+        valign: "middle",
+      },
+      headStyles: {
+        fillColor: [70, 130, 180], // Color azul acero (Steel Blue)
+        textColor: [255, 255, 255],
+        fontSize: 7,
+        fontStyle: "bold",
+      },
+      theme: "striped",
+      margin: { top: 0, left: 0, right: 0, bottom: 0 },
+      tableWidth: "wrap",
+      columnStyles: {
+        0: { cellWidth: 8 },
+        1: { cellWidth: 30 },
+        2: { cellWidth: 30 },
+        3: { cellWidth: 20 },
+        4: { cellWidth: 20 },
+        5: { cellWidth: 15 },
+        6: { cellWidth: 15 },
+        7: { cellWidth: 15 },
+        8: { cellWidth: 15 },
+        9: { cellWidth: 15 },
+        10: { cellWidth: 15 },
+        11: { cellWidth: 15 },
+        12: { cellWidth: 25 },
+        13: { cellWidth: 15 },
+        14: { cellWidth: 15 },
+        15: { cellWidth: 15 },
+        16: { cellWidth: 15 },
+      },
+      didDrawCell: (data) => {
+        // Ajustar el alto de la celda de facturas si es necesario
+        if (data.column.index === 12 && data.cell.raw.includes("\n")) {
+          const lines = data.cell.raw.split("\n").length;
+          data.row.height = lines * 5; // Ajustar el alto de la fila según el número de líneas
+        }
+      },
+    });let currentDate = new Date();
+    const formattedDate = parcearDateFile(currentDate);
+    // Guardar el PDF
+    doc.save(`contratos${formattedDate}.pdf`);
+
+    toast.success("PDF exportado exitosamente!");
+  } catch (error) {
+    console.error("Error al exportar PDF:", error);
+    toast.error(
+      "Ocurrió un error al exportar PDF. Por favor, inténtelo nuevamente."
+    );
+  }
+};
 
   const exportToExcel = (contratos) => {
     try {
