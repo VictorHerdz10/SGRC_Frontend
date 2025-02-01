@@ -535,7 +535,7 @@ const exportToPDF = (contratos) => {
           subirPDF,
           __v,
           factura,
-          dropboxPath,
+          cloudinaryPublicId,
           originalName,
           ...rest
         } = contrato;

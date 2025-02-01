@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   FiEdit2,
   FiCamera,
@@ -69,6 +69,20 @@ const UserProfile = () => {
   const [imageFile, setImageFile] = useState(null);
   const fileInputRef = useRef(null);
 
+   // Efecto para actualizar userDetails cuando perfil cambie
+   useEffect(() => {
+    if (perfil.nombre && perfil.cargo && perfil.telefono && perfil.foto_perfil) {
+      setUserDetails({
+        name: perfil.nombre,
+        email: perfil.email,
+        position: perfil.cargo,
+        phone: perfil.telefono,
+        role: rolname,
+        profilePicture: perfil.foto_perfil,
+      });
+    }
+  }, [perfil]); // Dependencia: perfil
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     setImageFile(file);
@@ -98,47 +112,44 @@ const UserProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+  
     if (!navigator.onLine) {
-        toast.error(
-          "No hay conexión a internet. No se puede actualizar la imagen de perfil.",
-          {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          }
-        );
+      toast.error(
+        "No hay conexión a internet. No se puede actualizar la imagen de perfil.",
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        }
+      );
+      setIsLoading(false);
+      return;
+    }
+  
+    if (passwords.newPassword !== "" || passwords.confirmPassword !== "") {
+      if (passwords.currentPassword === "") {
         setIsLoading(false);
+        toast.info("Por favor introduzca su contraseña actual");
         return;
       }
-    if(passwords.newPassword!=='' || passwords.confirmPassword!==''){
-        if(passwords.currentPassword===''){
-        setIsLoading(false);
-        toast.info('Por favor introdusca su contraseña actual')
-        return;
-        }
     }
-
-    if( valorInicial.nombre !== userDetails.name &&
-        valorInicial.cargo !== userDetails.position &&
-        valorInicial.telefono !== userDetails.phone &&
-        passwords.currentPassword===''
-    ){
-
-    }
+  
     const errores = validarInput(userDetails.name, "text", "");
     const errores1 = validarInput(userDetails.position, "text", "");
     const errores2 = validarInput(userDetails.phone, "text", "");
     setErrorName(errores || "");
     setErrorCargo(errores1 || "");
     setErrorTelefono(errores2 || "");
+  
     if (errores || errores1 || errores2) {
       setIsLoading(false);
       return;
     }
+  
     if (passwords.currentPassword !== "") {
       const errores4 = validarInput(passwords.newPassword, "password", "");
       const errores5 = validarInput(
@@ -148,108 +159,131 @@ const UserProfile = () => {
       );
       setErrorPasswordNew(errores4 || "");
       setErrorConfirmPAss(errores5 || "");
-
+  
       if (errores4 || errores5) {
         setIsLoading(false);
         return;
       }
     }
-
+  
     // Agregar los valores al FormData
     formData.append("nombre", userDetails.name.trim());
     formData.append("cargo", userDetails.position);
     formData.append("telefono", userDetails.phone);
+  
     if (imageFile) {
       formData.append("foto_perfil", imageFile);
     }
-    if (passwords.currentPassword === '') {
-        // Si la contraseña actual está vacía, solo actualizar el perfil si hay cambios
-        if (
-          perfil.nombre !== userDetails.name ||
-          perfil.cargo !== userDetails.position ||
-          perfil.telefono !== userDetails.phone ||
-          imageFile!==null
-        ) {
-          
-          const token = localStorage.getItem("token");
-          const config = {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              Authorization: `Bearer ${token}`,
-            },
-          };
-          try {
-            const url = `usuario/actualizar-perfil`;
-            const response = await clienteAxios.put(url, formData, config);
-            toast.success(response.data.msg);
-            obtenerPerfil();
-          } catch (error) {
-            toast.error(error.response.data.msg);
-          }
-        }
-      } else {
-        // Si la contraseña actual no está vacía, realizar todas las acciones
-        // Actualizar el perfil si hay cambios
-        if (
-          perfil.nombre !== userDetails.name ||
-          perfil.cargo !== userDetails.position ||
-          perfil.telefono !== userDetails.phone ||
-          imageFile!==null
-        ) {
-          const token = localStorage.getItem("token");
-          const config = {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              Authorization: `Bearer ${token}`,
-            },
-          };
-          try {
-            const url = `usuario/actualizar-perfil`;
-            const response = await clienteAxios.put(url, formData, config);
-            toast.success(response.data.msg);
-            obtenerPerfil();
-
-          } catch (error) {
-            toast.error(error.response.data.msg);
-          }
-        }
-    
-        // Cambiar la contraseña
+  
+    if (passwords.currentPassword === "") {
+      // Si la contraseña actual está vacía, solo actualizar el perfil si hay cambios
+      if (
+        perfil.nombre !== userDetails.name ||
+        perfil.cargo !== userDetails.position ||
+        perfil.telefono !== userDetails.phone ||
+        imageFile !== null
+      ) {
         const token = localStorage.getItem("token");
         const config = {
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
           },
         };
+  
         try {
-          const url = `usuario/cambiar-password`;
-          const response = await clienteAxios.post(
-            url,
-            {
-              password: passwords.currentPassword,
-              newpassword: passwords.newPassword,
-            },
-            config
-          );
+          const url = `usuario/actualizar-perfil`;
+          const response = await clienteAxios.put(url, formData, config);
           toast.success(response.data.msg);
+  
+          // Actualizar userDetails con la respuesta del backend
+          setUserDetails((prev) => ({
+            ...prev,
+            name: response.data.perfil.nombre,
+            position: response.data.perfil.cargo,
+            phone: response.data.perfil.telefono,
+            profilePicture: response.data.perfil.foto_perfil,
+          }));
           obtenerPerfil();
         } catch (error) {
           toast.error(error.response.data.msg);
         }
-      } 
-      setTimeout(() => {
-        setIsLoading(false);
-        setImageFile(null);
-        setPasswords({
-            currentPassword: "",
-            newPassword: "",
-            confirmPassword: "",
-        });
+      }
+    } else {
+      // Si la contraseña actual no está vacía, realizar todas las acciones
+      // Actualizar el perfil si hay cambios
+      if (
+        perfil.nombre !== userDetails.name ||
+        perfil.cargo !== userDetails.position ||
+        perfil.telefono !== userDetails.phone ||
+        imageFile !== null
+      ) {
+        const token = localStorage.getItem("token");
+        const config = {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        };
+  
+        try {
+          const url = `usuario/actualizar-perfil`;
+          const response = await clienteAxios.put(url, formData, config);
+          toast.success(response.data.msg);
+  
+          // Actualizar userDetails con la respuesta del backend
+          setUserDetails((prev) => ({
+            ...prev,
+            name: response.data.perfil.nombre,
+            position: response.data.perfil.cargo,
+            phone: response.data.perfil.telefono,
+            profilePicture: response.data.perfil.foto_perfil,
+          }));
+  
+          obtenerPerfil();
+        } catch (error) {
+          toast.error(error.response.data.msg);
+        }
+      }
+  
+      // Cambiar la contraseña
+      const token = localStorage.getItem("token");
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+  
+      try {
+        const url = `usuario/cambiar-password`;
+        const response = await clienteAxios.post(
+          url,
+          {
+            password: passwords.currentPassword,
+            newpassword: passwords.newPassword,
+          },
+          config
+        );
+        toast.success(response.data.msg);
         obtenerPerfil();
-        setPreviewImage(null);
-        setIsEditing(false);
-      },500);
+      } catch (error) {
+        toast.error(error.response.data.msg);
+      }
+    }
+  
+    setTimeout(() => {
+      setIsLoading(false);
+      setImageFile(null);
+      setPasswords({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
+      obtenerPerfil();
+      setPreviewImage(null);
+      setIsEditing(false);
+    }, 3000);
   };
 
   const togglePasswordVisibility = (field) => {
