@@ -7,7 +7,7 @@ const JsonViewer = ({ json }) => {
           <ul className="list-disc list-inside pl-4">
             {Object.entries(value).map(([key, val]) => (
               <li key={key}>
-                <strong>{key}:</strong> {renderValue(val)}
+                <strong>{key.replace(/_/g, ' ')}:</strong> {renderValue(val)}
               </li>
             ))}
           </ul>
@@ -20,12 +20,11 @@ const JsonViewer = ({ json }) => {
       <div className="space-y-2">
         {Object.entries(json).map(([key, value]) => (
           <div key={key}>
-            <strong className="text-gray-800">{key}:</strong> {renderValue(value)}
+            <strong className="text-gray-800">{key.replace(/_/g, ' ')}:</strong> {renderValue(value)}
           </div>
         ))}
       </div>
     );
   };
-
-
-export default JsonViewer;  
+  
+  export default JsonViewer;  

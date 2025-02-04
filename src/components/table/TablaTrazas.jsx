@@ -11,7 +11,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { IoClose } from "react-icons/io5";
 import useValidation from "../../hooks/useValidation";
 import JsonViewer from "../others/JsonViewer";
-import { formToJSON } from "axios";
 import clienteAxios from "../../axios/axios";
 
 const PanelTrazas = () => {
@@ -21,7 +20,7 @@ const PanelTrazas = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedJson, setSelectedJson] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterField, setFilterField] = useState("all");
+  const [filterField, setFilterField] = useState("nada");
   const itemsPerPage = 10;
 
   const formatDate = (dateString) => {
