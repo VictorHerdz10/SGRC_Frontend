@@ -1,9 +1,18 @@
 import React, { useState } from "react";
-import { FaTrash, FaChevronLeft, FaChevronRight, FaEye, FaSearch } from "react-icons/fa";
+import {
+  FaTrash,
+  FaChevronLeft,
+  FaChevronRight,
+  FaEye,
+  FaSearch,
+} from "react-icons/fa";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { IoClose } from "react-icons/io5";
 import useValidation from "../../hooks/useValidation";
+import JsonViewer from "../others/JsonViewer";
+import { formToJSON } from "axios";
+import clienteAxios from "../../axios/axios";
 
 const PanelTrazas = () => {
   const { trazas, setTrazas, obtenerTrazas } = useValidation();
@@ -26,13 +35,18 @@ const PanelTrazas = () => {
     return `${dia}/${mes}/${ano} ${horas}:${minutos}:${segundos}`;
   };
 
-  const formatJSON = (jsonString) => {
-    if (!jsonString) return "N/A";
+  const formatJSON = (inputString) => {
+    if (!inputString) return "N/A"; // Si el input es nulo o vacío, devuelve "N/A"
+
     try {
-      const parsed = JSON.parse(jsonString);
+      // Intenta parsear el string como JSON
+      const parsed = JSON.parse(inputString);
+
+      // Si el parsing tiene éxito, devuelve el JSON formateado
       return JSON.stringify(parsed, null, 2);
     } catch (e) {
-      return jsonString;
+      // Si falla el parsing, devuelve el string original
+      return inputString;
     }
   };
 
@@ -59,11 +73,21 @@ const PanelTrazas = () => {
 
   const handleDeleteTrazas = async (id) => {
     try {
-      console.log(`Eliminando traza con ID: ${id}`);
+      const token = localStorage.getItem("token");
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const url = `/trazas/${id}`;
+      const response = await clienteAxios.delete(url, config);
       setShowConfirmDelete(false);
-      toast.success("Traza eliminada correctamente");
+      obtenerTrazas();
+      toast.success(response.data.msg);
     } catch (error) {
-      toast.error("Error al eliminar la traza");
+      toast.error(error.response.data.msg);
     }
   };
 
@@ -119,7 +143,9 @@ const PanelTrazas = () => {
               <thead>
                 <tr>
                   <th className="py-2 px-4 border-l border-b border-r">ID</th>
-                  <th className="py-2 px-4 border-l border-b border-r">Entidad</th>
+                  <th className="py-2 px-4 border-l border-b border-r">
+                    Entidad
+                  </th>
                   <th className="py-2 px-4 border-b border-r">ID Entidad</th>
                   <th className="py-2 px-4 border-b border-r">Acción</th>
                   <th className="py-2 px-4 border-b border-r">Valor Antiguo</th>
@@ -136,10 +162,18 @@ const PanelTrazas = () => {
               <tbody>
                 {currentTrazas.map((trazas) => (
                   <tr key={trazas._id}>
-                    <td className="py-2 border-l px-6 border-b border-r">{trazas._id}</td>
-                    <td className="py-2 px-4 border-b border-r">{trazas.entity_name}</td>
-                    <td className="py-2 px-4 border-b border-r">{trazas.entity_id || "N/A"}</td>
-                    <td className="py-2 px-4 border-b border-r">{trazas.action_type}</td>
+                    <td className="py-2 border-l px-6 border-b border-r">
+                      {trazas._id}
+                    </td>
+                    <td className="py-2 px-4 border-b border-r">
+                      {trazas.entity_name}
+                    </td>
+                    <td className="py-2 px-4 border-b border-r">
+                      {trazas.entity_id || "N/A"}
+                    </td>
+                    <td className="py-2 px-4 border-b border-r">
+                      {trazas.action_type}
+                    </td>
                     <td className="py-2 px-4 border-b border-r">
                       {trazas.old_value ? (
                         <button
@@ -166,15 +200,27 @@ const PanelTrazas = () => {
                         "N/A"
                       )}
                     </td>
-                    <td className="py-2 px-4 border-b border-r">{trazas.changed_by}</td>
-                    <td className="py-2 px-4 border-b border-r">{formatDate(trazas.change_date)}</td>
-                    <td className="py-2 px-4 border-b border-r">{trazas.ip_address}</td>
-                    <td className="py-2 px-4 border-b border-r">{trazas.session_id}</td>
-                    <td className="py-2 px-4 border-b border-r">{trazas.transaction_id}</td>
+                    <td className="py-2 px-4 border-b border-r">
+                      {trazas.changed_by}
+                    </td>
+                    <td className="py-2 px-4 border-b border-r">
+                      {formatDate(trazas.change_date)}
+                    </td>
+                    <td className="py-2 px-4 border-b border-r">
+                      {trazas.ip_address}
+                    </td>
+                    <td className="py-2 px-4 border-b border-r">
+                      {trazas.session_id}
+                    </td>
+                    <td className="py-2 px-4 border-b border-r">
+                      {trazas.transaction_id}
+                    </td>
                     <td className="py-2 px-4 border-b border-r">
                       {trazas.metadata ? (
                         <button
-                          onClick={() => setSelectedJson(JSON.stringify(trazas.metadata))}
+                          onClick={() =>
+                            setSelectedJson(JSON.stringify(trazas.metadata))
+                          }
                           className="flex items-center space-x-1 bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600"
                         >
                           <FaEye />
@@ -223,7 +269,9 @@ const PanelTrazas = () => {
               </button>
             ))}
             <button
-              onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(totalPages, prev + 1))
+              }
               disabled={currentPage === totalPages}
               className="px-3 py-1 mx-1 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
             >
@@ -263,7 +311,6 @@ const PanelTrazas = () => {
             </div>
           </div>
         )}
-        {/* Cuadrito flotante para mostrar detalles */}
         {selectedJson && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
             <div className="relative w-full max-w-md p-6 bg-white rounded-lg shadow-xl animate-slideIn">
@@ -275,9 +322,21 @@ const PanelTrazas = () => {
                 <IoClose size={24} />
               </button>
               <h2 className="text-xl font-bold mb-4">Detalles</h2>
-              <pre className="whitespace-pre-wrap bg-gray-100 p-4 rounded">
-                {formatJSON(selectedJson)}
-              </pre>
+              <div className="bg-gray-100 p-4 rounded">
+                {(() => {
+                  const formatted = formatJSON(selectedJson); // Formatea el JSON o devuelve el string
+                  if (
+                    typeof formatted === "string" &&
+                    !formatted.startsWith("{")
+                  ) {
+                    // Si es un string simple (no JSON), lo muestra en negrita
+                    return <p className="font-bold">{formatted}</p>;
+                  } else {
+                    // Si es un JSON válido, lo pasa al JsonViewer
+                    return <JsonViewer json={JSON.parse(formatted)} />;
+                  }
+                })()}
+              </div>
             </div>
           </div>
         )}
