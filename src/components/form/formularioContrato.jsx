@@ -7,7 +7,7 @@ import ConfirmationModal from "../modals/confirmacionModal";
 import useValidation from "../../hooks/useValidation";
 import clienteAxios from "../../axios/axios";
 
-const FormularioContrato = () => {
+const FormularioContrato = ({ tipoContrato }) => {
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [tipoDeContrato, setTipoDeContrato] = useState("");
   const [objetoDelContrato, setObjetoDelContrato] = useState("");
@@ -61,29 +61,47 @@ const FormularioContrato = () => {
     formatDate,
     setIsEditing,
     isEditing,
+    contractTypes,
   } = useValidation();
-
   const loadContractData = (contract) => {
-    const [part1, part2] = contract.vigencia.split(" ");
-    setTipoDeContrato(contract.tipoDeContrato);
-    setObjetoDelContrato(contract.objetoDelContrato);
-    setEntidad(contract.entidad);
-    setDireccionEjecuta(contract.direccionEjecuta);
-    setAprobadoPorCC(formatDate(contract.aprobadoPorCC));
-    setFirmado(formatDate(contract.firmado));
-    setEntregadoJuridica(formatDate(contract.entregadoJuridica));
-    setFechaRecibido(formatDate(contract.fechaRecibido));
-    setValor(contract.valorPrincipal);
-    setVigencia(part1);
-    setEstado(contract.estado);
-    setNumeroDictamen(contract.numeroDictamen);
-    setTimeVigencia(part2);
+    // Verifica si contract existe
+    if (!contract) return;
+
+    // Divide la vigencia si existe
+    const [part1, part2] = contract.vigencia
+      ? contract.vigencia.split(" ")
+      : [null, null];
+
+    // Setea los valores solo si existen en contract
+    if (contract.tipoDeContrato !== undefined)
+      setTipoDeContrato(contract.tipoDeContrato);
+    if (contract.objetoDelContrato !== undefined)
+      setObjetoDelContrato(contract.objetoDelContrato);
+    if (contract.entidad !== undefined) setEntidad(contract.entidad);
+    if (contract.direccionEjecuta !== undefined)
+      setDireccionEjecuta(contract.direccionEjecuta);
+    if (contract.aprobadoPorCC !== undefined)
+      setAprobadoPorCC(formatDate(contract.aprobadoPorCC));
+    if (contract.firmado !== undefined)
+      setFirmado(formatDate(contract.firmado));
+    if (contract.entregadoJuridica !== undefined)
+      setEntregadoJuridica(formatDate(contract.entregadoJuridica));
+    if (contract.fechaRecibido !== undefined)
+      setFechaRecibido(formatDate(contract.fechaRecibido));
+    if (contract.valorPrincipal !== undefined)
+      setValor(contract.valorPrincipal);
+    if (part1 !== null) setVigencia(part1);
+    if (contract.estado !== undefined) setEstado(contract.estado);
+    if (contract.numeroDictamen !== undefined)
+      setNumeroDictamen(contract.numeroDictamen);
+    if (part2 !== null) setTimeVigencia(part2);
   };
   useEffect(() => {
+    setTipoDeContrato(tipoContrato);
     if (showForm && isEditing) {
       loadContractData(selectContrato);
     }
-  }, [selectContrato]);
+  }, [selectContrato, tipoContrato]);
   const showModalForConfirmation = () => {
     setShowConfirmationModal(true);
   };
@@ -93,18 +111,23 @@ const FormularioContrato = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    errores = validarInput(tipoDeContrato, "text", "");
-    errores1 = validarInput(objetoDelContrato, "text", "");
-    errores2 = validarInput(entidad, "text", "");
-    errores3 = validarInput(direccionEjecuta, "text", "");
-    errores4 = validarInput(aprobadoPorCC, "date", "");
-    errores5 = validarInput(firmado, "date", "");
-    errores6 = validarInput(entregadoJuridica, "date", "");
-    errores7 = validarInput(fechaRecibido, "date", "");
-    errores8 = validarInput(valor, "number", "");
-    errores9 = validarInput(vigencia, "number", "");
-    errores10 = validarInput(estado, "text", "");
-    errores11 = validarInput(numeroDictamen, "text", "");
+    e.stopPropagation();
+  
+    // Validar cada campo solo si existe
+    const errores = tipoDeContrato !== undefined && tipoDeContrato !== null ? validarInput(tipoDeContrato, "text", "") : "";
+    const errores1 = objetoDelContrato !== undefined && objetoDelContrato !== null ? validarInput(objetoDelContrato, "text", "") : "";
+    const errores2 = entidad !== undefined && entidad !== null ? validarInput(entidad, "text", "") : "";
+    const errores3 = direccionEjecuta !== undefined && direccionEjecuta !== null ? validarInput(direccionEjecuta, "text", "") : "";
+    const errores4 = aprobadoPorCC !== undefined && aprobadoPorCC !== null ? validarInput(aprobadoPorCC, "date", "") : "";
+    const errores5 = firmado !== undefined && firmado !== null ? validarInput(firmado, "date", "") : "";
+    const errores6 = entregadoJuridica !== undefined && entregadoJuridica !== null ? validarInput(entregadoJuridica, "date", "") : "";
+    const errores7 = fechaRecibido !== undefined && fechaRecibido !== null ? validarInput(fechaRecibido, "date", "") : "";
+    const errores8 = valor !== undefined && valor !== null ? validarInput(valor, "number", "") : "";
+    const errores9 = vigencia !== undefined && vigencia !== null ? validarInput(vigencia, "number", "") : "";
+    const errores10 = estado !== undefined && estado !== null ? validarInput(estado, "text", "") : "";
+    const errores11 = numeroDictamen !== undefined && numeroDictamen !== null ? validarInput(numeroDictamen, "text", "") : "";
+  
+    // Asignar errores a los estados correspondientes
     setErrorTipoDeContrato(errores || "");
     setErrorObjetoDelContrato(errores1 || "");
     setErrorEntidad(errores2 || "");
@@ -117,44 +140,104 @@ const FormularioContrato = () => {
     setErrorVigencia(errores9 || "");
     setErrorEstado(errores10 || "");
     setErrorNumeroDictamen(errores11 || "");
+  
+    // Validar el campo de tiempo de vigencia
     if (timeVigencia === "") {
       setErrorTimeVigencia("El campo tiempo de vigencia es requerido");
     } else {
       setErrorTimeVigencia("");
     }
-
-    if (
-      errores !== "" &&
-      errores1 !== "" &&
-      errores2 !== "" &&
-      errores3 !== "" &&
-      errores4 !== "" &&
-      errores5 !== "" &&
-      errores6 !== "" &&
-      errores7 !== "" &&
-      errores8 !== "" &&
-      errores9 !== "" &&
-      errores10 !== "" &&
-      errores11 !== ""
-    ) {
+  
+    // Verificar si hay errores en los campos requeridos
+    const camposRequeridos = contractTypes.find(ct => ct.nombre === tipoContrato)?.camposRequeridos || [];
+  
+    const hayErrores = camposRequeridos.some((campo) => {
+      switch (campo.id) {
+        case "tipoDeContrato":
+          return errores !== "";
+        case "objetoDelContrato":
+          return errores1 !== "";
+        case "entidad":
+          return errores2 !== "";
+        case "direccionEjecuta":
+          return errores3 !== "";
+        case "aprobadorCC":
+          return errores4 !== "";
+        case "firmado":
+          return errores5 !== "";
+        case "entregadoJuridica":
+          return errores6 !== "";
+        case "fechaRecibido":
+          return errores7 !== "";
+        case "monto":
+          return errores8 !== "";
+        case "vigencia":
+          return errores9 !== "";
+        case "estado":
+          return errores10 !== "";
+        case "numeroDictamen":
+          return errores11 !== "";
+        default:
+          return false;
+      }
+    });
+  
+    if (hayErrores) {
+      toast.error("Algunos campos requeridos tienen errores");
       return;
     }
+
     let vigenciaReal = `${vigencia} ${timeVigencia}`;
     const formData = new FormData();
 
-    // Agregar los valores al FormData
-    formData.append("tipoDeContrato", tipoDeContrato.trim());
-    formData.append("objetoDelContrato", objetoDelContrato.trim());
-    formData.append("entidad", entidad);
-    formData.append("direccionEjecuta", direccionEjecuta);
-    formData.append("aprobadoPorCC", aprobadoPorCC);
-    formData.append("firmado", firmado);
-    formData.append("entregadoJuridica", entregadoJuridica);
-    formData.append("fechaRecibido", fechaRecibido);
-    formData.append("valorPrincipal", valor);
-    formData.append("vigencia", vigenciaReal);
-    formData.append("estado", estado);
-    formData.append("numeroDictamen", numeroDictamen.trim());
+    // Agregar los valores al FormData solo si existen
+    if (tipoDeContrato !== undefined && tipoDeContrato !== null) {
+      formData.append("tipoDeContrato", tipoDeContrato.trim());
+    }
+
+    if (objetoDelContrato !== undefined && objetoDelContrato !== null) {
+      formData.append("objetoDelContrato", objetoDelContrato.trim());
+    }
+
+    if (entidad !== undefined && entidad !== null) {
+      formData.append("entidad", entidad);
+    }
+
+    if (direccionEjecuta !== undefined && direccionEjecuta !== null) {
+      formData.append("direccionEjecuta", direccionEjecuta);
+    }
+
+    if (aprobadoPorCC !== undefined && aprobadoPorCC !== null) {
+      formData.append("aprobadoPorCC", aprobadoPorCC);
+    }
+
+    if (firmado !== undefined && firmado !== null) {
+      formData.append("firmado", firmado);
+    }
+
+    if (entregadoJuridica !== undefined && entregadoJuridica !== null) {
+      formData.append("entregadoJuridica", entregadoJuridica);
+    }
+
+    if (fechaRecibido !== undefined && fechaRecibido !== null) {
+      formData.append("fechaRecibido", fechaRecibido);
+    }
+
+    if (valor !== undefined && valor !== null) {
+      formData.append("valorPrincipal", valor);
+    }
+
+    if (vigenciaReal !== undefined && vigenciaReal !== null && vigenciaReal!==' ') {
+      formData.append("vigencia", vigenciaReal);
+    }
+
+    if (estado !== undefined && estado !== null) {
+      formData.append("estado", estado);
+    }
+
+    if (numeroDictamen !== undefined && numeroDictamen !== null) {
+      formData.append("numeroDictamen", numeroDictamen.trim());
+    }
     // Agregar el archivo al FormData
     if (file) {
       formData.append("subirPDF", file);
@@ -172,7 +255,6 @@ const FormularioContrato = () => {
         const response = await clienteAxios.put(url, formData, config);
         toast.success(response.data.msg);
         setTimeout(() => {
-          setTipoDeContrato("");
           setObjetoDelContrato("");
           setEntidad("");
           setDireccionEjecuta("");
@@ -184,7 +266,7 @@ const FormularioContrato = () => {
           setVigencia("");
           setEstado("");
           setNumeroDictamen("");
-          obtenerRegistros();
+          obtenerRegistros(tipoContrato);
           setShowForm(false);
           setFile(null);
           setSelectContrato({});
@@ -197,7 +279,6 @@ const FormularioContrato = () => {
 
           toast.success(response.data.msg);
           setTimeout(() => {
-            setTipoDeContrato("");
             setObjetoDelContrato("");
             setEntidad("");
             setDireccionEjecuta("");
@@ -209,7 +290,7 @@ const FormularioContrato = () => {
             setVigencia("");
             setEstado("");
             setNumeroDictamen("");
-            obtenerRegistros();
+            obtenerRegistros(tipoContrato);
             setShowForm(false);
             setFile(null);
           }, 500);
@@ -233,7 +314,6 @@ const FormularioContrato = () => {
         className="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded mb-4"
         onClick={() => {
           setShowForm(!showForm);
-          setTipoDeContrato("");
           setObjetoDelContrato("");
           setEntidad("");
           setDireccionEjecuta("");
@@ -276,15 +356,15 @@ const FormularioContrato = () => {
                 name="tipo_contrato"
                 placeholder="Tipo de Contrato"
                 value={tipoDeContrato}
-                onChange={(e) => setTipoDeContrato(e.target.value)}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                disabled
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-not-allowed"
               />
               {errorTipoDeContrato && (
                 <span className="text-red-500">{errorTipoDeContrato}</span>
               )}
             </div>
 
-            <div className="mb-4">
+           {contractTypes.find(ct => ct.nombre === tipoContrato)?.camposRequeridos.some(campo => campo.id === 'objetoContrato') && <div className="mb-4">
               <label
                 htmlFor="objeto_contrato"
                 className="block text-gray-700 text-sm font-semibold mb-1"
@@ -303,9 +383,9 @@ const FormularioContrato = () => {
               {errorObjetoDelContrato && (
                 <span className="text-red-500">{errorObjetoDelContrato}</span>
               )}
-            </div>
+            </div>}
 
-            <div className="mb-4">
+            {contractTypes.find(ct => ct.nombre === tipoContrato)?.camposRequeridos.some(campo => campo.id === 'entidad') && <div className="mb-4">
               <label
                 htmlFor="entidad"
                 className="block text-gray-700 text-sm font-semibold mb-1"
@@ -330,9 +410,9 @@ const FormularioContrato = () => {
               {errorEntidad && (
                 <span className="text-red-500">{errorEntidad}</span>
               )}
-            </div>
+            </div>}
 
-            <div className="mb-4">
+{contractTypes.find(ct => ct.nombre === tipoContrato)?.camposRequeridos.some(campo => campo.id === 'direccionEjecutiva') &&   <div className="mb-4">
               <label
                 htmlFor="direccionEjecutiva"
                 className="block text-gray-700 text-sm font-semibold mb-1"
@@ -360,9 +440,9 @@ const FormularioContrato = () => {
               {errorDireccionEjecuta && (
                 <span className="text-red-500">{errorDireccionEjecuta}</span>
               )}
-            </div>
+            </div>}
 
-            <div className="mb-4">
+            {contractTypes.find(ct => ct.nombre === tipoContrato)?.camposRequeridos.some(campo => campo.id === 'aprobadorCC') && <div className="mb-4">
               <label
                 htmlFor="aprovadorCC"
                 className="block text-gray-700 text-sm font-semibold mb-1"
@@ -381,9 +461,9 @@ const FormularioContrato = () => {
               {errorAprobadoPorCC && (
                 <span className="text-red-500">{errorAprobadoPorCC}</span>
               )}
-            </div>
+            </div>}
 
-            <div className="mb-4">
+            {contractTypes.find(ct => ct.nombre === tipoContrato)?.camposRequeridos.some(campo => campo.id === 'fechaFirmada') &&<div className="mb-4">
               <label
                 htmlFor="firmado"
                 className="block text-gray-700 text-sm font-semibold mb-1"
@@ -402,9 +482,9 @@ const FormularioContrato = () => {
               {errorFirmado && (
                 <span className="text-red-500">{errorFirmado}</span>
               )}
-            </div>
+            </div>}
 
-            <div className="mb-4">
+            {contractTypes.find(ct => ct.nombre === tipoContrato)?.camposRequeridos.some(campo => campo.id === 'entregadoJuridica') && <div className="mb-4">
               <label
                 htmlFor="entregadoJuridica"
                 className="block text-gray-700 text-sm font-semibold mb-1"
@@ -423,9 +503,9 @@ const FormularioContrato = () => {
               {errorEntregadoJuridica && (
                 <span className="text-red-500">{errorEntregadoJuridica}</span>
               )}
-            </div>
+            </div>}
 
-            <div className="mb-4">
+           {contractTypes.find(ct => ct.nombre === tipoContrato)?.camposRequeridos.some(campo => campo.id === 'fechaRecibido') && <div className="mb-4">
               <label
                 htmlFor="fechaRecibido"
                 className="block text-gray-700 text-sm font-semibold mb-1"
@@ -444,9 +524,9 @@ const FormularioContrato = () => {
               {errorFechaRecibido && (
                 <span className="text-red-500">{errorFechaRecibido}</span>
               )}
-            </div>
+            </div>}
 
-            <div className="mb-4">
+            {contractTypes.find(ct => ct.nombre === tipoContrato)?.camposRequeridos.some(campo => campo.id === 'monto') && <div className="mb-4">
               <label
                 className="block text-gray-700 text-sm font-bold mb-2"
                 htmlFor="monto"
@@ -463,12 +543,12 @@ const FormularioContrato = () => {
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
               {errorValor && <span className="text-red-500">{errorValor}</span>}
-            </div>
+            </div>}
 
-            <div className="mb-4">
+            {contractTypes.find(ct => ct.nombre === tipoContrato)?.camposRequeridos.some(campo => campo.id === 'vigencia') && <div className="mb-4">
               <label
                 htmlFor="vigencia"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm text-gray-700 font-bold mb-1"
               >
                 Vigencia
               </label>
@@ -497,9 +577,9 @@ const FormularioContrato = () => {
               {errorVigencia && (
                 <span className="text-red-500">{errorVigencia}</span>
               )}
-            </div>
+            </div>}
 
-            <div className="mb-4">
+            {contractTypes.find(ct => ct.nombre === tipoContrato)?.camposRequeridos.some(campo => campo.id === 'estado') && <div className="mb-4">
               <label
                 className="block text-gray-700 text-sm font-bold mb-2"
                 htmlFor="estado"
@@ -522,9 +602,9 @@ const FormularioContrato = () => {
               {errorEstado && (
                 <span className="text-red-500">{errorEstado}</span>
               )}
-            </div>
+            </div>}
 
-            <div className="mb-4">
+            {contractTypes.find(ct => ct.nombre === tipoContrato)?.camposRequeridos.some(campo => campo.id === 'numeroDictamen') && <div className="mb-4">
               <label
                 className="block text-gray-700 text-sm font-bold mb-2"
                 htmlFor="numeroDictamen"
@@ -543,9 +623,9 @@ const FormularioContrato = () => {
               {errorNumeroDictamen && (
                 <span className="text-red-500">{errorNumeroDictamen}</span>
               )}
-            </div>
+            </div>}
 
-            <div className="mb-4">
+            {contractTypes.find(ct => ct.nombre === tipoContrato)?.camposRequeridos.some(campo => campo.id === 'subirPDF') &&<div className="mb-4">
               <label
                 htmlFor="subirPDF"
                 className="block text-gray-700 text-sm font-bold mb-2"
@@ -553,7 +633,7 @@ const FormularioContrato = () => {
                 Subir PDF
               </label>
               <FileUploadInput />
-            </div>
+            </div>}
             <ConfirmationModal
               isOpen={showConfirmationModal}
               onClose={() => hideModalForConfirmation()}

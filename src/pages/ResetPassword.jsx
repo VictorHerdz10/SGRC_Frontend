@@ -65,7 +65,7 @@ const ResetPassword = () => {
                         htmlFor="email"
                       >
                         Correo electronico{" "}
-                        <span className="text-red-600">*</span>
+                        <span className={ email ? 'text-black':`text-red-600`}>*</span>
                       </label>
                       <input
                         id="email"

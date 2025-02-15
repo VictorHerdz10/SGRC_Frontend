@@ -22,6 +22,7 @@ const ValidationProvider = ({ children }) => {
   const [notifications, setNotifications] = useState([]);
   const [users, setUsers] = useState([]);
   const[trazas,setTrazas]=useState([]);
+  const [contractTypes, setContractTypes] = useState([]);
   // 1. Obtener la hora actual
   function obtenerHoraActual() {
     return new Date();
@@ -212,7 +213,7 @@ const ValidationProvider = ({ children }) => {
       } catch (error) {}
     }
   };
-  const obtenerRegistros = async () => {
+  const obtenerRegistros = async (tipoContrato) => {
     const token = localStorage.getItem("token");
     const config = {
       headers: {
@@ -222,11 +223,27 @@ const ValidationProvider = ({ children }) => {
     };
     if (token && auth) {
       try {
-        const url = "contratos/listar-registro-contratos";
+        const url = `contratos/listar-registro-contratos/${tipoContrato}`;
         const response = await clienteAxios(url, config);
         const { data } = response;
         setContratos(data);
       } catch (error) {}
+    }
+  };
+  const obtenerTiposContrato = async () => {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    try {
+      const url = "/tipo-contrato/obtener-tipoContrato";
+      const response = await clienteAxios.get(url, config);
+      setContractTypes(response.data);
+    } catch (error) {
+        toast.error(error.response.data.msg)
     }
   };
   const obtenerBackup = async () => {
@@ -314,7 +331,10 @@ const ValidationProvider = ({ children }) => {
         setPerfil,
         obtenerTrazas,
         setTrazas,
-        trazas
+        trazas,
+        contractTypes,
+        setContractTypes,
+        obtenerTiposContrato
       }}
     >
       {children}

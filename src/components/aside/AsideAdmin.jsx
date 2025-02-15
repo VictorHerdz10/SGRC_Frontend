@@ -5,7 +5,8 @@ import {
   FaBuilding,
   FaIndustry,
   FaDatabase,
-  FaListAlt
+  FaListAlt,
+  FaFileContract
 } from "react-icons/fa";
 import { RiDashboardFill, RiLogoutBoxRLine } from "react-icons/ri";
 import { BsFileEarmarkText } from "react-icons/bs";
@@ -19,7 +20,6 @@ const SideMenu = () => {
     obtenerDirecciones,
     obtenerEntidades,
     obtenerPerfil,
-    obtenerRegistros,
     obtenerBackup,
     obtenerUsuarios,
     setDirecciones,
@@ -30,7 +30,9 @@ const SideMenu = () => {
     setUsers,
     setPerfil,
     obtenerTrazas,
-    setTrazas
+    setTrazas,
+    obtenerTiposContrato,
+    setContractTypes
   } = useValidation();
   const [activeItem, setActiveItem] = useState("dashboard");
   const menuRef = useRef(null);
@@ -54,11 +56,11 @@ const SideMenu = () => {
         try {
           switch (window.location.pathname) {
             case "/admin/registro-contrato":
-              await obtenerRegistros();
               await obtenerDirecciones();
               await obtenerNotificaciones();
               await obtenerEntidades();
               await obtenerPerfil();
+              await obtenerTiposContrato();
               await setBackupHistory([]);
               await setUsers([]);
               await setTrazas([]);
@@ -72,6 +74,7 @@ const SideMenu = () => {
               await setBackupHistory([]);
               await setUsers([]);
               await setTrazas([]);
+              await setContractTypes([]);
               break;
             case "/admin/gestion-entidad":
               await obtenerEntidades();
@@ -82,6 +85,7 @@ const SideMenu = () => {
               await setBackupHistory([]);
               await setUsers([]);
               await setTrazas([]);
+              await setContractTypes([]);
               break;
             case "/admin/gestion-usuarios":
               await obtenerUsuarios();
@@ -91,7 +95,8 @@ const SideMenu = () => {
               await setEntidades([]);
               await setContratos([]);
               await setBackupHistory([]);
-              await setTrazas([])
+              await setTrazas([]);
+              await setContractTypes([]);
               break;
             case "/admin/respaldo-datos":
               await obtenerBackup();
@@ -102,6 +107,7 @@ const SideMenu = () => {
               await setContratos([]);
               await setUsers([]);
               await setTrazas([]);
+              await setContractTypes([]);
               break;
             case "/admin/mi-perfil":
               await obtenerPerfil();
@@ -112,6 +118,7 @@ const SideMenu = () => {
               await setBackupHistory([]);
               await setUsers([]);
               await setTrazas([]);
+              await setContractTypes([]);
               break;
               case "/admin/gestion-trazas":
               await obtenerPerfil();
@@ -122,7 +129,20 @@ const SideMenu = () => {
               await setContratos([]);
               await setBackupHistory([]);
               await setUsers([]);
+              await setContractTypes([]);
               break;
+              case "/admin/gestion-tipo-contrato":
+              await obtenerPerfil();
+              await obtenerNotificaciones();
+              await obtenerTiposContrato();
+              await obtenerTrazas([]);
+              await setDirecciones([]);
+              await setEntidades([]);
+              await setContratos([]);
+              await setBackupHistory([]);
+              await setUsers([]);
+              break;
+
             default:
               navigate('/404');
           }
@@ -155,6 +175,12 @@ const SideMenu = () => {
       label: "Gestión de Registros",
       icon: <BsFileEarmarkText className="text-xl" />,
       path: "/admin/registro-contrato",
+    },
+    {
+      id: "tipo-contrato", // Nuevo ítem para la gestión de tipos de contrato
+      label: "Gestión de Tipo de Contrato",
+      icon: <FaFileContract className="text-xl" />, // Ícono para la gestión de tipos de contrato
+      path: "/admin/gestion-tipo-contrato", // Ruta para la gestión de tipos de contrato
     },
     {
       id: "direccion-empresarial",
@@ -242,7 +268,6 @@ const SideMenu = () => {
       setShowConfirmModal(true);
     }
     if (itemId === "records") {
-      await obtenerRegistros();
       await obtenerDirecciones();
       await obtenerNotificaciones();
       await obtenerEntidades();

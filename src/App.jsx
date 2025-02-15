@@ -27,6 +27,7 @@ import GestionDataBase from "./pages/GestionDataBase";
 import ThemeToggle from "./components/others/ThemeToggle";
 import NotFound from "./pages/404";
 import GestionTrazas from "./pages/GestionTrazas";
+import GestionTipoContrato from "./pages/GestionTipoContrato";
 
 function App() {
   const location = useLocation();
@@ -76,6 +77,10 @@ function App() {
                 path="gestion-direccion-empresarial"
                 element={<GestionDireccion />}
               />
+               <Route
+                path="gestion-tipo-contrato"
+                element={<GestionTipoContrato />}
+              />
               <Route
                 path="gestion-entidad"
                 element={<GestionEntidad />}
@@ -108,11 +113,7 @@ function App() {
               />
               <Route path="mi-perfil" element={<Perfil />} />
             </Route>
-            {/* Rutas para redirigir a 404 si se intenta acceder directamente a los layouts */}
-            <Route path="/admin" element={<NotFound />} />
-            <Route path="/auth" element={<NotFound />} />
-            <Route path="/directivo" element={<NotFound />} />
-            <Route path="/especialista" element={<NotFound />} />
+            
             <Route path="*" element={<NotFound />} />
           </Routes>
         </ValidationProvider>

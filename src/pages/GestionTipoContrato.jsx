@@ -1,14 +1,12 @@
-import React, { useState } from "react";
 import HeaderAdmin from "../partials/headers/HeaderAuth";
 import AsideAdmin from "../components/aside/AsideAdmin";
 import useValidation from "../hooks/useValidation";
 import useAuth from "../hooks/useAuth";
-import AsideDirector from "../components/aside/AsideDirector";
-import PanelDireccion from "../components/table/TablaDireccion";
+import ContractConfigPanel from "../components/others/EditorTipoContrato";
 
-const GestionDireccion = () => {
-  const { auth } = useAuth();
+const GestionTipoContrato = () => {
   const { isOpen } = useValidation();
+  const { auth } = useAuth();
 
   return (
     <>
@@ -26,7 +24,7 @@ const GestionDireccion = () => {
           </div>
 
           <div className="w-full p-10 ml-0 mt-20 col-span-10 bg-white dark:bg-gray-900 overflow-y-auto">
-            <PanelDireccion />
+            <ContractConfigPanel/>
           </div>
         </div>
       </div>
@@ -34,4 +32,4 @@ const GestionDireccion = () => {
   );
 };
 
-export default GestionDireccion;
+export default GestionTipoContrato;

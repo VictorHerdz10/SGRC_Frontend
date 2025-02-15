@@ -107,7 +107,7 @@ const SignUp = () => {
                         className="block text-gray-800 text-sm font-medium mb-1"
                         htmlFor="nombre"
                       >
-                        Nombre <span className="text-red-600">*</span>
+                        Nombre <span className={ nombre ? 'text-black':`text-red-600`}>*</span>
                       </label>
                       <input
                         id="nombre"
@@ -129,7 +129,7 @@ const SignUp = () => {
                         htmlFor="email"
                       >
                         Correo electrónico{" "}
-                        <span className="text-red-600">*</span>
+                        <span className={ email ? 'text-black':`text-red-600`}>*</span>
                       </label>
                       <input
                         id="email"
@@ -150,7 +150,7 @@ const SignUp = () => {
                         className="block text-gray-800 text-sm font-medium mb-1"
                         htmlFor="password"
                       >
-                        Contraseña <span className="text-red-600">*</span>
+                        Contraseña <span className={ password ? 'text-black':`text-red-600`}>*</span>
                       </label>
                       <input
                         id="password"
@@ -172,7 +172,7 @@ const SignUp = () => {
                         htmlFor="repetirpassword"
                       >
                         Repetir contraseña{" "}
-                        <span className="text-red-600">*</span>
+                        <span className={ repetirPassword ? 'text-black':`text-red-600`}>*</span>
                       </label>
                       <input
                         id="repetirpassword"

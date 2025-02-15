@@ -22,7 +22,7 @@ import clienteAxios from "../../axios/axios";
 import useValidation from "../../hooks/useValidation";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
-const ContractTable = () => {
+const ContractTable = ({ tipoContrato }) => {
   const {
     validarInput,
     obtenerRegistros,
@@ -36,6 +36,7 @@ const ContractTable = () => {
     isEditing,
     setIsEditing,
     obtenerNotificaciones,
+    contractTypes,
   } = useValidation();
   let errores, errores2;
   const [totalItems, setTotalItems] = useState(contratos.length);
@@ -234,7 +235,7 @@ const ContractTable = () => {
   };
   const handleFilter = async () => {
     let query = {};
-
+    query.tipoContrato = tipoContrato;
     if (filtarEstado) {
       query.estado = filtarEstado;
     }
@@ -277,7 +278,7 @@ const ContractTable = () => {
       const response = await clienteAxios.delete(url, config);
       toast.success(response.data.msg);
       setShowEliminarModal(false);
-      obtenerRegistros();
+      obtenerRegistros(tipoContrato);
     } catch (error) {
       toast.error(error.response.data.msg);
     }
@@ -296,7 +297,7 @@ const ContractTable = () => {
       const response = await clienteAxios.delete(url, config);
       toast.success(response.data.msg);
       setShowModal(false);
-      obtenerRegistros();
+      obtenerRegistros(tipoContrato);
       obtenerNotificaciones();
       setId("");
     } catch (error) {
@@ -348,168 +349,204 @@ const ContractTable = () => {
       setErrorMonto({});
       setMonto("");
       setNumeroDictamen("");
-      obtenerRegistros();
+      obtenerRegistros(tipoContrato);
       obtenerNotificaciones();
     } catch (error) {
       toast.error(error.response.data.msg);
     }
   };
-// Función para parcear la vigencia
-const parcearVigencia = (vigencia) => {
-  if (typeof vigencia !== "string") return vigencia;
+  // Función para parcear la vigencia
+  const parcearVigencia = (vigencia) => {
+    if (typeof vigencia !== "string") return vigencia;
 
-  let newValue = vigencia;
+    let newValue = vigencia;
 
-  if (vigencia.toLowerCase().includes("months")) {
-    newValue = vigencia.replace("months", "meses");
-  } else if (vigencia.toLowerCase().includes("years")) {
-    newValue = vigencia.replace("years", "años");
-  } else if (vigencia.toLowerCase().includes("month")) {
-    newValue = vigencia.replace("month", "mes");
-  } else if (vigencia.toLowerCase().includes("year")) {
-    newValue = vigencia.replace("year", "año");
-  }
+    if (vigencia.toLowerCase().includes("months")) {
+      newValue = vigencia.replace("months", "meses");
+    } else if (vigencia.toLowerCase().includes("years")) {
+      newValue = vigencia.replace("years", "años");
+    } else if (vigencia.toLowerCase().includes("month")) {
+      newValue = vigencia.replace("month", "mes");
+    } else if (vigencia.toLowerCase().includes("year")) {
+      newValue = vigencia.replace("year", "año");
+    }
 
-  // Verificar singular/plural
-  if (vigencia.startsWith("1 ")) {
-    newValue = newValue.replace("meses", "mes").replace("años", "año");
-  }
+    // Verificar singular/plural
+    if (vigencia.startsWith("1 ")) {
+      newValue = newValue.replace("meses", "mes").replace("años", "año");
+    }
 
-  return newValue;
-};
+    return newValue;
+  };
 
-// Función para formatear las facturas con saltos de línea
-const formatearFacturas = (facturas) => {
-  console.log(facturas);
+  // Función para formatear las facturas con saltos de línea
+  const formatearFacturas = (facturas) => {
     if (!facturas || !Array.isArray(facturas)) return "N/A";
 
-  return facturas
-    .map((f) => `${f.numeroDictamen || "N/A"}: $${f.monto || "0"}`)
-    .join("\n"); // Usar saltos de línea para separar las facturas
-};
+    return facturas
+      .map((f) => `${f.numeroDictamen || "N/A"}: $${f.monto || "0"}`)
+      .join("\n"); // Usar saltos de línea para separar las facturas
+  };
 
-const exportToPDF = (contratos) => {
-  try {
-    // Crear el documento en formato horizontal (landscape)
-    const doc = new jsPDF({
-      orientation: "landscape",
-      unit: "mm",
-      format: "a4",
-    });
+  const exportToPDF = (contratos) => {
+    try {
+      // Verificar si hay menos de 10 contratos
+      const isVertical = contratos.length < 10;
 
-    // Título del documento
-    const title = "Registros de Contratos de la Dirección General de Servicios";
-    doc.setFontSize(12);
-    doc.setFont("helvetica", "bold");
-    const pageWidth = doc.internal.pageSize.getWidth();
-    const textWidth =
-      (doc.getStringUnitWidth(title) * doc.internal.getFontSize()) /
-      doc.internal.scaleFactor;
-    const textOffset = (pageWidth - textWidth) / 2;
-    doc.text(title, textOffset, 10);
-    doc.setFont("helvetica", "normal");
+      // Crear el documento en formato horizontal o vertical según el caso
+      const doc = new jsPDF({
+        orientation: isVertical ? "portrait" : "landscape", // Vertical si hay menos de 10 contratos
+        unit: "mm",
+        format: "a4",
+      });
 
-    // Definir las columnas de la tabla
-    const tableColumn = [
-      "No.",
-      "Tipo de Contrato",
-      "Objeto del Contrato",
-      "Entidad",
-      "Dirección que lo ejecuta",
-      "Aprobado por el CC",
-      "Firmado",
-      "Entregado al área jurídica",
-      "Fecha Recibido",
-      "Monto",
-      "Monto Disponible",
-      "Monto Gastado",
-      "Facturas",
-      "Vigencia",
-      "Fecha Vencimiento",
-      "Estado",
-      "No. de Dictamen",
-    ];
+      // Título del documento
+      const title =
+        "Registros de Contratos de la Dirección General de Servicios";
+      doc.setFontSize(12); // Tamaño de fuente fijo
+      doc.setFont("helvetica", "bold");
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const textWidth =
+        (doc.getStringUnitWidth(title) * doc.internal.getFontSize()) /
+        doc.internal.scaleFactor;
+      const textOffset = (pageWidth - textWidth) / 2;
+      doc.text(title, textOffset, 10);
+      doc.setFont("helvetica", "normal");
 
-    // Mapear los datos de los contratos a las filas de la tabla
-    const tableRows = contratos.map((contrato, index) => [
-      index + 1,
-      contrato.tipoDeContrato || "N/A",
-      contrato.objetoDelContrato || "N/A",
-      contrato.entidad || "N/A",
-      contrato.direccionEjecuta || "N/A",
-      parcearDate(contrato.aprobadoPorCC) || "N/A",
-      parcearDate(contrato.firmado) || "N/A",
-      parcearDate(contrato.entregadoJuridica) || "N/A",
-      parcearDate(contrato.fechaRecibido) || "N/A",
-      `$${contrato.valorPrincipal || "0"}`,
-      `$${contrato.valorDisponible || "0"}`,
-      `$${contrato.valorGastado || "0"}`,
-      formatearFacturas(contrato.factura), // Formatear facturas con saltos de línea
-      parcearVigencia(contrato.vigencia), // Parcear vigencia
-      parcearDate(contrato.fechaVencimiento) || "N/A",
-      contrato.estado || "N/A",
-      contrato.numeroDictamen || "N/A",
-    ]);
+      // Definir las columnas de la tabla dinámicamente
+      const availableColumns = [
+        { key: "tipoDeContrato", label: "Tipo de Contrato", width: 30 },
+        { key: "objetoDelContrato", label: "Objeto del Contrato", width: 30 },
+        { key: "entidad", label: "Entidad", width: 20 },
+        {
+          key: "direccionEjecuta",
+          label: "Dirección que lo ejecuta",
+          width: 20,
+        },
+        { key: "aprobadoPorCC", label: "Aprobado por el CC", width: 15 },
+        { key: "firmado", label: "Firmado", width: 15 },
+        {
+          key: "entregadoJuridica",
+          label: "Entregado al área jurídica",
+          width: 15,
+        },
+        { key: "fechaRecibido", label: "Fecha Recibido", width: 15 },
+        { key: "valorPrincipal", label: "Monto", width: 15 },
+        { key: "valorDisponible", label: "Monto Disponible", width: 15 },
+        { key: "valorGastado", label: "Monto Gastado", width: 15 },
+        { key: "factura", label: "Facturas", width: 25 },
+        { key: "vigencia", label: "Vigencia", width: 15 },
+        { key: "fechaVencimiento", label: "Fecha Vencimiento", width: 15 },
+        { key: "estado", label: "Estado", width: 15 },
+        { key: "numeroDictamen", label: "No. de Dictamen", width: 15 },
+      ];
 
-    // Crear la tabla en el documento
-    doc.autoTable({
-      startY: 15,
-      head: [tableColumn],
-      body: tableRows,
-      styles: {
-        fontSize: 6,
-        cellPadding: 1,
-        halign: "center",
-        valign: "middle",
-      },
-      headStyles: {
-        fillColor: [70, 130, 180], // Color azul acero (Steel Blue)
-        textColor: [255, 255, 255],
-        fontSize: 7,
-        fontStyle: "bold",
-      },
-      theme: "striped",
-      margin: { top: 0, left: 0, right: 0, bottom: 0 },
-      tableWidth: "wrap",
-      columnStyles: {
-        0: { cellWidth: 8 },
-        1: { cellWidth: 30 },
-        2: { cellWidth: 30 },
-        3: { cellWidth: 20 },
-        4: { cellWidth: 20 },
-        5: { cellWidth: 15 },
-        6: { cellWidth: 15 },
-        7: { cellWidth: 15 },
-        8: { cellWidth: 15 },
-        9: { cellWidth: 15 },
-        10: { cellWidth: 15 },
-        11: { cellWidth: 15 },
-        12: { cellWidth: 25 },
-        13: { cellWidth: 15 },
-        14: { cellWidth: 15 },
-        15: { cellWidth: 15 },
-        16: { cellWidth: 15 },
-      },
-      didDrawCell: (data) => {
-        // Ajustar el alto de la celda de facturas si es necesario
-        if (data.column.index === 12 && data.cell.raw.includes("\n")) {
-          const lines = data.cell.raw.split("\n").length;
-          data.row.height = lines * 5; // Ajustar el alto de la fila según el número de líneas
-        }
-      },
-    });let currentDate = new Date();
-    const formattedDate = parcearDateFile(currentDate);
-    // Guardar el PDF
-    doc.save(`contratos${formattedDate}.pdf`);
+      // Filtrar columnas que tienen al menos un valor definido en los contratos
+      const filteredColumns = availableColumns.filter((column) =>
+        contratos.some(
+          (contrato) =>
+            contrato[column.key] !== null && contrato[column.key] !== ""
+        )
+      );
 
-    toast.success("PDF exportado exitosamente!");
-  } catch (error) {
-    console.error("Error al exportar PDF:", error);
-    toast.error(
-      "Ocurrió un error al exportar PDF. Por favor, inténtelo nuevamente."
-    );
-  }
-};
+      // Obtener las etiquetas de las columnas filtradas
+      const tableColumn = [
+        "No.",
+        ...filteredColumns.map((column) => column.label),
+      ];
+
+      // Mapear los datos de los contratos a las filas de la tabla
+      const tableRows = contratos.map((contrato, index) => {
+        const row = [index + 1]; // Número de fila
+        filteredColumns.forEach((column) => {
+          const value = contrato[column.key];
+          if (value !== null && value !== "") {
+            // Formatear valores según el tipo de columna
+            switch (column.key) {
+              case "aprobadoPorCC":
+              case "firmado":
+              case "entregadoJuridica":
+              case "fechaRecibido":
+              case "fechaVencimiento":
+                row.push(parcearDate(value) || "N/A");
+                break;
+              case "valorPrincipal":
+                row.push(`$${value || "0"}`);
+                break;
+              case "valorDisponible":
+                row.push(`$${value || "0"}`);
+                break;
+              case "valorGastado":
+                row.push(`$${value || "0"}`);
+                break;
+              case "factura":
+                row.push(formatearFacturas(value) || "N/A");
+                break;
+              case "vigencia":
+                row.push(parcearVigencia(value) || "N/A");
+                break;
+              default:
+                row.push(value || "N/A");
+            }
+          } else {
+            row.push("N/A"); // Si el valor es null o vacío, se coloca "N/A"
+          }
+        });
+        return row;
+      });
+
+      // Crear la tabla en el documento
+      doc.autoTable({
+        startY: 20, // Espacio adicional para el título
+        head: [tableColumn],
+        body: tableRows,
+        styles: {
+          fontSize: 6, // Tamaño de fuente fijo
+          cellPadding: 1, // Espacio entre celdas fijo
+          halign: "center",
+          valign: "middle",
+        },
+        headStyles: {
+          fillColor: [70, 130, 180], // Color azul acero (Steel Blue)
+          textColor: [255, 255, 255],
+          fontSize: 7, // Tamaño de fuente fijo para el encabezado
+          fontStyle: "bold",
+        },
+        theme: "striped",
+        margin: { horizontal: "auto" }, // Centrar la tabla horizontalmente
+        tableWidth: "wrap",
+        columnStyles: filteredColumns.reduce(
+          (styles, column, index) => {
+            styles[index + 1] = { cellWidth: column.width }; // Ancho de las celdas sin cambios
+            return styles;
+          },
+          { 0: { cellWidth: 8 } }
+        ), // Ancho fijo para la columna "No."
+        didDrawCell: (data) => {
+          // Ajustar el alto de la celda de facturas si es necesario
+          if (
+            data.column.index === tableColumn.indexOf("Facturas") &&
+            data.cell.raw.includes("\n")
+          ) {
+            const lines = data.cell.raw.split("\n").length;
+            data.row.height = lines * 5; // Ajustar el alto de la fila según el número de líneas
+          }
+        },
+      });
+
+      // Guardar el PDF
+      let currentDate = new Date();
+      const formattedDate = parcearDateFile(currentDate);
+      doc.save(`contratos${formattedDate}.pdf`);
+
+      toast.success("PDF exportado exitosamente!");
+    } catch (error) {
+      console.error("Error al exportar PDF:", error);
+      toast.error(
+        "Ocurrió un error al exportar PDF. Por favor, inténtelo nuevamente."
+      );
+    }
+  };
 
   const exportToExcel = (contratos) => {
     try {
@@ -524,7 +561,7 @@ const exportToPDF = (contratos) => {
 
       // Título del documento
       const title = `REGISTROS DE CONTRATOS`;
-      XLSX.utils.sheet_add_aoa(ws, [[title]], { origin: "E1" }); // Centrar el título en la columna G
+      XLSX.utils.sheet_add_aoa(ws, [[title]], { origin: "E1" }); // Centrar el título en la columna E
       ws["!merges"] = [{ s: { r: 0, c: 4 }, e: { r: 0, c: 8 } }]; // Combinar celdas para el título
 
       // Filtrar y transformar los datos
@@ -544,82 +581,84 @@ const exportToPDF = (contratos) => {
         const transformedContrato = {
           NO: index + 1,
           ...Object.fromEntries(
-            Object.entries(rest).map(([key, value]) => {
-              let newKey = key;
-              let newValue = value;
-              if (key.toLowerCase().includes("valor")) {
-                newValue = `$${value}`;
-              }
-              // Personalizar las claves
-              if (key.toLowerCase().includes("tipo")) {
-                newKey = "Tipo de Contrato";
-              } else if (key.toLowerCase().includes("objeto")) {
-                newKey = "Objeto del Contrato";
-              } else if (key.toLowerCase().includes("aprobado")) {
-                newKey = "Aprobado por el CC";
-              } else if (key.toLowerCase().includes("firmado")) {
-                newKey = "Firmado";
-              } else if (key.toLowerCase().includes("entregado")) {
-                newKey = "Entregado al área jurídica";
-              } else if (key.toLowerCase().includes("recibido")) {
-                newKey = "Fecha Recibido";
-              } else if (key.toLowerCase().includes("valorprincipal")) {
-                newKey = "Monto";
-              } else if (key.toLowerCase().includes("valordisponible")) {
-                newKey = "Monto Disponible";
-              } else if (key.toLowerCase().includes("valorgastado")) {
-                newKey = "Monto Gastado";
-              } else if (key.toLowerCase().includes("facturas")) {
-                newKey = "Facturas";
-              } else if (key.toLowerCase().includes("fechavencimiento")) {
-                newKey = "Fecha de Vencimiento";
-              } else if (key.toLowerCase().includes("estado")) {
-                newKey = "Estado";
-              } else if (key.toLowerCase().includes("dictamen")) {
-                newKey = "No. de Dictamen";
-              } else if (key.toLowerCase().includes("vigencia")) {
-                newKey = "Vigencia";
-              } else if (key.toLowerCase().includes("entidad")) {
-                newKey = "Entidad";
-              } else if (key.toLowerCase().includes("direccion")) {
-                newKey = "Dirección Ejecutiva";
-              } else if (key.toLowerCase().includes("fecharecibido")) {
-                newKey = "Fecha de Recibido";
-              }
-              // Modificar valores de vigencia
-              if (
-                key.toLowerCase().includes("vigencia") &&
-                typeof value === "string"
-              ) {
-                if (value.toLowerCase().includes("months")) {
-                  newValue = value.replace("months", "meses");
-                } else if (value.toLowerCase().includes("years")) {
-                  newValue = value.replace("years", "años");
-                } else if (value.toLowerCase().includes("month")) {
-                  newValue = value.replace("month", "mes");
-                } else if (value.toLowerCase().includes("year")) {
-                  newValue = value.replace("year", "año");
-                }
-                // Verificar singular/plural
-                if (value.startsWith("1 ")) {
-                  newValue = newValue
-                    .replace("meses", "mes")
-                    .replace("años", "año");
-                }
-              }
+            Object.entries(rest)
+              .filter(([key, value]) => value !== null && value !== "") // Filtrar valores nulos o vacíos
+              .map(([key, value]) => {
+                let newKey = key;
+                let newValue = value;
 
-              // Parsee las fechas
-              if (
-                key.toLowerCase().includes("fecha") ||
-                key.toLowerCase().includes("aprobado") ||
-                key.toLowerCase().includes("firmado") ||
-                key.toLowerCase().includes("entregado")
-              ) {
-                newValue = parcearDate(new Date(value));
-              }
+                // Formatear valores monetarios
+                if (key.toLowerCase().includes("valor")) {
+                  newValue = `$${value}`;
+                }
 
-              return [newKey, newValue];
-            })
+                // Personalizar las claves
+                if (key.toLowerCase().includes("tipo")) {
+                  newKey = "Tipo de Contrato";
+                } else if (key.toLowerCase().includes("objeto")) {
+                  newKey = "Objeto del Contrato";
+                } else if (key.toLowerCase().includes("aprobado")) {
+                  newKey = "Aprobado por el CC";
+                } else if (key.toLowerCase().includes("firmado")) {
+                  newKey = "Firmado";
+                } else if (key.toLowerCase().includes("entregado")) {
+                  newKey = "Entregado al área jurídica";
+                } else if (key.toLowerCase().includes("recibido")) {
+                  newKey = "Fecha Recibido";
+                } else if (key.toLowerCase().includes("valorprincipal")) {
+                  newKey = "Monto";
+                } else if (key.toLowerCase().includes("valordisponible")) {
+                  newKey = "Monto Disponible";
+                } else if (key.toLowerCase().includes("valorgastado")) {
+                  newKey = "Monto Gastado";
+                } else if (key.toLowerCase().includes("fechavencimiento")) {
+                  newKey = "Fecha de Vencimiento";
+                } else if (key.toLowerCase().includes("estado")) {
+                  newKey = "Estado";
+                } else if (key.toLowerCase().includes("dictamen")) {
+                  newKey = "No. de Dictamen";
+                } else if (key.toLowerCase().includes("vigencia")) {
+                  newKey = "Vigencia";
+                } else if (key.toLowerCase().includes("entidad")) {
+                  newKey = "Entidad";
+                } else if (key.toLowerCase().includes("direccion")) {
+                  newKey = "Dirección Ejecutiva";
+                }
+
+                // Modificar valores de vigencia
+                if (
+                  key.toLowerCase().includes("vigencia") &&
+                  typeof value === "string"
+                ) {
+                  if (value.toLowerCase().includes("months")) {
+                    newValue = value.replace("months", "meses");
+                  } else if (value.toLowerCase().includes("years")) {
+                    newValue = value.replace("years", "años");
+                  } else if (value.toLowerCase().includes("month")) {
+                    newValue = value.replace("month", "mes");
+                  } else if (value.toLowerCase().includes("year")) {
+                    newValue = value.replace("year", "año");
+                  }
+                  // Verificar singular/plural
+                  if (value.startsWith("1 ")) {
+                    newValue = newValue
+                      .replace("meses", "mes")
+                      .replace("años", "año");
+                  }
+                }
+
+                // Parsear las fechas
+                if (
+                  key.toLowerCase().includes("fecha") ||
+                  key.toLowerCase().includes("aprobado") ||
+                  key.toLowerCase().includes("firmado") ||
+                  key.toLowerCase().includes("entregado")
+                ) {
+                  newValue = parcearDate(new Date(value));
+                }
+
+                return [newKey, newValue];
+              })
           ),
         };
 
@@ -632,33 +671,36 @@ const exportToPDF = (contratos) => {
 
         return transformedContrato;
       });
+
       // Añadir los datos de la tabla
       XLSX.utils.sheet_add_json(ws, filteredContratos, {
         origin: "A3",
         skipHeader: false,
       });
 
-      // Aplicar estilos a la hoja de cálculo
+      // Ajustar el ancho de las columnas dinámicamente
       const wscols = [
-        { wch: 5 }, // Ancho de la columna no.
-        { wch: 20 }, // Ancho de la columna 1
-        { wch: 30 }, // Ancho de la columna 2
-        { wch: 20 }, // Ancho de la columna 3
-        { wch: 20 }, // Ancho de la columna 4
-        { wch: 20 }, // Ancho de la columna 5
-        { wch: 20 }, // Ancho de la columna 6
-        { wch: 20 }, // Ancho de la columna 7
-        { wch: 20 }, // Ancho de la columna 8
-        { wch: 20 }, // Ancho de la columna 9
-        { wch: 20 }, // Ancho de la columna 10
-        { wch: 20 }, // Ancho de la columna 11
-        { wch: 20 }, // Ancho de la columna 12
-        { wch: 20 }, // Ancho de la columna 13
-        { wch: 20 }, // Ancho de la columna 14
-        { wch: 20 }, // Ancho de la columna 15
-        { wch: 30 }, // Ancho de la columna 16
+        { wch: 5 }, // Ancho de la columna NO.
+        { wch: 20 }, // Ancho de la columna Tipo de Contrato
+        { wch: 30 }, // Ancho de la columna Objeto del Contrato
+        { wch: 20 }, // Ancho de la columna Entidad
+        { wch: 20 }, // Ancho de la columna Dirección Ejecutiva
+        { wch: 15 }, // Ancho de la columna Aprobado por el CC
+        { wch: 15 }, // Ancho de la columna Firmado
+        { wch: 15 }, // Ancho de la columna Entregado al área jurídica
+        { wch: 15 }, // Ancho de la columna Fecha Recibido
+        { wch: 15 }, // Ancho de la columna Monto
+        { wch: 15 }, // Ancho de la columna Monto Disponible
+        { wch: 15 }, // Ancho de la columna Monto Gastado
+        { wch: 25 }, // Ancho de la columna Facturas
+        { wch: 15 }, // Ancho de la columna Vigencia
+        { wch: 15 }, // Ancho de la columna Fecha de Vencimiento
+        { wch: 15 }, // Ancho de la columna Estado
+        { wch: 15 }, // Ancho de la columna No. de Dictamen
       ];
       ws["!cols"] = wscols;
+
+      // Guardar el archivo Excel
       let currentDate = new Date();
       const formattedDate = parcearDateFile(currentDate);
       XLSX.writeFile(wb, `contratos_${formattedDate}.xlsx`);
@@ -714,7 +756,7 @@ const exportToPDF = (contratos) => {
       setMonto("");
       setNumeroDictamen("");
       setShowModalCreate(false);
-      obtenerRegistros();
+      obtenerRegistros(tipoContrato);
       obtenerNotificaciones();
     } catch (error) {
       toast.error(error.response.data.msg);
@@ -763,7 +805,7 @@ const exportToPDF = (contratos) => {
   };
 
   useEffect(() => {
-    obtenerRegistros();
+    obtenerRegistros(tipoContrato);
   }, []);
 
   const Modal = () => {
@@ -886,50 +928,67 @@ const exportToPDF = (contratos) => {
           Listado de Contratos{" "}
         </h1>
         <div className="mb-4 pr-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          <select
-            id="direccionEjecutiva"
-            name="direccionEjecutiva"
-            placeholder="Filtrar por dirección ejecutiva"
-            value={filtarDireccion}
-            onChange={(e) => setFiltrarDireccion(e.target.value)}
-            className="rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-          >
-            <option value=" ">Filtrar por dirección ejecutiva</option>
-            {direcciones.map((direccion) => (
-              <option key={direccion._id} value={direccion.direccionEjecutiva}>
-                {direccion.direccionEjecutiva}
-              </option>
-            ))}
-          </select>
-          <select
-            id="entidad"
-            name="entidad"
-            placeholder="Entidad"
-            value={filtarEntidad}
-            onChange={(e) => setFiltrarEntidad(e.target.value)}
-            className="rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-          >
-            <option value=" ">Filtar por entidad</option>
-            {entidades.map((entidad) => (
-              <option key={entidad._id} value={entidad.entidad}>
-                {entidad.entidad}
-              </option>
-            ))}
-          </select>
+          {contractTypes
+            .find((ct) => ct.nombre === tipoContrato)
+            ?.camposRequeridos.some(
+              (campo) => campo.id === "direccionEjecutiva"
+            ) && (
+            <select
+              id="direccionEjecutiva"
+              name="direccionEjecutiva"
+              placeholder="Filtrar por dirección ejecutiva"
+              value={filtarDireccion}
+              onChange={(e) => setFiltrarDireccion(e.target.value)}
+              className="rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            >
+              <option value=" ">Filtrar por dirección ejecutiva</option>
+              {direcciones.map((direccion) => (
+                <option
+                  key={direccion._id}
+                  value={direccion.direccionEjecutiva}
+                >
+                  {direccion.direccionEjecutiva}
+                </option>
+              ))}
+            </select>
+          )}
+          {contractTypes
+            .find((ct) => ct.nombre === tipoContrato)
+            ?.camposRequeridos.some((campo) => campo.id === "entidad") && (
+            <select
+              id="entidad"
+              name="entidad"
+              placeholder="Entidad"
+              value={filtarEntidad}
+              onChange={(e) => setFiltrarEntidad(e.target.value)}
+              className="rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            >
+              <option value=" ">Filtar por entidad</option>
+              {entidades.map((entidad) => (
+                <option key={entidad._id} value={entidad.entidad}>
+                  {entidad.entidad}
+                </option>
+              ))}
+            </select>
+          )}
 
-          <select
-            type="text"
-            id="estado"
-            name="estado"
-            value={filtarEstado}
-            onChange={(e) => setFiltrarEstado(e.target.value)}
-            className="rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-          >
-            <option value=" ">Filtar por estado</option>
-            <option value="Ejecución">Ejecución</option>
-            <option value="Finalizado">Finalizado</option>
-            <option value="Cancelado">Cancelado</option>
-          </select>
+          {contractTypes
+            .find((ct) => ct.nombre === tipoContrato)
+            ?.camposRequeridos.some((campo) => campo.id === "estado") && (
+            <select
+              type="text"
+              id="estado"
+              name="estado"
+              value={filtarEstado}
+              onChange={(e) => setFiltrarEstado(e.target.value)}
+              className="rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            >
+              <option value=" ">Filtar por estado</option>
+              <option value="Ejecución">Ejecución</option>
+              <option value="Finalizado">Finalizado</option>
+              <option value="Cancelado">Cancelado</option>
+            </select>
+          )}
           <button
             onClick={() => handleFilter()}
             className="bg-blue-700 text-white py-2 px-4 rounded-md hover:bg-blue-900  transition duration-200"
@@ -941,7 +1000,7 @@ const exportToPDF = (contratos) => {
               setFiltrarDireccion("");
               setFiltrarEntidad("");
               setFiltrarEstado("");
-              obtenerRegistros();
+              obtenerRegistros(tipoContrato);
             }}
             className="bg-gray-200 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 transition duration-200"
           >
@@ -975,54 +1034,144 @@ const exportToPDF = (contratos) => {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                     Tipo de Contrato
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                    Objeto del Contrato
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                    Entidad
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                    Dirección Ejecutiva
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                    Aprovado por el CC
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                    Firmado
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                    Entregado al área jurídica
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                    Fecha Recibido
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                    Monto
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                    Monto Disponible
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                    Monto Gastado
-                  </th>
+                  {contractTypes
+                    .find((ct) => ct.nombre === tipoContrato)
+                    ?.camposRequeridos.some(
+                      (campo) => campo.id === "objetoContrato"
+                    ) && (
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                      Objeto del Contrato
+                    </th>
+                  )}
+                  {contractTypes
+                    .find((ct) => ct.nombre === tipoContrato)
+                    ?.camposRequeridos.some(
+                      (campo) => campo.id === "entidad"
+                    ) && (
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                      Entidad
+                    </th>
+                  )}
+                  {contractTypes
+                    .find((ct) => ct.nombre === tipoContrato)
+                    ?.camposRequeridos.some(
+                      (campo) => campo.id === "direccionEjecutiva"
+                    ) && (
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                      Dirección Ejecutiva
+                    </th>
+                  )}
+                  {contractTypes
+                    .find((ct) => ct.nombre === tipoContrato)
+                    ?.camposRequeridos.some(
+                      (campo) => campo.id === "aprobadorCC"
+                    ) && (
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                      Aprobado por el CC
+                    </th>
+                  )}
+                  {contractTypes
+                    .find((ct) => ct.nombre === tipoContrato)
+                    ?.camposRequeridos.some(
+                      (campo) => campo.id === "fechaFirmada"
+                    ) && (
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                      Firmado
+                    </th>
+                  )}
+                  {contractTypes
+                    .find((ct) => ct.nombre === tipoContrato)
+                    ?.camposRequeridos.some(
+                      (campo) => campo.id === "entregadoJuridica"
+                    ) && (
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                      Entregado al área jurídica
+                    </th>
+                  )}
+                  {contractTypes
+                    .find((ct) => ct.nombre === tipoContrato)
+                    ?.camposRequeridos.some(
+                      (campo) => campo.id === "fechaRecibido"
+                    ) && (
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                      Fecha Recibido
+                    </th>
+                  )}
+                  {contractTypes
+                    .find((ct) => ct.nombre === tipoContrato)
+                    ?.camposRequeridos.some(
+                      (campo) => campo.id === "monto"
+                    ) && (
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                      Monto
+                    </th>
+                  )}
+                  {contractTypes
+                    .find((ct) => ct.nombre === tipoContrato)
+                    ?.camposRequeridos.some(
+                      (campo) => campo.id === "monto"
+                    ) && (
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                      Monto Disponible
+                    </th>
+                  )}
+                  {contractTypes
+                    .find((ct) => ct.nombre === tipoContrato)
+                    ?.camposRequeridos.some(
+                      (campo) => campo.id === "monto"
+                    ) && (
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                      Monto Gastado
+                    </th>
+                  )}
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                     Facturas
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                    Vigencia
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                    Fecha de Vencimiento
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                    Estado
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                    No. de Dictamen
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                    PDF
-                  </th>
+                  {contractTypes
+                    .find((ct) => ct.nombre === tipoContrato)
+                    ?.camposRequeridos.some(
+                      (campo) => campo.id === "vigencia"
+                    ) && (
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                      Vigencia
+                    </th>
+                  )}
+                  {contractTypes
+                    .find((ct) => ct.nombre === tipoContrato)
+                    ?.camposRequeridos.some(
+                      (campo) => campo.id === "fechaRecibido"
+                    ) && (
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                      Fecha de Vencimiento
+                    </th>
+                  )}
+                  {contractTypes
+                    .find((ct) => ct.nombre === tipoContrato)
+                    ?.camposRequeridos.some(
+                      (campo) => campo.id === "estado"
+                    ) && (
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                      Estado
+                    </th>
+                  )}
+                  {contractTypes
+                    .find((ct) => ct.nombre === tipoContrato)
+                    ?.camposRequeridos.some(
+                      (campo) => campo.id === "numeroDictamen"
+                    ) && (
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                      No. de Dictamen
+                    </th>
+                  )}
+                  {contractTypes
+                    .find((ct) => ct.nombre === tipoContrato)
+                    ?.camposRequeridos.some(
+                      (campo) => campo.id === "subirPDF"
+                    ) && (
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                      PDF
+                    </th>
+                  )}
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                     Editar e info del Registro
                   </th>
@@ -1037,47 +1186,69 @@ const exportToPDF = (contratos) => {
                     <td className="px-6 py-4 whitespace-nowrap">
                       {calculatePageIndex(currentPage, index) + 1}
                     </td>
-                    <td className="px-6 py-4 whitespace-normal break-words max-w-xs ">
-                      {contract.tipoDeContrato}
-                    </td>
-                    <td className="px-6 py-4  whitespace-normal break-words max-w-xs ">
-                      {contract.objetoDelContrato}
-                    </td>
-                    <td className="px-6 py-4 whitespace-normal break-words max-w-xs ">
-                      {contract.entidad}
-                    </td>
-                    <td className="px-6 py-4 whitespace-normal break-words max-w-xs ">
-                      {contract.direccionEjecuta}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {parcearDate(new Date(contract.aprobadoPorCC))}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {parcearDate(new Date(contract.firmado))}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {parcearDate(new Date(contract.entregadoJuridica))}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {parcearDate(new Date(contract.fechaRecibido))}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      ${contract.valorPrincipal}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center">
-                        <div
-                          className={`w-3 h-3 rounded-full ${getValueColor(
-                            contract.valorPrincipal,
-                            contract.valorDisponible
-                          )} mr-2`}
-                        ></div>
-                        ${contract.valorDisponible}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      ${contract.valorGastado}
-                    </td>
+                    {contract.tipoDeContrato && (
+                      <td className="px-6 py-4 whitespace-normal break-words max-w-xs ">
+                        {contract.tipoDeContrato}
+                      </td>
+                    )}
+                    {contract.objetoDelContrato && (
+                      <td className="px-6 py-4  whitespace-normal break-words max-w-xs ">
+                        {contract.objetoDelContrato}
+                      </td>
+                    )}
+                    {contract.entidad && (
+                      <td className="px-6 py-4 whitespace-normal break-words max-w-xs ">
+                        {contract.entidad}
+                      </td>
+                    )}
+                    {contract.direccionEjecuta && (
+                      <td className="px-6 py-4 whitespace-normal break-words max-w-xs ">
+                        {contract.direccionEjecuta}
+                      </td>
+                    )}
+                    {contract.aprobadoPorCC && (
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {parcearDate(new Date(contract.aprobadoPorCC))}
+                      </td>
+                    )}
+                    {contract.firmado && (
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {parcearDate(new Date(contract.firmado))}
+                      </td>
+                    )}
+                    {contract.entregadoJuridica && (
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {parcearDate(new Date(contract.entregadoJuridica))}
+                      </td>
+                    )}
+                    {contract.fechaRecibido && (
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {parcearDate(new Date(contract.fechaRecibido))}
+                      </td>
+                    )}
+                    {contract.valorPrincipal && (
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        ${contract.valorPrincipal}
+                      </td>
+                    )}
+                    {contract.valorPrincipal && (
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center">
+                          <div
+                            className={`w-3 h-3 rounded-full ${getValueColor(
+                              contract.valorPrincipal,
+                              contract.valorDisponible
+                            )} mr-2`}
+                          ></div>
+                          ${contract.valorDisponible}
+                        </div>
+                      </td>
+                    )}
+                    {contract.valorPrincipal && (
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        ${contract.valorGastado}
+                      </td>
+                    )}
                     <td className="px-6 py-4">
                       <div className="space-y-2">
                         {contract.factura.length === 0 ? (
@@ -1132,24 +1303,34 @@ const exportToPDF = (contratos) => {
                         )}
                       </div>
                     </td>
-                    <td className="px-6 whitespace-normal break-words max-w-xs ">
-                      {parseDuration(contract.vigencia)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {parcearDate(new Date(contract.fechaVencimiento))}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {contract.estado}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-center">
-                      {contract.numeroDictamen}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <FaFileDownload
-                        className="text-blue-500 cursor-pointer"
-                        onClick={() => handleDownload(contract._id)}
-                      />
-                    </td>
+                    {contract.vigencia && (
+                      <td className="px-6 whitespace-normal break-words max-w-xs ">
+                        {parseDuration(contract.vigencia)}
+                      </td>
+                    )}
+                    {contract.fechaVencimiento && (
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {parcearDate(new Date(contract.fechaVencimiento))}
+                      </td>
+                    )}
+                    {contract.estado && (
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {contract.estado}
+                      </td>
+                    )}
+                    {contract.numeroDictamen && (
+                      <td className="px-6 py-4 whitespace-nowrap text-center">
+                        {contract.numeroDictamen}
+                      </td>
+                    )}
+                    {contract.subirPDF && (
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <FaFileDownload
+                          className="text-blue-500 cursor-pointer"
+                          onClick={() => handleDownload(contract._id)}
+                        />
+                      </td>
+                    )}
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className=" flex space-x-2 justify-around">
                         <FaPencilAlt
