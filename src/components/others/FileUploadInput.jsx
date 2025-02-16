@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FaFile, FaFileArchive } from "react-icons/fa";
 import useValidation from "../../hooks/useValidation";
 import JSZip from "jszip";
-import clienteAxios from '../../axios/axios';
+import clienteAxios from "../../axios/axios";
 
 const FileUploadInput = ({ showNotification }) => {
   const { file, setFile } = useValidation();
@@ -42,8 +42,9 @@ const FileUploadInput = ({ showNotification }) => {
   };
 
   const getFileIcon = (fileType) => {
-    if (fileType.includes("zip")) return <FaFileArchive className="text-yellow-500" />;
-    return <FaFile className="text-gray-500" />;
+    if (fileType.includes("zip"))
+      return <FaFileArchive className="text-yellow-500 dark:text-yellow-400" />;
+    return <FaFile className="text-gray-500 dark:text-gray-400" />;
   };
 
   const handleUploadBackup = async () => {
@@ -54,8 +55,8 @@ const FileUploadInput = ({ showNotification }) => {
       const backupData = {};
 
       for (const fileName of Object.keys(zipContent.files)) {
-        const fileData = await zipContent.files[fileName].async('string');
-        const tableName = fileName.replace('.json', '');
+        const fileData = await zipContent.files[fileName].async("string");
+        const tableName = fileName.replace(".json", "");
         backupData[tableName] = JSON.parse(fileData);
       }
 
@@ -86,9 +87,12 @@ const FileUploadInput = ({ showNotification }) => {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
+    <div className="w-full max-w-md mx-auto p-6 bg-white rounded-lg shadow-md dark:bg-gray-800">
       <div>
-        <label htmlFor="file-upload" className="block mb-2 font-medium text-gray-700">
+        <label
+          htmlFor="file-upload"
+          className="block mb-2 font-medium text-gray-700 dark:text-gray-300"
+        >
           Elige un archivo zip
         </label>
         <div className="relative">
@@ -102,35 +106,41 @@ const FileUploadInput = ({ showNotification }) => {
           />
           <label
             htmlFor="file-upload"
-            className={`flex items-center justify-between w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 ${error ? "border-red-500" : ""}`}
+            className={`flex items-center justify-between w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-600 ${
+              error ? "border-red-500 dark:border-red-500" : ""
+            }`}
           >
             <span>{file ? file.name : "Seleccionar archivo"}</span>
             {file && getFileIcon(file.type)}
           </label>
         </div>
-        {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+        {error && (
+          <p className="mt-2 text-sm text-red-600 dark:text-red-400">{error}</p>
+        )}
       </div>
       {file && uploadProgress < 100 && (
-        <div className="w-full bg-gray-200 rounded-full h-2.5">
+        <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
           <div
-            className="bg-blue-600 h-2.5 rounded-full transition-all duration-500 ease-out"
+            className="bg-blue-600 h-2.5 rounded-full transition-all duration-500 ease-out dark:bg-blue-500"
             style={{ width: `${uploadProgress}%` }}
           ></div>
         </div>
       )}
       {file && uploadProgress === 100 && (
         <>
-          <p className="text-sm text-green-600">¡Archivo cargado exitosamente!</p>
+          <p className="text-sm text-green-600 dark:text-green-400">
+            ¡Archivo cargado exitosamente!
+          </p>
           <div className="flex justify-between mt-4">
             <button
               onClick={handleUploadBackup}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors dark:bg-blue-500 dark:hover:bg-blue-600"
             >
               Restaurar
             </button>
             <button
               onClick={handleCancelUpload}
-              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors dark:bg-red-500 dark:hover:bg-red-600"
             >
               Cancelar
             </button>
@@ -140,7 +150,7 @@ const FileUploadInput = ({ showNotification }) => {
       {file && uploadProgress < 100 && (
         <button
           onClick={handleCancelUpload}
-          className="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+          className="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors dark:bg-red-500 dark:hover:bg-red-600"
         >
           Cancelar
         </button>
