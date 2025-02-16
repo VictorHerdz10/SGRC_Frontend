@@ -38,7 +38,7 @@ const HeaderAuth = () => {
 
   const [top, setTop] = useState(true);
 
-  // detect whether user has scrolled the page down by 10px
+  // Detect whether user has scrolled the page down by 10px
   useEffect(() => {
     const scrollHandler = () => {
       window.pageYOffset > 10 ? setTop(false) : setTop(true);
@@ -56,23 +56,23 @@ const HeaderAuth = () => {
     } else {
       setUrl("directivo/registro-contrato");
     }
-  }, []);
+  }, [auth.tipo_usuario]);
 
   return (
     <>
       <header
         className={`fixed w-full z-30 md:bg-opacity-90 transition duration-300 ease-in-out rounded-full border-gray-100 ${
-          !top && "bg-white backdrop-blur-sm shadow-lg"
+          !top && "bg-white dark:bg-gray-800 backdrop-blur-sm shadow-lg"
         }`}
       >
         <div
           className={`container mx-0 px-5 ${
             isOpen ? "lg:pr-56 sm:pr-60 md:pr-24" : "pr-10"
-          } `}
+          }`}
         >
           <div className="flex items-center justify-between h-16 md:h-20 p-10">
             {/* Site branding */}
-            <div className="flex-shrink-0 flex ">
+            <div className="flex-shrink-0 flex">
               <div className="flex-shrink-0 mr-4">
                 {/* Logo */}
                 <Link to={`/${url}`} className="block" aria-label="Cruip">
@@ -107,15 +107,14 @@ const HeaderAuth = () => {
               </div>
               <Link
                 to={`/${url}`}
-                className="text-lg font-bold text-gray-800 transition duration-300 ease-in-out hover:text-gray 
-           900"
+                className="text-lg font-bold text-gray-800 dark:text-gray-100 transition duration-300 ease-in-out hover:text-gray-900 dark:hover:text-gray-200"
               >
-                {" "}
                 <h2 className="bg-clip-text h3 text-transparent bg-gradient-to-r from-blue-500 to-teal-400">
                   SGC
                 </h2>
               </Link>
             </div>
+
             {/* Site navigation */}
             <nav className="flex-grow md:flex">
               <ul
