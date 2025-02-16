@@ -9,7 +9,8 @@ import ContractTable from "../components/table/Tablaregistros";
 import useAuth from "../hooks/useAuth";
 
 const GestionRegistro = () => {
-  const { isOpen, setIsOpen, showForm, contractTypes, obtenerRegistros } = useValidation();
+  const { isOpen, setIsOpen, showForm, contractTypes, obtenerRegistros } =
+    useValidation();
   const { auth } = useAuth();
   const contentRef = useRef(null);
   const [tipoContrato, setTipoContrato] = useState("");
@@ -43,16 +44,19 @@ const GestionRegistro = () => {
           )}
         </div>
         <div className="flex flex-col flex-1 min-w-0">
-          <div className="sticky top-0 w-full p-4 bg-white dark:bg-gray-900 bg-opacity-10 z-10 mb-10">
+          <div className="sticky top-0 w-full p-4 bg-transparent bg-opacity-10 z-10 mb-10">
             <HeaderAdmin />
           </div>
           <div
             ref={contentRef}
-            className="flex-1 p-6 bg-white dark:bg-gray-900 overflow-y-auto space-y-6"
+            className="flex-1 p-6 bg-white dark:bg-uci overflow-y-auto space-y-6"
           >
             {/* Selector de tipo de contrato */}
             <div className="mb-6">
-              <label htmlFor="tipoContrato" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label
+                htmlFor="tipoContrato"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >
                 Selecciona el tipo de contrato:
               </label>
               <select
@@ -84,7 +88,9 @@ const GestionRegistro = () => {
             )}
 
             {/* Renderizado condicional del formulario y la tabla según el tipo de contrato */}
-            {contractTypes.some((contract) => contract.nombre === tipoContrato) && (
+            {contractTypes.some(
+              (contract) => contract.nombre === tipoContrato
+            ) && (
               <>
                 <FormularioContrato tipoContrato={tipoContrato} />
                 <ContractTable tipoContrato={tipoContrato} />
