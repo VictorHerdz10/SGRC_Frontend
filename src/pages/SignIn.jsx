@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
-
 import Header from "../partials/headers/Header";
 import useValidation from "../hooks/useValidation";
 import clienteAxios from "../axios/axios";
@@ -9,7 +8,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const SignIn = () => {
-  const{setAuth}=useAuth();
+  const { setAuth } = useAuth();
   const { validarInput } = useValidation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,41 +27,42 @@ const SignIn = () => {
     }
 
     try {
-      const response = await clienteAxios.post("usuario/login", {email:email.trim(),password:password.trim()});
-      localStorage.setItem('token',response.data.token);
+      const response = await clienteAxios.post("usuario/login", {
+        email: email.trim(),
+        password: password.trim(),
+      });
+      localStorage.setItem("token", response.data.token);
       setAuth(response.data);
-      setEmail('');
-      setPassword('');
-      if (response.data.tipo_usuario === 'Admin_Gnl') {
-        navigate('/admin/registro-contrato');
-    } else if (response.data.tipo_usuario === 'director') {
-        navigate('/directivo/registro-contrato');
-    } else if (response.data.tipo_usuario === 'especialista') {
-        navigate('/especialista/registro-contrato');
-    } else if (response.data.tipo_usuario === 'visitante') {
-        navigate('/visitante/registro-contrato');
-    }
-      
+      setEmail("");
+      setPassword("");
+      if (response.data.tipo_usuario === "Admin_Gnl") {
+        navigate("/admin/registro-contrato");
+      } else if (response.data.tipo_usuario === "director") {
+        navigate("/directivo/registro-contrato");
+      } else if (response.data.tipo_usuario === "especialista") {
+        navigate("/especialista/registro-contrato");
+      } else if (response.data.tipo_usuario === "visitante") {
+        navigate("/visitante/registro-contrato");
+      }
     } catch (error) {
-      toast.error(error.response.data.msg)
-      
+      toast.error(error.response.data.msg);
     }
   };
 
   return (
-    <div className="flex flex-col min-h-screen overflow-hidden">
-      {/*  Site header */}
+    <div className="flex flex-col min-h-screen overflow-hidden ">
+      {/* Site header */}
       <Header />
 
-      {/*  Page content */}
-      <main className="flex-grow">
-        <section className="bg-transparent">
+      {/* Page content */}
+      <main className="flex-grow flex items-center justify-center">
+        <section className="w-full">
           <div className="max-w-6xl mx-auto px-4 sm:px-6">
-            <div className="pt-32 pb-12 md:pt-40 md:pb-20">
+            <div className="pt-32 p-5">
               {/* Page header */}
               <div className="max-w-3xl mx-auto text-center pb-12 md:pb-20">
-                <h1 className="h1">
-                  Bienvenido nuevamente <br></br>
+                <h1 className="h1 text-black dark:text-white">
+                  Bienvenido nuevamente <br />
                   <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400">
                     Tu puerta de acceso al universo de contratos
                   </span>
@@ -75,7 +75,7 @@ const SignIn = () => {
                   <div className="flex flex-wrap -mx-3 mb-4">
                     <div className="w-full px-3">
                       <label
-                        className="block text-gray-800 text-sm font-medium mb-1"
+                        className="block text-gray-800 dark:text-white text-sm font-medium mb-1"
                         htmlFor="email"
                       >
                         Correo electrónico
@@ -86,7 +86,7 @@ const SignIn = () => {
                         className="form-input w-full text-gray-800"
                         placeholder="Introduzca su dirección de correo electrónico"
                         value={email}
-                        onChange={(e)=> setEmail(e.target.value)}
+                        onChange={(e) => setEmail(e.target.value)}
                       />
                     </div>
                     {errorEmail && (
@@ -97,14 +97,14 @@ const SignIn = () => {
                     <div className="w-full px-3">
                       <div className="flex justify-between">
                         <label
-                          className="block text-gray-800 text-sm font-medium mb-1"
+                          className="block text-gray-800 dark:text-white text-sm font-medium mb-1"
                           htmlFor="password"
                         >
                           Contraseña
                         </label>
                         <Link
                           to="/auth/reset-password"
-                          className="text-sm font-medium text-blue-600 hover:underline"
+                          className="text-sm font-medium text-blue-400 hover:underline"
                         >
                           ¿Tiene problemas para iniciar sesión?
                         </Link>
@@ -115,7 +115,7 @@ const SignIn = () => {
                         className="form-input w-full text-gray-800"
                         placeholder="Introduzca su contraseña"
                         value={password}
-                        onChange={(e)=> setPassword(e.target.value)}
+                        onChange={(e) => setPassword(e.target.value)}
                       />
                     </div>
                     {errorPassword && (
@@ -131,13 +131,13 @@ const SignIn = () => {
                   </div>
                 </form>
 
-                <div className="text-gray-600 text-center mt-6">
+                <div className="text-gray-800 dark:text-white text-center mt-6">
                   ¿No tienes una cuenta?{" "}
                   <Link
                     to="/auth/signup"
-                    className="text-blue-600 hover:underline transition duration-150 ease-in-out"
+                    className="text-blue-400 hover:underline transition duration-150 ease-in-out"
                   >
-                    Registrate
+                    Regístrate
                   </Link>
                 </div>
               </div>
