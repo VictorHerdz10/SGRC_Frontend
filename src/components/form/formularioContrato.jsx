@@ -112,21 +112,57 @@ const FormularioContrato = ({ tipoContrato }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     e.stopPropagation();
-  
+
     // Validar cada campo solo si existe
-    const errores = tipoDeContrato !== undefined && tipoDeContrato !== null ? validarInput(tipoDeContrato, "text", "") : "";
-    const errores1 = objetoDelContrato !== undefined && objetoDelContrato !== null ? validarInput(objetoDelContrato, "text", "") : "";
-    const errores2 = entidad !== undefined && entidad !== null ? validarInput(entidad, "text", "") : "";
-    const errores3 = direccionEjecuta !== undefined && direccionEjecuta !== null ? validarInput(direccionEjecuta, "text", "") : "";
-    const errores4 = aprobadoPorCC !== undefined && aprobadoPorCC !== null ? validarInput(aprobadoPorCC, "date", "") : "";
-    const errores5 = firmado !== undefined && firmado !== null ? validarInput(firmado, "date", "") : "";
-    const errores6 = entregadoJuridica !== undefined && entregadoJuridica !== null ? validarInput(entregadoJuridica, "date", "") : "";
-    const errores7 = fechaRecibido !== undefined && fechaRecibido !== null ? validarInput(fechaRecibido, "date", "") : "";
-    const errores8 = valor !== undefined && valor !== null ? validarInput(valor, "number", "") : "";
-    const errores9 = vigencia !== undefined && vigencia !== null ? validarInput(vigencia, "number", "") : "";
-    const errores10 = estado !== undefined && estado !== null ? validarInput(estado, "text", "") : "";
-    const errores11 = numeroDictamen !== undefined && numeroDictamen !== null ? validarInput(numeroDictamen, "text", "") : "";
-  
+    const errores =
+      tipoDeContrato !== undefined && tipoDeContrato !== null
+        ? validarInput(tipoDeContrato, "text", "")
+        : "";
+    const errores1 =
+      objetoDelContrato !== undefined && objetoDelContrato !== null
+        ? validarInput(objetoDelContrato, "text", "")
+        : "";
+    const errores2 =
+      entidad !== undefined && entidad !== null
+        ? validarInput(entidad, "text", "")
+        : "";
+    const errores3 =
+      direccionEjecuta !== undefined && direccionEjecuta !== null
+        ? validarInput(direccionEjecuta, "text", "")
+        : "";
+    const errores4 =
+      aprobadoPorCC !== undefined && aprobadoPorCC !== null
+        ? validarInput(aprobadoPorCC, "date", "")
+        : "";
+    const errores5 =
+      firmado !== undefined && firmado !== null
+        ? validarInput(firmado, "date", "")
+        : "";
+    const errores6 =
+      entregadoJuridica !== undefined && entregadoJuridica !== null
+        ? validarInput(entregadoJuridica, "date", "")
+        : "";
+    const errores7 =
+      fechaRecibido !== undefined && fechaRecibido !== null
+        ? validarInput(fechaRecibido, "date", "")
+        : "";
+    const errores8 =
+      valor !== undefined && valor !== null
+        ? validarInput(valor, "number", "")
+        : "";
+    const errores9 =
+      vigencia !== undefined && vigencia !== null
+        ? validarInput(vigencia, "number", "")
+        : "";
+    const errores10 =
+      estado !== undefined && estado !== null
+        ? validarInput(estado, "text", "")
+        : "";
+    const errores11 =
+      numeroDictamen !== undefined && numeroDictamen !== null
+        ? validarInput(numeroDictamen, "text", "")
+        : "";
+
     // Asignar errores a los estados correspondientes
     setErrorTipoDeContrato(errores || "");
     setErrorObjetoDelContrato(errores1 || "");
@@ -140,17 +176,19 @@ const FormularioContrato = ({ tipoContrato }) => {
     setErrorVigencia(errores9 || "");
     setErrorEstado(errores10 || "");
     setErrorNumeroDictamen(errores11 || "");
-  
+
     // Validar el campo de tiempo de vigencia
     if (timeVigencia === "") {
       setErrorTimeVigencia("El campo tiempo de vigencia es requerido");
     } else {
       setErrorTimeVigencia("");
     }
-  
+
     // Verificar si hay errores en los campos requeridos
-    const camposRequeridos = contractTypes.find(ct => ct.nombre === tipoContrato)?.camposRequeridos || [];
-  
+    const camposRequeridos =
+      contractTypes.find((ct) => ct.nombre === tipoContrato)
+        ?.camposRequeridos || [];
+
     const hayErrores = camposRequeridos.some((campo) => {
       switch (campo.id) {
         case "tipoDeContrato":
@@ -181,7 +219,7 @@ const FormularioContrato = ({ tipoContrato }) => {
           return false;
       }
     });
-  
+
     if (hayErrores) {
       toast.error("Algunos campos requeridos tienen errores");
       return;
@@ -227,7 +265,11 @@ const FormularioContrato = ({ tipoContrato }) => {
       formData.append("valorPrincipal", valor);
     }
 
-    if (vigenciaReal !== undefined && vigenciaReal !== null && vigenciaReal!==' ') {
+    if (
+      vigenciaReal !== undefined &&
+      vigenciaReal !== null &&
+      vigenciaReal !== " "
+    ) {
       formData.append("vigencia", vigenciaReal);
     }
 
@@ -306,12 +348,12 @@ const FormularioContrato = ({ tipoContrato }) => {
 
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400">
-        Gestión de los Registros{" "}
+      <h1 className="text-3xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400 dark:from-blue-300 dark:to-teal-200">
+        Gestión de los Registros
       </h1>
 
       <button
-        className="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded mb-4"
+        className="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded mb-4 dark:bg-blue-600 dark:hover:bg-blue-800"
         onClick={() => {
           setShowForm(!showForm);
           setObjetoDelContrato("");
@@ -335,9 +377,9 @@ const FormularioContrato = ({ tipoContrato }) => {
         <div className="container mx-auto px-4">
           <form
             onSubmit={handleSubmit}
-            className="max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl bg-white shadow-xl rounded px-6 pt-6 pb-8 mb-4"
+            className="max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl bg-white shadow-xl rounded px-6 pt-6 pb-8 mb-4 dark:bg-gray-800"
           >
-            <h2 className="text-3xl font-bold text-indigo-600 mb-8 text-center mx-auto">
+            <h2 className="text-3xl font-bold text-indigo-600 mb-8 text-center mx-auto dark:text-indigo-300">
               {isEditing
                 ? "Actualizar el registro de contrato"
                 : "Registrar un nuevo contrato"}
@@ -346,7 +388,7 @@ const FormularioContrato = ({ tipoContrato }) => {
             <div className="mb-4">
               <label
                 htmlFor="tipo_contrato"
-                className="block text-gray-700 text-sm font-semibold mb-1"
+                className="block text-gray-700 text-sm font-semibold mb-1 dark:text-gray-300"
               >
                 Tipo de Contrato
               </label>
@@ -357,283 +399,372 @@ const FormularioContrato = ({ tipoContrato }) => {
                 placeholder="Tipo de Contrato"
                 value={tipoDeContrato}
                 disabled
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-not-allowed"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-not-allowed dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
               />
               {errorTipoDeContrato && (
-                <span className="text-red-500">{errorTipoDeContrato}</span>
+                <span className="text-red-500 dark:text-red-400">
+                  {errorTipoDeContrato}
+                </span>
               )}
             </div>
 
-           {contractTypes.find(ct => ct.nombre === tipoContrato)?.camposRequeridos.some(campo => campo.id === 'objetoContrato') && <div className="mb-4">
-              <label
-                htmlFor="objeto_contrato"
-                className="block text-gray-700 text-sm font-semibold mb-1"
-              >
-                Objeto del Contrato
-              </label>
-              <textarea
-                id="objeto_contrato"
-                name="objeto_contrato"
-                rows={3}
-                placeholder="Objeto del Contrato"
-                value={objetoDelContrato}
-                onChange={(e) => setObjetoDelContrato(e.target.value)}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              />
-              {errorObjetoDelContrato && (
-                <span className="text-red-500">{errorObjetoDelContrato}</span>
-              )}
-            </div>}
+            {contractTypes
+              .find((ct) => ct.nombre === tipoContrato)
+              ?.camposRequeridos.some(
+                (campo) => campo.id === "objetoContrato"
+              ) && (
+              <div className="mb-4">
+                <label
+                  htmlFor="objeto_contrato"
+                  className="block text-gray-700 text-sm font-semibold mb-1 dark:text-gray-300"
+                >
+                  Objeto del Contrato
+                </label>
+                <textarea
+                  id="objeto_contrato"
+                  name="objeto_contrato"
+                  rows={3}
+                  placeholder="Objeto del Contrato"
+                  value={objetoDelContrato}
+                  onChange={(e) => setObjetoDelContrato(e.target.value)}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
+                />
+                {errorObjetoDelContrato && (
+                  <span className="text-red-500 dark:text-red-400">
+                    {errorObjetoDelContrato}
+                  </span>
+                )}
+              </div>
+            )}
 
-            {contractTypes.find(ct => ct.nombre === tipoContrato)?.camposRequeridos.some(campo => campo.id === 'entidad') && <div className="mb-4">
-              <label
-                htmlFor="entidad"
-                className="block text-gray-700 text-sm font-semibold mb-1"
-              >
-                Entidad
-              </label>
-              <select
-                id="entidad"
-                name="entidad"
-                placeholder="Entidad"
-                value={entidad}
-                onChange={(e) => setEntidad(e.target.value)}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              >
-                <option value=" ">Seleccione...</option>
-                {entidades.map((entidad) => (
-                  <option key={entidad._id} value={entidad.entidad}>
-                    {entidad.entidad}
-                  </option>
-                ))}
-              </select>
-              {errorEntidad && (
-                <span className="text-red-500">{errorEntidad}</span>
-              )}
-            </div>}
+            {contractTypes
+              .find((ct) => ct.nombre === tipoContrato)
+              ?.camposRequeridos.some((campo) => campo.id === "entidad") && (
+              <div className="mb-4">
+                <label
+                  htmlFor="entidad"
+                  className="block text-gray-700 text-sm font-semibold mb-1 dark:text-gray-300"
+                >
+                  Entidad
+                </label>
+                <select
+                  id="entidad"
+                  name="entidad"
+                  placeholder="Entidad"
+                  value={entidad}
+                  onChange={(e) => setEntidad(e.target.value)}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
+                >
+                  <option value=" ">Seleccione...</option>
+                  {entidades.map((entidad) => (
+                    <option key={entidad._id} value={entidad.entidad}>
+                      {entidad.entidad}
+                    </option>
+                  ))}
+                </select>
+                {errorEntidad && (
+                  <span className="text-red-500 dark:text-red-400">
+                    {errorEntidad}
+                  </span>
+                )}
+              </div>
+            )}
 
-{contractTypes.find(ct => ct.nombre === tipoContrato)?.camposRequeridos.some(campo => campo.id === 'direccionEjecutiva') &&   <div className="mb-4">
-              <label
-                htmlFor="direccionEjecutiva"
-                className="block text-gray-700 text-sm font-semibold mb-1"
-              >
-                Dirección Ejecutiva
-              </label>
-              <select
-                id="direccionEjecutiva"
-                name="direccionEjecutiva"
-                placeholder="Dirección que lo Ejecuta"
-                value={direccionEjecuta}
-                onChange={(e) => setDireccionEjecuta(e.target.value)}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              >
-                <option value="">Seleccione...</option>
-                {direcciones.map((direccion) => (
-                  <option
-                    key={direccion._id}
-                    value={direccion.direccionEjecutiva}
-                  >
-                    {direccion.direccionEjecutiva}
-                  </option>
-                ))}
-              </select>
-              {errorDireccionEjecuta && (
-                <span className="text-red-500">{errorDireccionEjecuta}</span>
-              )}
-            </div>}
+            {contractTypes
+              .find((ct) => ct.nombre === tipoContrato)
+              ?.camposRequeridos.some(
+                (campo) => campo.id === "direccionEjecutiva"
+              ) && (
+              <div className="mb-4">
+                <label
+                  htmlFor="direccionEjecutiva"
+                  className="block text-gray-700 text-sm font-semibold mb-1 dark:text-gray-300"
+                >
+                  Dirección Ejecutiva
+                </label>
+                <select
+                  id="direccionEjecutiva"
+                  name="direccionEjecutiva"
+                  placeholder="Dirección que lo Ejecuta"
+                  value={direccionEjecuta}
+                  onChange={(e) => setDireccionEjecuta(e.target.value)}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
+                >
+                  <option value="">Seleccione...</option>
+                  {direcciones.map((direccion) => (
+                    <option
+                      key={direccion._id}
+                      value={direccion.direccionEjecutiva}
+                    >
+                      {direccion.direccionEjecutiva}
+                    </option>
+                  ))}
+                </select>
+                {errorDireccionEjecuta && (
+                  <span className="text-red-500 dark:text-red-400">
+                    {errorDireccionEjecuta}
+                  </span>
+                )}
+              </div>
+            )}
 
-            {contractTypes.find(ct => ct.nombre === tipoContrato)?.camposRequeridos.some(campo => campo.id === 'aprobadorCC') && <div className="mb-4">
-              <label
-                htmlFor="aprovadorCC"
-                className="block text-gray-700 text-sm font-semibold mb-1"
-              >
-                Aprobador por el CC
-              </label>
-              <input
-                type="date"
-                id="aprovadorCC"
-                name="aprovadorCC"
-                placeholder="Aprobador por el CC"
-                value={aprobadoPorCC}
-                onChange={(e) => setAprobadoPorCC(e.target.value)}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              />
-              {errorAprobadoPorCC && (
-                <span className="text-red-500">{errorAprobadoPorCC}</span>
-              )}
-            </div>}
+            {contractTypes
+              .find((ct) => ct.nombre === tipoContrato)
+              ?.camposRequeridos.some(
+                (campo) => campo.id === "aprobadorCC"
+              ) && (
+              <div className="mb-4">
+                <label
+                  htmlFor="aprovadorCC"
+                  className="block text-gray-700 text-sm font-semibold mb-1 dark:text-gray-300"
+                >
+                  Aprobador por el CC
+                </label>
+                <input
+                  type="date"
+                  id="aprovadorCC"
+                  name="aprovadorCC"
+                  placeholder="Aprobador por el CC"
+                  value={aprobadoPorCC}
+                  onChange={(e) => setAprobadoPorCC(e.target.value)}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
+                />
+                {errorAprobadoPorCC && (
+                  <span className="text-red-500 dark:text-red-400">
+                    {errorAprobadoPorCC}
+                  </span>
+                )}
+              </div>
+            )}
 
-            {contractTypes.find(ct => ct.nombre === tipoContrato)?.camposRequeridos.some(campo => campo.id === 'fechaFirmada') &&<div className="mb-4">
-              <label
-                htmlFor="firmado"
-                className="block text-gray-700 text-sm font-semibold mb-1"
-              >
-                Fecha Firmada
-              </label>
-              <input
-                type="date"
-                id="firmado"
-                name="firmado"
-                placeholder="Fecha Firmada"
-                value={firmado}
-                onChange={(e) => setFirmado(e.target.value)}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              />
-              {errorFirmado && (
-                <span className="text-red-500">{errorFirmado}</span>
-              )}
-            </div>}
+            {contractTypes
+              .find((ct) => ct.nombre === tipoContrato)
+              ?.camposRequeridos.some(
+                (campo) => campo.id === "fechaFirmada"
+              ) && (
+              <div className="mb-4">
+                <label
+                  htmlFor="firmado"
+                  className="block text-gray-700 text-sm font-semibold mb-1 dark:text-gray-300"
+                >
+                  Fecha Firmada
+                </label>
+                <input
+                  type="date"
+                  id="firmado"
+                  name="firmado"
+                  placeholder="Fecha Firmada"
+                  value={firmado}
+                  onChange={(e) => setFirmado(e.target.value)}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
+                />
+                {errorFirmado && (
+                  <span className="text-red-500 dark:text-red-400">
+                    {errorFirmado}
+                  </span>
+                )}
+              </div>
+            )}
 
-            {contractTypes.find(ct => ct.nombre === tipoContrato)?.camposRequeridos.some(campo => campo.id === 'entregadoJuridica') && <div className="mb-4">
-              <label
-                htmlFor="entregadoJuridica"
-                className="block text-gray-700 text-sm font-semibold mb-1"
-              >
-                Entregado Jurídica
-              </label>
-              <input
-                type="date"
-                id="entregadoJuridica"
-                name="entregadoJuridica"
-                placeholder="Entregado Jurídica"
-                value={entregadoJuridica}
-                onChange={(e) => setEntregadoJuridica(e.target.value)}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              />
-              {errorEntregadoJuridica && (
-                <span className="text-red-500">{errorEntregadoJuridica}</span>
-              )}
-            </div>}
+            {contractTypes
+              .find((ct) => ct.nombre === tipoContrato)
+              ?.camposRequeridos.some(
+                (campo) => campo.id === "entregadoJuridica"
+              ) && (
+              <div className="mb-4">
+                <label
+                  htmlFor="entregadoJuridica"
+                  className="block text-gray-700 text-sm font-semibold mb-1 dark:text-gray-300"
+                >
+                  Entregado Jurídica
+                </label>
+                <input
+                  type="date"
+                  id="entregadoJuridica"
+                  name="entregadoJuridica"
+                  placeholder="Entregado Jurídica"
+                  value={entregadoJuridica}
+                  onChange={(e) => setEntregadoJuridica(e.target.value)}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
+                />
+                {errorEntregadoJuridica && (
+                  <span className="text-red-500 dark:text-red-400">
+                    {errorEntregadoJuridica}
+                  </span>
+                )}
+              </div>
+            )}
 
-           {contractTypes.find(ct => ct.nombre === tipoContrato)?.camposRequeridos.some(campo => campo.id === 'fechaRecibido') && <div className="mb-4">
-              <label
-                htmlFor="fechaRecibido"
-                className="block text-gray-700 text-sm font-semibold mb-1"
-              >
-                Fecha Recibido
-              </label>
-              <input
-                type="date"
-                id="fechaRecibido"
-                name="fechaRecibido"
-                placeholder="Fecha Recibido"
-                value={fechaRecibido}
-                onChange={(e) => setFechaRecibido(e.target.value)}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              />
-              {errorFechaRecibido && (
-                <span className="text-red-500">{errorFechaRecibido}</span>
-              )}
-            </div>}
+            {contractTypes
+              .find((ct) => ct.nombre === tipoContrato)
+              ?.camposRequeridos.some(
+                (campo) => campo.id === "fechaRecibido"
+              ) && (
+              <div className="mb-4">
+                <label
+                  htmlFor="fechaRecibido"
+                  className="block text-gray-700 text-sm font-semibold mb-1 dark:text-gray-300"
+                >
+                  Fecha Recibido
+                </label>
+                <input
+                  type="date"
+                  id="fechaRecibido"
+                  name="fechaRecibido"
+                  placeholder="Fecha Recibido"
+                  value={fechaRecibido}
+                  onChange={(e) => setFechaRecibido(e.target.value)}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
+                />
+                {errorFechaRecibido && (
+                  <span className="text-red-500 dark:text-red-400">
+                    {errorFechaRecibido}
+                  </span>
+                )}
+              </div>
+            )}
 
-            {contractTypes.find(ct => ct.nombre === tipoContrato)?.camposRequeridos.some(campo => campo.id === 'monto') && <div className="mb-4">
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="monto"
-              >
-                Monto
-              </label>
-              <input
-                type="number"
-                id="monto"
-                name="monto"
-                placeholder="monto"
-                value={valor}
-                onChange={(e) => setValor(e.target.value)}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              />
-              {errorValor && <span className="text-red-500">{errorValor}</span>}
-            </div>}
-
-            {contractTypes.find(ct => ct.nombre === tipoContrato)?.camposRequeridos.some(campo => campo.id === 'vigencia') && <div className="mb-4">
-              <label
-                htmlFor="vigencia"
-                className="block text-sm text-gray-700 font-bold mb-1"
-              >
-                Vigencia
-              </label>
-              <div className="flex items-center">
+            {contractTypes
+              .find((ct) => ct.nombre === tipoContrato)
+              ?.camposRequeridos.some((campo) => campo.id === "monto") && (
+              <div className="mb-4">
+                <label
+                  className="block text-gray-700 text-sm font-bold mb-2 dark:text-gray-300"
+                  htmlFor="monto"
+                >
+                  Monto
+                </label>
                 <input
                   type="number"
-                  id="vigencia"
-                  name="vigencia"
-                  placeholder="Vigencia"
-                  className="shadow appearance-none border rounded-l-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  value={vigencia}
-                  onChange={(e) => setVigencia(e.target.value)}
+                  id="monto"
+                  name="monto"
+                  placeholder="monto"
+                  value={valor}
+                  onChange={(e) => setValor(e.target.value)}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
                 />
-                <div className="ml-2 flex-shrink-0">
-                  <select
-                    className="bg-gray-200 text-gray-700 border border-gray-400 rounded-r-lg w-32 py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-                    value={timeVigencia}
-                    onChange={(e) => setTimeVigencia(e.target.value)}
-                  >
-                    <option value="">Seleccione...</option>
-                    <option value="months">Meses</option>
-                    <option value="years">Años</option>
-                  </select>
-                </div>
+                {errorValor && (
+                  <span className="text-red-500 dark:text-red-400">
+                    {errorValor}
+                  </span>
+                )}
               </div>
-              {errorVigencia && (
-                <span className="text-red-500">{errorVigencia}</span>
-              )}
-            </div>}
+            )}
 
-            {contractTypes.find(ct => ct.nombre === tipoContrato)?.camposRequeridos.some(campo => campo.id === 'estado') && <div className="mb-4">
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="estado"
-              >
-                Estado
-              </label>
-              <select
-                type="text"
-                id="estado"
-                name="estado"
-                value={estado}
-                onChange={(e) => setEstado(e.target.value)}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              >
-                <option value="">Seleccione...</option>
-                <option value="Ejecución">Ejecución</option>
-                <option value="Finalizado">Finalizado</option>
-                <option value="Cancelado">Cancelado</option>
-              </select>
-              {errorEstado && (
-                <span className="text-red-500">{errorEstado}</span>
-              )}
-            </div>}
+            {contractTypes
+              .find((ct) => ct.nombre === tipoContrato)
+              ?.camposRequeridos.some((campo) => campo.id === "vigencia") && (
+              <div className="mb-4">
+                <label
+                  htmlFor="vigencia"
+                  className="block text-sm text-gray-700 font-bold mb-1 dark:text-gray-300"
+                >
+                  Vigencia
+                </label>
+                <div className="flex items-center">
+                  <input
+                    type="number"
+                    id="vigencia"
+                    name="vigencia"
+                    placeholder="Vigencia"
+                    className="shadow appearance-none border rounded-l-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
+                    value={vigencia}
+                    onChange={(e) => setVigencia(e.target.value)}
+                  />
+                  <div className="ml-2 flex-shrink-0">
+                    <select
+                      className="bg-gray-200 text-gray-700 border border-gray-400 rounded-r-lg w-32 py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 dark:bg-gray-600 dark:text-gray-200 dark:border-gray-500"
+                      value={timeVigencia}
+                      onChange={(e) => setTimeVigencia(e.target.value)}
+                    >
+                      <option value="">Seleccione...</option>
+                      <option value="months">Meses</option>
+                      <option value="years">Años</option>
+                    </select>
+                  </div>
+                </div>
+                {errorVigencia && (
+                  <span className="text-red-500 dark:text-red-400">
+                    {errorVigencia}
+                  </span>
+                )}
+              </div>
+            )}
 
-            {contractTypes.find(ct => ct.nombre === tipoContrato)?.camposRequeridos.some(campo => campo.id === 'numeroDictamen') && <div className="mb-4">
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="numeroDictamen"
-              >
-                Número de Dictamen
-              </label>
-              <input
-                type="text"
-                id="numeroDictamen"
-                name="numeroDictamen"
-                placeholder="Núm. de Dictamen"
-                value={numeroDictamen}
-                onChange={(e) => setNumeroDictamen(e.target.value)}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              />
-              {errorNumeroDictamen && (
-                <span className="text-red-500">{errorNumeroDictamen}</span>
-              )}
-            </div>}
+            {contractTypes
+              .find((ct) => ct.nombre === tipoContrato)
+              ?.camposRequeridos.some((campo) => campo.id === "estado") && (
+              <div className="mb-4">
+                <label
+                  className="block text-gray-700 text-sm font-bold mb-2 dark:text-gray-300"
+                  htmlFor="estado"
+                >
+                  Estado
+                </label>
+                <select
+                  type="text"
+                  id="estado"
+                  name="estado"
+                  value={estado}
+                  onChange={(e) => setEstado(e.target.value)}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
+                >
+                  <option value="">Seleccione...</option>
+                  <option value="Ejecución">Ejecución</option>
+                  <option value="Finalizado">Finalizado</option>
+                  <option value="Cancelado">Cancelado</option>
+                </select>
+                {errorEstado && (
+                  <span className="text-red-500 dark:text-red-400">
+                    {errorEstado}
+                  </span>
+                )}
+              </div>
+            )}
 
-            {contractTypes.find(ct => ct.nombre === tipoContrato)?.camposRequeridos.some(campo => campo.id === 'subirPDF') &&<div className="mb-4">
-              <label
-                htmlFor="subirPDF"
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                Subir PDF
-              </label>
-              <FileUploadInput />
-            </div>}
+            {contractTypes
+              .find((ct) => ct.nombre === tipoContrato)
+              ?.camposRequeridos.some(
+                (campo) => campo.id === "numeroDictamen"
+              ) && (
+              <div className="mb-4">
+                <label
+                  className="block text-gray-700 text-sm font-bold mb-2 dark:text-gray-300"
+                  htmlFor="numeroDictamen"
+                >
+                  Número de Dictamen
+                </label>
+                <input
+                  type="text"
+                  id="numeroDictamen"
+                  name="numeroDictamen"
+                  placeholder="Núm. de Dictamen"
+                  value={numeroDictamen}
+                  onChange={(e) => setNumeroDictamen(e.target.value)}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
+                />
+                {errorNumeroDictamen && (
+                  <span className="text-red-500 dark:text-red-400">
+                    {errorNumeroDictamen}
+                  </span>
+                )}
+              </div>
+            )}
+
+            {contractTypes
+              .find((ct) => ct.nombre === tipoContrato)
+              ?.camposRequeridos.some((campo) => campo.id === "subirPDF") && (
+              <div className="mb-4">
+                <label
+                  htmlFor="subirPDF"
+                  className="block text-gray-700 text-sm font-bold mb-2 dark:text-gray-300"
+                >
+                  Subir PDF
+                </label>
+                <FileUploadInput />
+              </div>
+            )}
+
             <ConfirmationModal
               isOpen={showConfirmationModal}
               onClose={() => hideModalForConfirmation()}
@@ -643,15 +774,16 @@ const FormularioContrato = ({ tipoContrato }) => {
               }}
               title={
                 isEditing
-                  ? "¿Estas  seguro que deseas actualizar este registro de contrato?"
-                  : "¿Estas  seguro que deseas crear un nuevo registro de contrato?"
+                  ? "¿Estás seguro que deseas actualizar este registro de contrato?"
+                  : "¿Estás seguro que deseas crear un nuevo registro de contrato?"
               }
               message="Esta acción no se puede deshacer. ¿Deseas continuar?"
             />
+
             <div className="flex items-center justify-between">
               <p
                 onClick={showModalForConfirmation}
-                className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transform transition duration-150 ease-in-out"
+                className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transform transition duration-150 ease-in-out dark:bg-blue-600 dark:hover:bg-blue-700"
               >
                 {isEditing ? "Actualizar Registro" : "Crear Registro"}
               </p>
