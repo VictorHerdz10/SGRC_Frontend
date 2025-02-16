@@ -16,7 +16,7 @@ import useValidation from "../../hooks/useValidation";
 
 const Notification = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  
+
   const [showNotifications, setShowNotifications] = useState(false);
   const {
     showModal,
@@ -31,7 +31,7 @@ const Notification = () => {
     obtenerHoraActual,
     setNotifications,
     notifications,
-    obtenerNotificaciones
+    obtenerNotificaciones,
   } = useValidation();
 
   const handleDeleteNotification = async (notificationId) => {
@@ -91,7 +91,7 @@ const Notification = () => {
     <>
       <div className="relative">
         <FaBell
-          className="text-2xl cursor-pointer"
+          className="text-2xl dark:text-white cursor-pointer"
           onClick={handleshowNotification}
         />
         {notifications.length > 0 && (
