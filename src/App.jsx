@@ -20,7 +20,7 @@ import GestionUser from "./pages/GestionUser";
 import Perfil from "./pages/Perfil";
 import AdminLayout from "./layout/AdminLayout";
 import CambioPassword from "./pages/CambioPassword";
-import FrameOptions from './components/others/FrameOptions';
+import FrameOptions from "./components/others/FrameOptions";
 import DirectivoLayout from "./layout/DirectivoLayout";
 import EspecialistaLayout from "./layout/EspecialistaLayout";
 import GestionDataBase from "./pages/GestionDataBase";
@@ -45,6 +45,7 @@ function App() {
     document.querySelector("html").style.scrollBehavior = "auto";
     window.scroll({ top: 0 });
     document.querySelector("html").style.scrollBehavior = "";
+    AOS.refresh();
   }, [location.pathname]); // triggered on route change
 
   return (
@@ -53,7 +54,7 @@ function App() {
         <ValidationProvider>
           <Routes>
             <Route exact path="/" element={<Home />} />
-            
+
             {/* Rutas para redirigir a 404 si se intenta acceder directamente a los layouts */}
             <Route path="/admin" element={<NotFound />} />
             <Route path="/auth" element={<NotFound />} />
@@ -68,59 +69,48 @@ function App() {
             </Route>
 
             <Route path="/admin" element={<AdminLayout />}>
-            <Route path="gestion-trazas" element={<GestionTrazas />} />
-              <Route
-                path="registro-contrato"
-                element={<GestionRegistro />}
-              />
+              <Route path="gestion-trazas" element={<GestionTrazas />} />
+              <Route path="registro-contrato" element={<GestionRegistro />} />
               <Route
                 path="gestion-direccion-empresarial"
                 element={<GestionDireccion />}
               />
-               <Route
+              <Route
                 path="gestion-tipo-contrato"
                 element={<GestionTipoContrato />}
               />
-              <Route
-                path="gestion-entidad"
-                element={<GestionEntidad />}
-              />
+              <Route path="gestion-entidad" element={<GestionEntidad />} />
               <Route path="gestion-usuarios" element={<GestionUser />} />
               <Route path="respaldo-datos" element={<GestionDataBase />} />
               <Route path="mi-perfil" element={<Perfil />} />
             </Route>
 
             <Route path="/directivo" element={<DirectivoLayout />}>
+              <Route path="registro-contrato" element={<GestionRegistro />} />
               <Route
-                path="registro-contrato"
-                element={<GestionRegistro />}
+                path="gestion-tipo-contrato"
+                element={<GestionTipoContrato />}
               />
               <Route
                 path="gestion-direccion-empresarial"
                 element={<GestionDireccion />}
               />
-              <Route
-                path="gestion-entidad"
-                element={<GestionEntidad />}
-              />
+              <Route path="gestion-entidad" element={<GestionEntidad />} />
               <Route path="mi-perfil" element={<Perfil />} />
             </Route>
 
             <Route path="/especialista" element={<EspecialistaLayout />}>
-              <Route
-                path="registro-contrato"
-                element={<GestionRegistro />}
-              />
+              <Route path="registro-contrato" element={<GestionRegistro />} />
               <Route path="mi-perfil" element={<Perfil />} />
             </Route>
-            
+
             <Route path="*" element={<NotFound />} />
           </Routes>
         </ValidationProvider>
       </AuthProvider>
       <ToastContainer />
       <FrameOptions />
-      <ThemeToggle/>
+      <ThemeToggle />
     </>
   );
 }
