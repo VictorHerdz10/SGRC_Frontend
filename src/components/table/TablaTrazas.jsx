@@ -92,15 +92,15 @@ const PanelTrazas = () => {
 
   return (
     <>
-      <div className="container mx-auto p-4">
+      <div className="container mx-auto p-4 dark:text-white">
         <div>
-          <h2 className="bg-clip-text text-xl font-semibold mb-4 text-transparent bg-gradient-to-r from-blue-500 to-teal-400">
+          <h2 className="bg-clip-text text-2xl font-semibold mb-4 text-transparent bg-gradient-to-r from-blue-500 to-teal-400 dark:from-blue-300 dark:to-teal-200">
             Trazas generadas
           </h2>
           <div className="overflow-x-auto">
             {/* Buscador y Filtro */}
             <div className="flex flex-col md:flex-row gap-6 mb-6">
-              <div className="flex items-center bg-blue-500 border border-blue-600 rounded-lg overflow-hidden shadow-sm">
+              <div className="flex items-center bg-blue-500 border border-blue-600 rounded-lg overflow-hidden shadow-sm dark:bg-blue-600 dark:border-blue-700">
                 <div className="relative flex items-center w-full">
                   <style>
                     {`
@@ -115,17 +115,17 @@ const PanelTrazas = () => {
                     placeholder="Buscar..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="search-input flex-grow px-12 py-3 text-sm text-white bg-transparent border-none focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2"
+                    className="search-input flex-grow px-12 py-3 text-sm text-white bg-transparent border-none focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 dark:placeholder-gray-300"
                     disabled={filterField === "nada"}
                   />
-                  <FaSearch className="absolute left-4 w-5 h-5 text-white/70" />
+                  <FaSearch className="absolute left-4 w-5 h-5 text-white/70 dark:text-white/80" />
                 </div>
               </div>
 
               <select
                 value={filterField}
                 onChange={(e) => setFilterField(e.target.value)}
-                className="flex-shrink-0 w-full md:w-[200px] px-4 py-3 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                className="flex-shrink-0 w-full md:w-[200px] px-4 py-3 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500  dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               >
                 <option value="nada">Filtrar por ...</option>
                 <option value="all">Todas</option>
@@ -138,46 +138,73 @@ const PanelTrazas = () => {
               </select>
             </div>
             {/* Tabla */}
-            <table className="min-w-full bg-white">
+            <table className="min-w-full bg-white dark:bg-gray-800">
               <thead>
                 <tr>
-                  <th className="py-2 px-4 border-l border-b border-r">ID</th>
-                  <th className="py-2 px-4 border-l border-b border-r">
+                  <th className="py-2 px-4 border-l border-b border-r dark:border-gray-700">
+                    ID
+                  </th>
+                  <th className="py-2 px-4 border-l border-b border-r dark:border-gray-700">
                     Entidad
                   </th>
-                  <th className="py-2 px-4 border-b border-r">ID Entidad</th>
-                  <th className="py-2 px-4 border-b border-r">Acción</th>
-                  <th className="py-2 px-4 border-b border-r">Valor Antiguo</th>
-                  <th className="py-2 px-4 border-b border-r">Nuevo Valor</th>
-                  <th className="py-2 px-4 border-b border-r">Usuario</th>
-                  <th className="py-2 px-4 border-b border-r">Fecha</th>
-                  <th className="py-2 px-4 border-b border-r">IP</th>
-                  <th className="py-2 px-4 border-b border-r">Sesión</th>
-                  <th className="py-2 px-4 border-b border-r">Transacción</th>
-                  <th className="py-2 px-4 border-b border-r">Metadatos</th>
-                  <th className="py-2 px-4 border-b border-r">Acciones</th>
+                  <th className="py-2 px-4 border-b border-r dark:border-gray-700">
+                    ID Entidad
+                  </th>
+                  <th className="py-2 px-4 border-b border-r dark:border-gray-700">
+                    Acción
+                  </th>
+                  <th className="py-2 px-4 border-b border-r dark:border-gray-700">
+                    Valor Antiguo
+                  </th>
+                  <th className="py-2 px-4 border-b border-r dark:border-gray-700">
+                    Nuevo Valor
+                  </th>
+                  <th className="py-2 px-4 border-b border-r dark:border-gray-700">
+                    Usuario
+                  </th>
+                  <th className="py-2 px-4 border-b border-r dark:border-gray-700">
+                    Fecha
+                  </th>
+                  <th className="py-2 px-4 border-b border-r dark:border-gray-700">
+                    IP
+                  </th>
+                  <th className="py-2 px-4 border-b border-r dark:border-gray-700">
+                    Sesión
+                  </th>
+                  <th className="py-2 px-4 border-b border-r dark:border-gray-700">
+                    Transacción
+                  </th>
+                  <th className="py-2 px-4 border-b border-r dark:border-gray-700">
+                    Metadatos
+                  </th>
+                  <th className="py-2 px-4 border-b border-r dark:border-gray-700">
+                    Acciones
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {currentTrazas.map((trazas) => (
-                  <tr key={trazas._id}>
-                    <td className="py-2 border-l px-6 border-b border-r">
+                  <tr
+                    key={trazas._id}
+                    className="hover:bg-gray-50 dark:hover:bg-gray-700"
+                  >
+                    <td className="py-2 border-l px-6 border-b border-r dark:border-gray-600">
                       {trazas._id}
                     </td>
-                    <td className="py-2 px-4 border-b border-r">
+                    <td className="py-2 px-4 border-b border-r dark:border-gray-600">
                       {trazas.entity_name}
                     </td>
-                    <td className="py-2 px-4 border-b border-r">
+                    <td className="py-2 px-4 border-b border-r dark:border-gray-600">
                       {trazas.entity_id || "N/A"}
                     </td>
-                    <td className="py-2 px-4 border-b border-r">
+                    <td className="py-2 px-4 border-b border-r dark:border-gray-600">
                       {trazas.action_type}
                     </td>
-                    <td className="py-2 px-4 border-b border-r">
+                    <td className="py-2 px-4 border-b border-r dark:border-gray-600">
                       {trazas.old_value ? (
                         <button
                           onClick={() => setSelectedJson(trazas.old_value)}
-                          className="flex items-center space-x-1 bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600"
+                          className="flex items-center space-x-1 bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700"
                         >
                           <FaEye />
                           <span>Ver detalles</span>
@@ -186,11 +213,11 @@ const PanelTrazas = () => {
                         "N/A"
                       )}
                     </td>
-                    <td className="py-2 px-4 border-b border-r">
+                    <td className="py-2 px-4 border-b border-r dark:border-gray-600">
                       {trazas.new_value ? (
                         <button
                           onClick={() => setSelectedJson(trazas.new_value)}
-                          className="flex items-center space-x-1 bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600"
+                          className="flex items-center space-x-1 bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700"
                         >
                           <FaEye />
                           <span>Ver detalles</span>
@@ -199,28 +226,28 @@ const PanelTrazas = () => {
                         "N/A"
                       )}
                     </td>
-                    <td className="py-2 px-4 border-b border-r">
+                    <td className="py-2 px-4 border-b border-r dark:border-gray-600">
                       {trazas.changed_by}
                     </td>
-                    <td className="py-2 px-4 border-b border-r">
+                    <td className="py-2 px-4 border-b border-r dark:border-gray-600">
                       {formatDate(trazas.change_date)}
                     </td>
-                    <td className="py-2 px-4 border-b border-r">
+                    <td className="py-2 px-4 border-b border-r dark:border-gray-600">
                       {trazas.ip_address}
                     </td>
-                    <td className="py-2 px-4 border-b border-r">
+                    <td className="py-2 px-4 border-b border-r dark:border-gray-600">
                       {trazas.session_id}
                     </td>
-                    <td className="py-2 px-4 border-b border-r">
+                    <td className="py-2 px-4 border-b border-r dark:border-gray-600">
                       {trazas.transaction_id}
                     </td>
-                    <td className="py-2 px-4 border-b border-r">
+                    <td className="py-2 px-4 border-b border-r dark:border-gray-600">
                       {trazas.metadata ? (
                         <button
                           onClick={() =>
                             setSelectedJson(JSON.stringify(trazas.metadata))
                           }
-                          className="flex items-center space-x-1 bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600"
+                          className="flex items-center space-x-1 bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700"
                         >
                           <FaEye />
                           <span>Ver detalles</span>
@@ -229,10 +256,10 @@ const PanelTrazas = () => {
                         "N/A"
                       )}
                     </td>
-                    <td className="py-2 px-4 border-b border-r">
+                    <td className="py-2 px-4 border-b border-r dark:border-gray-600">
                       <div className="flex space-x-2 justify-center">
                         <FaTrash
-                          className="text-red-500 cursor-pointer"
+                          className="text-red-500 cursor-pointer dark:text-red-400"
                           onClick={() => {
                             setShowConfirmDelete(true);
                             setTrazasId(trazas._id);
@@ -250,7 +277,7 @@ const PanelTrazas = () => {
             <button
               onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
               disabled={currentPage === 1}
-              className="px-3 py-1 mx-1 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
+              className="px-3 py-1 mx-1 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
             >
               <FaChevronLeft />
             </button>
@@ -261,7 +288,7 @@ const PanelTrazas = () => {
                 className={`mx-1 px-3 py-1 rounded ${
                   currentPage === startPage + i
                     ? "bg-blue-600 text-white"
-                    : "bg-gray-200 text-gray-700"
+                    : "bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-white"
                 }`}
               >
                 {startPage + i}
@@ -272,7 +299,7 @@ const PanelTrazas = () => {
                 setCurrentPage((prev) => Math.min(totalPages, prev + 1))
               }
               disabled={currentPage === totalPages}
-              className="px-3 py-1 mx-1 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
+              className="px-3 py-1 mx-1 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
             >
               <FaChevronRight />
             </button>
@@ -281,28 +308,30 @@ const PanelTrazas = () => {
         {/* Modal de confirmación de eliminación */}
         {showConfirmDelete && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="relative w-full max-w-md p-6 bg-white rounded-lg shadow-xl animate-slideIn">
+            <div className="relative w-full max-w-md p-6 bg-white rounded-lg shadow-xl animate-slideIn dark:bg-gray-800">
               <button
                 onClick={() => setShowConfirmDelete(false)}
-                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors"
+                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors dark:text-gray-400 dark:hover:text-gray-200"
                 aria-label="Close confirmation"
               >
                 <IoClose size={24} />
               </button>
-              <h2 className="text-xl font-bold mb-4">Advertencia</h2>
-              <p className="text-gray-600 mb-6">
+              <h2 className="text-xl font-bold mb-4 dark:text-white">
+                Advertencia
+              </h2>
+              <p className="text-gray-600 mb-6 dark:text-gray-300">
                 ¿Estás seguro de que deseas eliminar esta traza?
               </p>
               <div className="flex justify-end space-x-4">
                 <button
                   onClick={() => setShowConfirmDelete(false)}
-                  className="px-4 py-2 text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                  className="px-4 py-2 text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors dark:text-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600"
                 >
                   Cancelar
                 </button>
                 <button
                   onClick={() => handleDeleteTrazas(trazasId)}
-                  className="px-4 py-2 text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors"
+                  className="px-4 py-2 text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors dark:bg-red-500 dark:hover:bg-red-600"
                 >
                   Eliminar
                 </button>
@@ -312,16 +341,18 @@ const PanelTrazas = () => {
         )}
         {selectedJson && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="relative w-full max-w-md p-6 bg-white rounded-lg shadow-xl animate-slideIn">
+            <div className="relative w-full max-w-md p-6 bg-white rounded-lg shadow-xl animate-slideIn dark:bg-gray-800">
               <button
                 onClick={() => setSelectedJson(null)}
-                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors"
+                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors dark:text-gray-400 dark:hover:text-gray-200"
                 aria-label="Close JSON viewer"
               >
                 <IoClose size={24} />
               </button>
-              <h2 className="text-xl font-bold mb-4">Detalles</h2>
-              <div className="bg-gray-100 p-4 rounded">
+              <h2 className="text-xl font-bold mb-4 dark:text-white">
+                Detalles
+              </h2>
+              <div className="bg-gray-100 p-4 rounded dark:bg-gray-700">
                 {(() => {
                   const formatted = formatJSON(selectedJson); // Formatea el JSON o devuelve el string
                   if (
@@ -329,7 +360,9 @@ const PanelTrazas = () => {
                     !formatted.startsWith("{")
                   ) {
                     // Si es un string simple (no JSON), lo muestra en negrita
-                    return <p className="font-bold">{formatted}</p>;
+                    return (
+                      <p className="font-bold dark:text-white">{formatted}</p>
+                    );
                   } else {
                     // Si es un JSON válido, lo pasa al JsonViewer
                     return <JsonViewer json={JSON.parse(formatted)} />;
