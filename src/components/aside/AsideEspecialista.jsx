@@ -10,7 +10,7 @@ import { RiDashboardFill, RiLogoutBoxRLine } from "react-icons/ri";
 import { BsFileEarmarkText } from "react-icons/bs";
 import useValidation from "../../hooks/useValidation";
 import { useLocation, useNavigate } from "react-router-dom";
-const SideMenu = () => {
+const AsideEspecialista = () => {
   const {
     isOpen,
     setIsOpen,
@@ -24,6 +24,8 @@ const SideMenu = () => {
     setEntidades,
     obtenerDirecciones,
     obtenerEntidades,
+    obtenerTiposContrato,
+    setContractTypes,
   } = useValidation();
   const [activeItem, setActiveItem] = useState("dashboard");
   const menuRef = useRef(null);
@@ -46,50 +48,46 @@ const SideMenu = () => {
       const executeOnPageReload = async () => {
         try {
           switch (window.location.pathname) {
-            case "/admin/registro-contrato":
-              console.log('aqui en registro')
-              await obtenerRegistros();
+            case "/especialista/registro-contrato":
+              console.log("aqui en registro");
+              await obtenerTiposContrato();
               await obtenerDirecciones();
               await obtenerNotificaciones();
               await obtenerEntidades();
               await obtenerPerfil();
-              await setBackupHistory([]);
-              await setUsers([]);
               break;
-            case "/admin/mi-perfil":
+            case "/especialista/mi-perfil":
               await obtenerPerfil();
               await obtenerNotificaciones();
               await setDirecciones([]);
               await setEntidades([]);
               await setContratos([]);
-              await setBackupHistory([]);
-              await setUsers([]);
+              await setContractTypes([]);
               break;
             default:
-              navigate('/404');
-              
+              navigate("/404");
           }
         } catch (error) {
-          console.error('Error during page reload operations:', error);
+          console.error("Error during page reload operations:", error);
         }
       };
-  
+
       executeOnPageReload();
-  
-      window.addEventListener('beforeunload', () => {
-        localStorage.setItem('pageReloaded', 'true');
+
+      window.addEventListener("beforeunload", () => {
+        localStorage.setItem("pageReloaded", "true");
       });
-  
-      if (localStorage.getItem('pageReloaded') === 'true') {
+
+      if (localStorage.getItem("pageReloaded") === "true") {
         executeOnPageReload();
-        localStorage.removeItem('pageReloaded');
+        localStorage.removeItem("pageReloaded");
       }
-  
+
       return () => {
-        window.removeEventListener('beforeunload', () => {});
+        window.removeEventListener("beforeunload", () => {});
       };
-    }, [navigate ]);
-  
+    }, [navigate]);
+
     return null; // Esta función no devuelve nada, solo ejecuta efectos secundarios
   };
   const menuItems = [
@@ -154,7 +152,7 @@ const SideMenu = () => {
       setShowConfirmModal(true);
     }
     if (itemId === "records") {
-      await obtenerRegistros();
+      await obtenerTiposContrato();
       await obtenerDirecciones();
       await obtenerNotificaciones();
       await obtenerEntidades();
@@ -166,6 +164,7 @@ const SideMenu = () => {
       await setDirecciones([]);
       await setEntidades([]);
       await setContratos([]);
+      await setContractTypes([]);
     }
     setActiveItem(itemId);
     navigate(path);
@@ -174,14 +173,14 @@ const SideMenu = () => {
   return (
     <div
       ref={menuRef}
-      className={`fixed top-0 left-0 h-full bg-white shadow-xl transition-all duration-300 ease-in-out ${
+      className={`fixed top-0 left-0 h-full bg-white dark:bg-gray-800 shadow-xl transition-all duration-300 ease-in-out ${
         isOpen ? "w-64" : "w-20"
       }`}
     >
       <div className="flex flex-col h-full">
-        <div className="flex items-center justify-between p-4 border-b border-gray-200">
+        <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
           <h1
-            className={`font-semibold text-gray-800 transition-opacity duration-200 ${
+            className={`font-semibold text-gray-800 dark:text-gray-300 transition-opacity duration-200 ${
               isOpen ? "opacity-100" : "opacity-0 hidden"
             }`}
           >
@@ -189,11 +188,11 @@ const SideMenu = () => {
           </h1>
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="p-2 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
+            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-600"
             aria-label="Toggle menu"
             disabled={window.innerWidth <= 1024}
           >
-            <RiDashboardFill className="text-xl text-gray-600" />
+            <RiDashboardFill className="text-xl text-gray-600 dark:text-gray-300" />
           </button>
         </div>
 
@@ -203,10 +202,10 @@ const SideMenu = () => {
               <li key={item.id}>
                 <button
                   onClick={() => handleMenuClick(item.id, item.path)}
-                  className={`w-full flex items-center p-3 rounded-lg transition-all duration-200 ${
+                  className={`w-full flex items-center p-3 rounded-lg transition-all duration-200 dark:text-gray-300 ${
                     activeItem === item.id
-                      ? "bg-blue-50 text-blue-600"
-                      : "text-gray-600 hover:bg-gray-100"
+                      ? "bg-blue-50 text-blue-600 dark:bg-blue-900 dark:text-gray-100"
+                      : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-blue-800"
                   }`}
                   aria-label={item.label}
                 >
@@ -230,4 +229,4 @@ const SideMenu = () => {
   );
 };
 
-export default SideMenu;
+export default AsideEspecialista;
