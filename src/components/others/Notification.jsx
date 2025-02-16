@@ -16,7 +16,6 @@ import useValidation from "../../hooks/useValidation";
 
 const Notification = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-
   const [showNotifications, setShowNotifications] = useState(false);
   const {
     showModal,
@@ -62,9 +61,11 @@ const Notification = () => {
       setShowNotifications(false);
     }, 10000);
   };
+
   const handleCloseNotification = () => {
     setShowNotifications(false);
   };
+
   const handleClearAllNotifications = async () => {
     const token = localStorage.getItem("token");
     const config = {
@@ -100,12 +101,12 @@ const Notification = () => {
           </span>
         )}
         {showNotifications && (
-          <div className="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg py-1 z-10">
+          <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-10">
             <a
               className="text-bold justify-end w-full text-xs text-end flex"
               onClick={handleCloseNotification}
             >
-              <p className="text-xs hover:text-xl hover:text-black justify-end items-end">
+              <p className="text-xs hover:text-xl hover:text-black dark:hover:text-white justify-end items-end">
                 <IoClose size={20} />{" "}
               </p>
             </a>
@@ -114,13 +115,13 @@ const Notification = () => {
                 {notifications.map((notification) => (
                   <div
                     key={notification._id}
-                    className="flex items-center justify-between px-4 py-2 hover:bg-gray-100"
+                    className="flex items-center justify-between px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
                     <div>
-                      <p className="text-sm text-gray-700">
+                      <p className="text-sm text-gray-700 dark:text-gray-200">
                         {notification.description}
                       </p>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
                         hace{" "}
                         {calcularTiempoTranscurrido(
                           restarCuatroHoras(new Date(notification.create)),
@@ -147,10 +148,12 @@ const Notification = () => {
                 ))}
               </>
             ) : (
-              <p className="text-clip text-gray-500">No hay notificaciones</p>
+              <p className="text-clip text-gray-500 dark:text-gray-400 text-center w-full py-2">
+                No hay notificaciones
+              </p>
             )}
             <button
-              className="w-full text-center py-2 text-sm text-red-500 hover:bg-gray-100"
+              className="w-full text-center py-2 text-sm text-red-500 hover:bg-gray-100 dark:hover:bg-gray-700"
               onClick={() => setShowConfirmModal(true)}
             >
               Limpiar Todas
@@ -160,22 +163,22 @@ const Notification = () => {
       </div>
       {showConfirmModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="relative w-full max-w-md p-6 bg-white rounded-lg shadow-xl animate-slideIn">
+          <div className="relative w-full max-w-md p-6 bg-white dark:bg-gray-800 rounded-lg shadow-xl animate-slideIn">
             <button
               onClick={() => setShowConfirmModal(false)}
-              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors"
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
               aria-label="Close confirmation"
             >
               <IoClose size={24} />
             </button>
-            <h2 className="text-xl font-bold mb-4">Advertencia</h2>
-            <p className="text-gray-600 mb-6">
+            <h2 className="text-xl font-bold mb-4 dark:text-white">Advertencia</h2>
+            <p className="text-gray-600 dark:text-gray-400 mb-6">
               ¿Estás seguro de que deseas borrar todas las notificaciones?
             </p>
             <div className="flex justify-end space-x-4">
               <button
                 onClick={() => setShowConfirmModal(false)}
-                className="px-4 py-2 text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                className="px-4 py-2 text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
               >
                 Cancelar
               </button>
