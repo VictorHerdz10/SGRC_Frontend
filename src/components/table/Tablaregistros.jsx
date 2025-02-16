@@ -811,8 +811,8 @@ const ContractTable = ({ tipoContrato }) => {
   const Modal = () => {
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-white p-8 rounded-lg max-w-md w-full animate-slideIn">
-          <h2 className="text-2xl font-bold mb-4">
+        <div className="bg-white dark:bg-gray-800 p-8 rounded-lg max-w-md w-full animate-slideIn">
+          <h2 className="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-200">
             {modalType === "view" && "Detalles de la Factura"}
             {modalType === "delete" && "Eliminar Factura"}
             {modalType === "info" && "Detalles del Registro"}
@@ -822,15 +822,15 @@ const ContractTable = ({ tipoContrato }) => {
             {modalType === "view" && (
               <div>
                 <div></div>
-                <p className="font-semibold ">
+                <p className="font-semibold text-gray-800 dark:text-gray-200">
                   Número de factura:{" "}
-                  <span className="text-gray-600">
+                  <span className="text-gray-600 dark:text-gray-400">
                     {selectedInvoice?.numeroDictamen}
                   </span>
                 </p>
-                <p className="font-semibold ">
+                <p className="font-semibold text-gray-800 dark:text-gray-200">
                   Fecha:{" "}
-                  <span className="text-gray-600">
+                  <span className="text-gray-600 dark:text-gray-400">
                     {parcearDate(
                       restarCuatroHoras(
                         new Date(selectedInvoice?.fechaCreacion)
@@ -838,31 +838,31 @@ const ContractTable = ({ tipoContrato }) => {
                     )}
                   </span>
                 </p>
-                <p className="font-semibold ">
+                <p className="font-semibold text-gray-800 dark:text-gray-200">
                   Monto:{" "}
-                  <span className="text-gray-600">
+                  <span className="text-gray-600 dark:text-gray-400">
                     ${selectedInvoice?.monto}
                   </span>
                 </p>
               </div>
             )}
             {modalType === "delete" && (
-              <p>
+              <p className="text-gray-800 dark:text-gray-200">
                 ¿Está seguro de eliminar la factura{" "}
                 {selectedInvoice?.numeroDictamen}?
               </p>
             )}
             {modalType === "info" && (
               <div>
-                <p className=" font-semibold ">
+                <p className="font-semibold text-gray-800 dark:text-gray-200">
                   Creado por:{" "}
-                  <span className="text-gray-600">
+                  <span className="text-gray-600 dark:text-gray-400">
                     {contrato.info?.creadoPor}
                   </span>
                 </p>
-                <p className=" font-semibold ">
+                <p className="font-semibold text-gray-800 dark:text-gray-200">
                   Fecha de creación:{" "}
-                  <span className="text-gray-600">
+                  <span className="text-gray-600 dark:text-gray-400">
                     {parcearDate(
                       restarCuatroHoras(
                         new Date(contrato.info?.fechaDeCreacion)
@@ -870,15 +870,15 @@ const ContractTable = ({ tipoContrato }) => {
                     )}
                   </span>
                 </p>
-                <p className=" font-semibold ">
+                <p className="font-semibold text-gray-800 dark:text-gray-200">
                   Modificado por:{" "}
-                  <span className="text-gray-600">
+                  <span className="text-gray-600 dark:text-gray-400">
                     {contrato.info?.modificadoPor}
                   </span>
                 </p>
-                <p className=" font-semibold ">
+                <p className="font-semibold text-gray-800 dark:text-gray-200">
                   Fecha de modificación:{" "}
-                  <span className="text-gray-600">
+                  <span className="text-gray-600 dark:text-gray-400">
                     {parcearDate(
                       restarCuatroHoras(
                         new Date(contrato.info?.fechaDeModificacion)
@@ -895,7 +895,7 @@ const ContractTable = ({ tipoContrato }) => {
               onClick={() => {
                 setShowModal(false);
               }}
-              className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+              className="px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 rounded hover:bg-gray-300 dark:hover:bg-gray-500"
             >
               {modalType === "view" || modalType === "info"
                 ? "Cerrar"
@@ -906,7 +906,7 @@ const ContractTable = ({ tipoContrato }) => {
                 {modalType === "delete" ? (
                   <button
                     onClick={() => handleDelete()}
-                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700"
                   >
                     Eliminar
                   </button>
@@ -924,7 +924,7 @@ const ContractTable = ({ tipoContrato }) => {
   return (
     <>
       <div className="container mx-auto p-4 pr-12">
-        <h1 className="text-3xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400">
+        <h1 className="text-3xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400 dark:from-blue-300 dark:to-teal-200">
           Listado de Contratos{" "}
         </h1>
         <div className="mb-4 pr-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -939,7 +939,7 @@ const ContractTable = ({ tipoContrato }) => {
               placeholder="Filtrar por dirección ejecutiva"
               value={filtarDireccion}
               onChange={(e) => setFiltrarDireccion(e.target.value)}
-              className="rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+              className="rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 dark:bg-gray-700 dark:text-gray-200"
             >
               <option value=" ">Filtrar por dirección ejecutiva</option>
               {direcciones.map((direccion) => (
@@ -961,7 +961,7 @@ const ContractTable = ({ tipoContrato }) => {
               placeholder="Entidad"
               value={filtarEntidad}
               onChange={(e) => setFiltrarEntidad(e.target.value)}
-              className="rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+              className="rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 dark:bg-gray-700 dark:text-gray-200"
             >
               <option value=" ">Filtar por entidad</option>
               {entidades.map((entidad) => (
@@ -981,7 +981,7 @@ const ContractTable = ({ tipoContrato }) => {
               name="estado"
               value={filtarEstado}
               onChange={(e) => setFiltrarEstado(e.target.value)}
-              className="rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+              className="rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 dark:bg-gray-700 dark:text-gray-200"
             >
               <option value=" ">Filtar por estado</option>
               <option value="Ejecución">Ejecución</option>
@@ -989,32 +989,40 @@ const ContractTable = ({ tipoContrato }) => {
               <option value="Cancelado">Cancelado</option>
             </select>
           )}
-          <button
-            onClick={() => handleFilter()}
-            className="bg-blue-700 text-white py-2 px-4 rounded-md hover:bg-blue-900  transition duration-200"
-          >
-            Aplicar Filtros
-          </button>
-          <button
-            onClick={() => {
-              setFiltrarDireccion("");
-              setFiltrarEntidad("");
-              setFiltrarEstado("");
-              obtenerRegistros(tipoContrato);
-            }}
-            className="bg-gray-200 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 transition duration-200"
-          >
-            Limpiar Filtros
-          </button>
+          {contractTypes
+            .find((ct) => ct.nombre === tipoContrato)
+            ?.camposRequeridos.some((campo) =>
+              ["estado", "entidad", "direccionEjecutiva"].includes(campo.id)
+            ) && (
+            <>
+              <button
+                onClick={() => handleFilter()}
+                className="bg-blue-700 text-white py-2 px-4 rounded-md hover:bg-blue-900 transition duration-200  dark:bg-blue-600 dark:hover:bg-blue-800"
+              >
+                Aplicar Filtros
+              </button>
+              <button
+                onClick={() => {
+                  setFiltrarDireccion("");
+                  setFiltrarEntidad("");
+                  setFiltrarEstado("");
+                  obtenerRegistros(tipoContrato);
+                }}
+                className="bg-gray-200 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 transition duration-200 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-700"
+              >
+                Limpiar Filtros
+              </button>
+            </>
+          )}
           <button
             onClick={() => exportToPDF(contratos)}
-            className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors dark:bg-red-700 dark:hover:bg-red-800"
           >
             <FaFilePdf /> Export PDF
           </button>
           <button
             onClick={() => exportToExcel(contratos)}
-            className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors dark:bg-green-700 dark:hover:bg-green-800"
           >
             <FaFileExcel /> Export Excel
           </button>
@@ -1022,16 +1030,16 @@ const ContractTable = ({ tipoContrato }) => {
         <div className="overflow-x-auto">
           {loading ? (
             <div className="flex justify-center items-center min-h-[400px]">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 dark:border-blue-400"></div>
             </div>
           ) : (
-            <table className="min-w-full bg-white shadow-md rounded-lg">
-              <thead className="bg-gray-100">
+            <table className="min-w-full bg-white dark:bg-gray-800  shadow-md rounded-lg">
+              <thead className="bg-gray-100 dark:bg-gray-700">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-l">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider border-l">
                     No.
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                     Tipo de Contrato
                   </th>
                   {contractTypes
@@ -1039,7 +1047,7 @@ const ContractTable = ({ tipoContrato }) => {
                     ?.camposRequeridos.some(
                       (campo) => campo.id === "objetoContrato"
                     ) && (
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                       Objeto del Contrato
                     </th>
                   )}
@@ -1048,7 +1056,7 @@ const ContractTable = ({ tipoContrato }) => {
                     ?.camposRequeridos.some(
                       (campo) => campo.id === "entidad"
                     ) && (
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                       Entidad
                     </th>
                   )}
@@ -1057,7 +1065,7 @@ const ContractTable = ({ tipoContrato }) => {
                     ?.camposRequeridos.some(
                       (campo) => campo.id === "direccionEjecutiva"
                     ) && (
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                       Dirección Ejecutiva
                     </th>
                   )}
@@ -1066,7 +1074,7 @@ const ContractTable = ({ tipoContrato }) => {
                     ?.camposRequeridos.some(
                       (campo) => campo.id === "aprobadorCC"
                     ) && (
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                       Aprobado por el CC
                     </th>
                   )}
@@ -1075,7 +1083,7 @@ const ContractTable = ({ tipoContrato }) => {
                     ?.camposRequeridos.some(
                       (campo) => campo.id === "fechaFirmada"
                     ) && (
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                       Firmado
                     </th>
                   )}
@@ -1084,7 +1092,7 @@ const ContractTable = ({ tipoContrato }) => {
                     ?.camposRequeridos.some(
                       (campo) => campo.id === "entregadoJuridica"
                     ) && (
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                       Entregado al área jurídica
                     </th>
                   )}
@@ -1093,7 +1101,7 @@ const ContractTable = ({ tipoContrato }) => {
                     ?.camposRequeridos.some(
                       (campo) => campo.id === "fechaRecibido"
                     ) && (
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                       Fecha Recibido
                     </th>
                   )}
@@ -1102,7 +1110,7 @@ const ContractTable = ({ tipoContrato }) => {
                     ?.camposRequeridos.some(
                       (campo) => campo.id === "monto"
                     ) && (
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                       Monto
                     </th>
                   )}
@@ -1111,7 +1119,7 @@ const ContractTable = ({ tipoContrato }) => {
                     ?.camposRequeridos.some(
                       (campo) => campo.id === "monto"
                     ) && (
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                       Monto Disponible
                     </th>
                   )}
@@ -1120,11 +1128,11 @@ const ContractTable = ({ tipoContrato }) => {
                     ?.camposRequeridos.some(
                       (campo) => campo.id === "monto"
                     ) && (
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                       Monto Gastado
                     </th>
                   )}
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                     Facturas
                   </th>
                   {contractTypes
@@ -1132,7 +1140,7 @@ const ContractTable = ({ tipoContrato }) => {
                     ?.camposRequeridos.some(
                       (campo) => campo.id === "vigencia"
                     ) && (
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                       Vigencia
                     </th>
                   )}
@@ -1141,7 +1149,7 @@ const ContractTable = ({ tipoContrato }) => {
                     ?.camposRequeridos.some(
                       (campo) => campo.id === "fechaRecibido"
                     ) && (
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                       Fecha de Vencimiento
                     </th>
                   )}
@@ -1150,7 +1158,7 @@ const ContractTable = ({ tipoContrato }) => {
                     ?.camposRequeridos.some(
                       (campo) => campo.id === "estado"
                     ) && (
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                       Estado
                     </th>
                   )}
@@ -1159,7 +1167,7 @@ const ContractTable = ({ tipoContrato }) => {
                     ?.camposRequeridos.some(
                       (campo) => campo.id === "numeroDictamen"
                     ) && (
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                       No. de Dictamen
                     </th>
                   )}
@@ -1168,71 +1176,74 @@ const ContractTable = ({ tipoContrato }) => {
                     ?.camposRequeridos.some(
                       (campo) => campo.id === "subirPDF"
                     ) && (
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                       PDF
                     </th>
                   )}
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                     Editar e info del Registro
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-r">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider border-r">
                     Crear Factura
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                 {currentItems.map((contract, index) => (
-                  <tr className="border-l border-r" key={contract._id}>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                  <tr
+                    className="border-l border-r dark:border-gray-700"
+                    key={contract._id}
+                  >
+                    <td className="px-6 py-4 whitespace-nowrap dark:text-gray-200">
                       {calculatePageIndex(currentPage, index) + 1}
                     </td>
                     {contract.tipoDeContrato && (
-                      <td className="px-6 py-4 whitespace-normal break-words max-w-xs ">
+                      <td className="px-6 py-4 whitespace-normal break-words max-w-xs dark:text-gray-200">
                         {contract.tipoDeContrato}
                       </td>
                     )}
                     {contract.objetoDelContrato && (
-                      <td className="px-6 py-4  whitespace-normal break-words max-w-xs ">
+                      <td className="px-6 py-4 whitespace-normal break-words max-w-xs dark:text-gray-200">
                         {contract.objetoDelContrato}
                       </td>
                     )}
                     {contract.entidad && (
-                      <td className="px-6 py-4 whitespace-normal break-words max-w-xs ">
+                      <td className="px-6 py-4 whitespace-normal break-words max-w-xs dark:text-gray-200">
                         {contract.entidad}
                       </td>
                     )}
                     {contract.direccionEjecuta && (
-                      <td className="px-6 py-4 whitespace-normal break-words max-w-xs ">
+                      <td className="px-6 py-4 whitespace-normal break-words max-w-xs dark:text-gray-200">
                         {contract.direccionEjecuta}
                       </td>
                     )}
                     {contract.aprobadoPorCC && (
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-6 py-4 whitespace-nowrap dark:text-gray-200">
                         {parcearDate(new Date(contract.aprobadoPorCC))}
                       </td>
                     )}
                     {contract.firmado && (
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-6 py-4 whitespace-nowrap dark:text-gray-200">
                         {parcearDate(new Date(contract.firmado))}
                       </td>
                     )}
                     {contract.entregadoJuridica && (
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-6 py-4 whitespace-nowrap dark:text-gray-200">
                         {parcearDate(new Date(contract.entregadoJuridica))}
                       </td>
                     )}
                     {contract.fechaRecibido && (
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-6 py-4 whitespace-nowrap dark:text-gray-200">
                         {parcearDate(new Date(contract.fechaRecibido))}
                       </td>
                     )}
                     {contract.valorPrincipal && (
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-6 py-4 whitespace-nowrap dark:text-gray-200">
                         ${contract.valorPrincipal}
                       </td>
                     )}
                     {contract.valorPrincipal && (
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-6 py-4 whitespace-nowrap dark:text-gray-200">
                         <div className="flex items-center">
                           <div
                             className={`w-3 h-3 rounded-full ${getValueColor(
@@ -1245,14 +1256,14 @@ const ContractTable = ({ tipoContrato }) => {
                       </td>
                     )}
                     {contract.valorPrincipal && (
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-6 py-4 whitespace-nowrap dark:text-gray-200">
                         ${contract.valorGastado}
                       </td>
                     )}
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-4 dark:text-gray-200">
                       <div className="space-y-2">
                         {contract.factura.length === 0 ? (
-                          <p className=" text-clip text-gray-500">
+                          <p className="text-clip text-gray-500 dark:text-gray-400">
                             Sin facturas asociadas
                           </p>
                         ) : (
@@ -1266,20 +1277,20 @@ const ContractTable = ({ tipoContrato }) => {
                                   <span>Fac {factura.numeroDictamen}</span>
                                   <div className="flex space-x-1">
                                     <FaEye
-                                      className="text-blue-500 cursor-pointer"
+                                      className="text-blue-500 cursor-pointer dark:text-blue-400"
                                       onClick={() =>
                                         handleModal("view", factura, "")
                                       }
                                     />
                                     <FaTrash
-                                      className="text-red-500 cursor-pointer"
+                                      className="text-red-500 cursor-pointer dark:text-red-400"
                                       onClick={() => {
                                         handleModal("delete", factura, "");
                                         setId(contract._id);
                                       }}
                                     />
                                     <FaEdit
-                                      className="text-yellow-500 cursor-pointer"
+                                      className="text-yellow-500 cursor-pointer dark:text-yellow-400"
                                       onClick={() => {
                                         setNumeroDictamenNew(
                                           factura?.numeroDictamen
@@ -1304,37 +1315,37 @@ const ContractTable = ({ tipoContrato }) => {
                       </div>
                     </td>
                     {contract.vigencia && (
-                      <td className="px-6 whitespace-normal break-words max-w-xs ">
+                      <td className="px-6 whitespace-normal break-words max-w-xs dark:text-gray-200">
                         {parseDuration(contract.vigencia)}
                       </td>
                     )}
                     {contract.fechaVencimiento && (
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-6 py-4 whitespace-nowrap dark:text-gray-200">
                         {parcearDate(new Date(contract.fechaVencimiento))}
                       </td>
                     )}
                     {contract.estado && (
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-6 py-4 whitespace-nowrap dark:text-gray-200">
                         {contract.estado}
                       </td>
                     )}
                     {contract.numeroDictamen && (
-                      <td className="px-6 py-4 whitespace-nowrap text-center">
+                      <td className="px-6 py-4 whitespace-nowrap text-center dark:text-gray-200">
                         {contract.numeroDictamen}
                       </td>
                     )}
                     {contract.subirPDF && (
                       <td className="px-6 py-4 whitespace-nowrap">
                         <FaFileDownload
-                          className="text-blue-500 cursor-pointer"
+                          className="text-blue-500 cursor-pointer dark:text-blue-400"
                           onClick={() => handleDownload(contract._id)}
                         />
                       </td>
                     )}
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className=" flex space-x-2 justify-around">
+                      <div className="flex space-x-2 justify-around">
                         <FaPencilAlt
-                          className="text-blue-500  cursor-pointer"
+                          className="text-blue-500 cursor-pointer dark:text-blue-400"
                           onClick={() => {
                             setShowForm(true);
                             setSelectContrato(contract);
@@ -1342,14 +1353,14 @@ const ContractTable = ({ tipoContrato }) => {
                           }}
                         />
                         <FaTrash
-                          className="text-red-500 cursor-pointer"
+                          className="text-red-500 cursor-pointer dark:text-red-400"
                           onClick={() => {
                             setShowEliminarModal(true);
                             setId(contract._id);
                           }}
                         />
                         <FaInfoCircle
-                          className="text-blue-500  cursor-pointer"
+                          className="text-blue-500 cursor-pointer dark:text-blue-400"
                           onClick={() => handleModal("info", contract, "")}
                         />
                       </div>
@@ -1362,10 +1373,10 @@ const ContractTable = ({ tipoContrato }) => {
                           setMonto("");
                           setNumeroDictamen("");
                         }}
-                        className="flex items-center space-x-1 px-1 py-1 bg-blue-700 text-white rounded hover:bg-blue-800"
+                        className="flex items-center space-x-1 px-1 py-1 bg-blue-700 text-white rounded hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700"
                       >
                         <FaPlus className="h-3 w-2" />
-                        <span className=" text-white font-serif text-sm">
+                        <span className="text-white font-serif text-sm">
                           Crear Factura
                         </span>
                       </button>
@@ -1377,8 +1388,8 @@ const ContractTable = ({ tipoContrato }) => {
           )}
           {showModalUpdate && (
             <>
-              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                <div className="relative w-full max-w-md p-6 bg-white rounded-lg shadow-xl animate-slideIn">
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 dark:bg-opacity-70">
+                <div className="relative w-full max-w-md p-6 bg-white rounded-lg shadow-xl animate-slideIn dark:bg-gray-800">
                   <button
                     onClick={() => {
                       setShowModalUpdate(false);
@@ -1390,18 +1401,18 @@ const ContractTable = ({ tipoContrato }) => {
                       setErrorText1("");
                       setId("");
                     }}
-                    className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors"
+                    className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors dark:text-gray-300 dark:hover:text-gray-100"
                     aria-label="Close confirmation"
                   >
                     <IoClose size={24} />
                   </button>
-                  <h3 className="text-xl font-semibold mb-4">
+                  <h3 className="text-xl font-semibold mb-4 dark:text-white">
                     Actualizar factura
                   </h3>
                   <div className="mb-4">
                     <label
                       htmlFor="numeroDictamen"
-                      className="block text-gray-700 text-sm font-semibold mb-1"
+                      className="block text-gray-700 text-sm font-semibold mb-1 dark:text-gray-300"
                     >
                       Número de factura
                     </label>
@@ -1412,16 +1423,18 @@ const ContractTable = ({ tipoContrato }) => {
                       placeholder="Número de factura"
                       value={numeroDictamenNew}
                       onChange={(e) => setNumeroDictamenNew(e.target.value)}
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
                     />
                     {errorText && (
-                      <span className="text-red-500">{errorText}</span>
+                      <span className="text-red-500 dark:text-red-400">
+                        {errorText}
+                      </span>
                     )}
                   </div>
                   <div className="mb-4">
                     <label
                       htmlFor="monto"
-                      className="block text-gray-700 text-sm font-semibold mb-1"
+                      className="block text-gray-700 text-sm font-semibold mb-1 dark:text-gray-300"
                     >
                       Monto (Valor Actual: {actualMonto})
                     </label>
@@ -1434,17 +1447,19 @@ const ContractTable = ({ tipoContrato }) => {
                       onChange={(e) => {
                         setMonto(e.target.value);
                       }}
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
                     />
                     {errorText1 && (
-                      <span className="text-red-500">{errorText1}</span>
+                      <span className="text-red-500 dark:text-red-400">
+                        {errorText1}
+                      </span>
                     )}
                     {errorMonto && (
                       <span
                         className={`${
                           errorMonto.success === true
-                            ? "text-green-500"
-                            : "text-red-500"
+                            ? "text-green-500 dark:text-green-400"
+                            : "text-red-500 dark:text-red-400"
                         }`}
                       >
                         {errorMonto.msg}
@@ -1463,13 +1478,13 @@ const ContractTable = ({ tipoContrato }) => {
                         setMonto("");
                         setId("");
                       }}
-                      className="px-4 py-2 text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                      className="px-4 py-2 text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors dark:text-gray-200 dark:bg-gray-600 dark:hover:bg-gray-700"
                     >
                       Cancelar
                     </button>
                     <button
                       onClick={(e) => handleUpdate(e)}
-                      className={`px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors`}
+                      className={`px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors dark:bg-blue-700 dark:hover:bg-blue-800`}
                     >
                       Actualizar
                     </button>
@@ -1480,8 +1495,8 @@ const ContractTable = ({ tipoContrato }) => {
           )}
           {showModalCreate && (
             <>
-              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                <div className="relative w-full max-w-md p-6 bg-white rounded-lg shadow-xl animate-slideIn">
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 dark:bg-opacity-70">
+                <div className="relative w-full max-w-md p-6 bg-white rounded-lg shadow-xl animate-slideIn dark:bg-gray-800">
                   <button
                     onClick={() => {
                       setShowModalCreate(false);
@@ -1492,18 +1507,18 @@ const ContractTable = ({ tipoContrato }) => {
                       setMonto("");
                       setNumeroDictamen("");
                     }}
-                    className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors"
+                    className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors dark:text-gray-300 dark:hover:text-gray-100"
                     aria-label="Close confirmation"
                   >
                     <IoClose size={24} />
                   </button>
-                  <h3 className="text-xl font-semibold mb-4">
+                  <h3 className="text-xl font-semibold mb-4 dark:text-white">
                     Registrar una nueva factura
                   </h3>
                   <div className="mb-4">
                     <label
                       htmlFor="numeroDictamen"
-                      className="block text-gray-700 text-sm font-semibold mb-1"
+                      className="block text-gray-700 text-sm font-semibold mb-1 dark:text-gray-300"
                     >
                       Número de factura
                     </label>
@@ -1514,16 +1529,18 @@ const ContractTable = ({ tipoContrato }) => {
                       placeholder="Número de factura"
                       value={numeroDictamen}
                       onChange={(e) => setNumeroDictamen(e.target.value)}
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
                     />
                     {errorText && (
-                      <span className="text-red-500">{errorText}</span>
+                      <span className="text-red-500 dark:text-red-400">
+                        {errorText}
+                      </span>
                     )}
                   </div>
                   <div className="mb-4">
                     <label
                       htmlFor="monto"
-                      className="block text-gray-700 text-sm font-semibold mb-1"
+                      className="block text-gray-700 text-sm font-semibold mb-1 dark:text-gray-300"
                     >
                       Monto
                     </label>
@@ -1536,17 +1553,19 @@ const ContractTable = ({ tipoContrato }) => {
                       onChange={(e) => {
                         setMonto(e.target.value);
                       }}
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
                     />
                     {errorText1 && (
-                      <span className="text-red-500">{errorText1}</span>
+                      <span className="text-red-500 dark:text-red-400">
+                        {errorText1}
+                      </span>
                     )}
                     {errorMonto && (
                       <span
                         className={`${
                           errorMonto.success === true
-                            ? "text-green-500"
-                            : "text-red-500"
+                            ? "text-green-500 dark:text-green-400"
+                            : "text-red-500 dark:text-red-400"
                         }`}
                       >
                         {errorMonto.msg}
@@ -1564,13 +1583,13 @@ const ContractTable = ({ tipoContrato }) => {
                         setMonto("");
                         setNumeroDictamen("");
                       }}
-                      className="px-4 py-2 text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                      className="px-4 py-2 text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors dark:text-gray-200 dark:bg-gray-600 dark:hover:bg-gray-700"
                     >
                       Cancelar
                     </button>
                     <button
                       onClick={(e) => handleCreate(e)}
-                      className={`px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors `}
+                      className={`px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors dark:bg-blue-700 dark:hover:bg-blue-800`}
                     >
                       Registrar
                     </button>
@@ -1580,29 +1599,31 @@ const ContractTable = ({ tipoContrato }) => {
             </>
           )}
           {showEliminarModal && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-              <div className="relative w-full max-w-md p-6 bg-white rounded-lg shadow-xl animate-slideIn">
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 dark:bg-opacity-70">
+              <div className="relative w-full max-w-md p-6 bg-white rounded-lg shadow-xl animate-slideIn dark:bg-gray-800">
                 <button
                   onClick={() => setShowEliminarModal(false)}
-                  className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors"
+                  className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors dark:text-gray-300 dark:hover:text-gray-100"
                   aria-label="Close confirmation"
                 >
                   <IoClose size={24} />
                 </button>
-                <h2 className="text-xl font-bold mb-4">Advertencia</h2>
-                <p className="text-gray-600 mb-6">
+                <h2 className="text-xl font-bold mb-4 dark:text-white">
+                  Advertencia
+                </h2>
+                <p className="text-gray-600 mb-6 dark:text-gray-300">
                   ¿Estás seguro de que deseas eliminar este registro?
                 </p>
                 <div className="flex justify-end space-x-4">
                   <button
                     onClick={() => setShowEliminarModal(false)}
-                    className="px-4 py-2 text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                    className="px-4 py-2 text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors dark:text-gray-200 dark:bg-gray-600 dark:hover:bg-gray-700"
                   >
                     Cancelar
                   </button>
                   <button
                     onClick={() => handleEliminarRegistro()}
-                    className="px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+                    className="px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors dark:bg-blue-700 dark:hover:bg-blue-800"
                   >
                     Confirmar
                   </button>
@@ -1612,48 +1633,49 @@ const ContractTable = ({ tipoContrato }) => {
           )}
         </div>
         <div className="flex flex-col sm:flex-row justify-between items-center mt-4 space-y-4 sm:space-y-0">
-          <div className="text-sm text-gray-700">
+          <div className="text-sm text-gray-700 dark:text-gray-300">
             Mostrando{" "}
             {contratos.length === 0 ? indexOfFirstItem : indexOfFirstItem + 1} a
             la {Math.min(indexOfLastItem, contratos.length)} de{" "}
             {contratos.length} entradas
           </div>
+          {contratos.length > 0 && (
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                aria-label="Previous page"
+                className={`flex items-center px-3 py-1 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  currentPage === 1
+                    ? "bg-gray-100 text-gray-400 dark:bg-gray-800 dark:-text-gray-300 cursor-not-allowed"
+                    : "bg-gray-100 hover:bg-gray-200 text-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-300"
+                }`}
+              >
+                <FiChevronLeft className="mr-1" /> Anterior
+              </button>
 
-          <div className="flex items-center space-x-2">
-            <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-              aria-label="Previous page"
-              className={`flex items-center px-3 py-1 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                currentPage === 1
-                  ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                  : "bg-gray-100 hover:bg-gray-200 text-gray-700"
-              }`}
-            >
-              <FiChevronLeft className="mr-1" /> Anterior
-            </button>
+              <div className="hidden sm:flex">
+                {getElementsInRange(
+                  renderPageNumbers(),
+                  currentPage,
+                  currentPage + 9
+                )}
+              </div>
 
-            <div className="hidden sm:flex">
-              {getElementsInRange(
-                renderPageNumbers(),
-                currentPage,
-                currentPage + 9
-              )}
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                aria-label="Next page"
+                className={`flex items-center px-3 py-1 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  currentPage === totalPages
+                    ? "bg-gray-100 text-gray-400 dark:bg-gray-800 dark:-text-gray-300 cursor-not-allowed"
+                    : "bg-gray-100 hover:bg-gray-200 text-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-300"
+                }`}
+              >
+                Próximo <FiChevronRight className="ml-1" />
+              </button>
             </div>
-
-            <button
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-              aria-label="Next page"
-              className={`flex items-center px-3 py-1 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                currentPage === totalPages
-                  ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                  : "bg-gray-100 hover:bg-gray-200 text-gray-700"
-              }`}
-            >
-              Próximo <FiChevronRight className="ml-1" />
-            </button>
-          </div>
+          )}
         </div>
       </div>
       {showModal && <Modal />}
