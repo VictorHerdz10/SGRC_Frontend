@@ -12,7 +12,7 @@ const GestionDireccion = () => {
 
   return (
     <>
-      <div className="flex">
+      <div className="flex h-screen overflow-hidden">
         <div className={isOpen ? "p-4 ml-10 w-64" : "p-4 w-20"}>
           {auth.tipo_usuario === "Admin_Gnl" ? (
             <AsideAdmin />
@@ -25,7 +25,7 @@ const GestionDireccion = () => {
             <HeaderAdmin />
           </div>
 
-          <div className="w-full p-10 ml-0 mt-20 col-span-10 bg-white dark:bg-gray-900 overflow-y-auto">
+          <div className="w-full p-10 ml-0 mt-20 col-span-10 bg-white dark:bg-uci overflow-y-auto">
             <PanelDireccion />
           </div>
         </div>
