@@ -69,9 +69,14 @@ const UserProfile = () => {
   const [imageFile, setImageFile] = useState(null);
   const fileInputRef = useRef(null);
 
-   // Efecto para actualizar userDetails cuando perfil cambie
-   useEffect(() => {
-    if (perfil.nombre && perfil.cargo && perfil.telefono && perfil.foto_perfil) {
+  // Efecto para actualizar userDetails cuando perfil cambie
+  useEffect(() => {
+    if (
+      perfil.nombre &&
+      perfil.cargo &&
+      perfil.telefono &&
+      perfil.foto_perfil
+    ) {
       setUserDetails({
         name: perfil.nombre,
         email: perfil.email,
@@ -112,7 +117,7 @@ const UserProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-  
+
     if (!navigator.onLine) {
       toast.error(
         "No hay conexión a internet. No se puede actualizar la imagen de perfil.",
@@ -129,7 +134,7 @@ const UserProfile = () => {
       setIsLoading(false);
       return;
     }
-  
+
     if (passwords.newPassword !== "" || passwords.confirmPassword !== "") {
       if (passwords.currentPassword === "") {
         setIsLoading(false);
@@ -137,19 +142,19 @@ const UserProfile = () => {
         return;
       }
     }
-  
+
     const errores = validarInput(userDetails.name, "text", "");
     const errores1 = validarInput(userDetails.position, "text", "");
-    const errores2 = validarInput(userDetails.phone, "text", "");
+    const errores2 = validarInput(userDetails.phone, "telefono", "");
     setErrorName(errores || "");
     setErrorCargo(errores1 || "");
     setErrorTelefono(errores2 || "");
-  
+
     if (errores || errores1 || errores2) {
       setIsLoading(false);
       return;
     }
-  
+
     if (passwords.currentPassword !== "") {
       const errores4 = validarInput(passwords.newPassword, "password", "");
       const errores5 = validarInput(
@@ -159,22 +164,22 @@ const UserProfile = () => {
       );
       setErrorPasswordNew(errores4 || "");
       setErrorConfirmPAss(errores5 || "");
-  
+
       if (errores4 || errores5) {
         setIsLoading(false);
         return;
       }
     }
-  
+
     // Agregar los valores al FormData
     formData.append("nombre", userDetails.name.trim());
     formData.append("cargo", userDetails.position);
     formData.append("telefono", userDetails.phone);
-  
+
     if (imageFile) {
       formData.append("foto_perfil", imageFile);
     }
-  
+
     if (passwords.currentPassword === "") {
       // Si la contraseña actual está vacía, solo actualizar el perfil si hay cambios
       if (
@@ -190,12 +195,12 @@ const UserProfile = () => {
             Authorization: `Bearer ${token}`,
           },
         };
-  
+
         try {
           const url = `usuario/actualizar-perfil`;
           const response = await clienteAxios.put(url, formData, config);
           toast.success(response.data.msg);
-  
+
           // Actualizar userDetails con la respuesta del backend
           setUserDetails((prev) => ({
             ...prev,
@@ -225,12 +230,12 @@ const UserProfile = () => {
             Authorization: `Bearer ${token}`,
           },
         };
-  
+
         try {
           const url = `usuario/actualizar-perfil`;
           const response = await clienteAxios.put(url, formData, config);
           toast.success(response.data.msg);
-  
+
           // Actualizar userDetails con la respuesta del backend
           setUserDetails((prev) => ({
             ...prev,
@@ -239,13 +244,13 @@ const UserProfile = () => {
             phone: response.data.perfil.telefono,
             profilePicture: response.data.perfil.foto_perfil,
           }));
-  
+
           obtenerPerfil();
         } catch (error) {
           toast.error(error.response.data.msg);
         }
       }
-  
+
       // Cambiar la contraseña
       const token = localStorage.getItem("token");
       const config = {
@@ -254,7 +259,7 @@ const UserProfile = () => {
           Authorization: `Bearer ${token}`,
         },
       };
-  
+
       try {
         const url = `usuario/cambiar-password`;
         const response = await clienteAxios.post(
@@ -271,7 +276,7 @@ const UserProfile = () => {
         toast.error(error.response.data.msg);
       }
     }
-  
+
     setTimeout(() => {
       setIsLoading(false);
       setImageFile(null);
@@ -295,9 +300,9 @@ const UserProfile = () => {
 
   if (!isEditing) {
     return (
-      <div className="min-h-screen bg-gray-100 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-gray-100 py-8 px-4 sm:px-6 lg:px-8 dark:bg-uci">
         <div className="max-w-4xl mx-auto">
-          <div className="bg-white shadow-lg rounded-lg overflow-hidden">
+          <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden">
             <div className="p-6 sm:p-8">
               <div className="flex flex-col items-center mb-8">
                 <img
@@ -305,16 +310,19 @@ const UserProfile = () => {
                   alt="Profile"
                   className="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg"
                   onError={(e) => {
-                    e.target.src = "/src/images/default-avatar-profile-icon.jpg";
+                    e.target.src =
+                      "/src/images/default-avatar-profile-icon.jpg";
                   }}
                 />
-                <h1 className="text-2xl font-bold text-gray-900 mt-4">
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-4">
                   {perfil.nombre}
                 </h1>
-                <p className="text-gray-600">{userDetails.position}</p>
-                <div className="mt-2 flex items-center bg-blue-100 px-3 py-1 rounded-full">
+                <p className="text-gray-600 dark:text-gray-300">
+                  {userDetails.position}
+                </p>
+                <div className="mt-2 flex items-center bg-blue-100  px-3 py-1 rounded-full">
                   <FiShield className="text-blue-600 w-4 h-4 mr-2" />
-                  <span className="text-blue-600 text-sm font-medium">
+                  <span className="text-blue-600 dark:text-blue-800 text-sm font-medium">
                     {rolname}
                   </span>
                 </div>
@@ -324,23 +332,30 @@ const UserProfile = () => {
                 <div className="flex items-center space-x-4">
                   <FiMail className="text-gray-400 w-6 h-6" />
                   <div>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-gray-500 dark:text-gray-200">
                       Dirección de correo electrónico
                     </p>
-                    <p className="text-gray-900">{userDetails.email}</p>
+                    <p className="text-gray-900 dark:text-gray-400">
+                      {userDetails.email}
+                    </p>
                   </div>
                 </div>
 
                 <div className="flex items-center space-x-4">
                   <FiBriefcase className="text-gray-400 w-6 h-6" />
                   <div>
-                    <p className="text-sm text-gray-500">Cargo que ocupa</p>
-                    <p className="text-gray-900">
+                    <p className="text-sm text-gray-500 dark:text-gray-200">
+                      Cargo que ocupa
+                    </p>
+                    <p className="text-gray-900 dark:text-gray-400">
                       {" "}
                       {perfil.cargo ? (
-                        <span className="ml-2"> ({userDetails.position})</span>
+                        <span className="ml-2 dark:text-gray-400">
+                          {" "}
+                          ({userDetails.position})
+                        </span>
                       ) : (
-                        <span className="ml-2 text-gray-600 italic">
+                        <span className="ml-2 text-gray-600 dark:text-gray-400 italic">
                           Sin cargo asignado
                         </span>
                       )}
@@ -351,13 +366,18 @@ const UserProfile = () => {
                 <div className="flex items-center space-x-4">
                   <FiPhone className="text-gray-400 w-6 h-6" />
                   <div>
-                    <p className="text-sm text-gray-500">Número de teléfono</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-200">
+                      Número de teléfono
+                    </p>
                     <p className="text-gray-900">
                       {}{" "}
                       {perfil.telefono ? (
-                        <span className="ml-2"> ({userDetails.phone})</span>
+                        <span className="ml-2 dark:text-gray-400">
+                          {" "}
+                          ({userDetails.phone})
+                        </span>
                       ) : (
-                        <span className="ml-2 text-gray-600 italic">
+                        <span className="ml-2 text-gray-600 dark:text-gray-400 italic">
                           Sin telefono asignado
                         </span>
                       )}
@@ -383,14 +403,14 @@ const UserProfile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-100 dark:bg-uci py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         <form
           onSubmit={handleSubmit}
-          className="bg-white shadow-lg rounded-lg overflow-hidden"
+          className="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden"
         >
           <div className="p-6 sm:p-8">
-            <h1 className="text-2xl font-bold text-gray-900 mb-6">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
               Ajustes del Perfil
             </h1>
 
@@ -399,15 +419,16 @@ const UserProfile = () => {
                 <img
                   src={previewImage || `${userDetails.profilePicture}`}
                   alt="Profile"
-                  className="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg"
+                  className="w-32 h-32 rounded-full object-cover border-4 border-white dark:border-gray-800 shadow-lg"
                   onError={(e) => {
-                    e.target.src = "/src/images/default-avatar-profile-icon.jpg";
+                    e.target.src =
+                      "/src/images/default-avatar-profile-icon.jpg";
                   }}
                 />
                 <button
                   type="button"
                   onClick={() => fileInputRef.current.click()}
-                  className="absolute bottom-0 right-0 bg-blue-600 p-2 rounded-full text-white hover:bg-blue-700 transition-colors"
+                  className="absolute bottom-0 right-0 bg-blue-600 dark:bg-blue-700 p-2 rounded-full text-white hover:bg-blue-700 dark:hover:bg-blue-800 transition-colors"
                   aria-label="Change profile picture"
                 >
                   <FiCamera className="w-5 h-5" />
@@ -427,7 +448,7 @@ const UserProfile = () => {
               <div>
                 <label
                   htmlFor="name"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300"
                 >
                   Nombre Completo
                 </label>
@@ -438,12 +459,14 @@ const UserProfile = () => {
                     name="name"
                     value={userDetails.name}
                     onChange={handleInputChange}
-                    className="block w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
                     required
                   />
-                  <FiEdit2 className="absolute right-3 top-3.5 text-gray-400" />
+                  <FiEdit2 className="absolute right-3 top-3.5 text-gray-400 dark:text-gray-500" />
                   {errorName && (
-                    <span className="text-red-500">{errorName}</span>
+                    <span className="text-red-500 dark:text-red-400">
+                      {errorName}
+                    </span>
                   )}
                 </div>
               </div>
@@ -451,7 +474,7 @@ const UserProfile = () => {
               <div>
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300"
                 >
                   Dirección de correo electrónico
                 </label>
@@ -460,7 +483,7 @@ const UserProfile = () => {
                   id="email"
                   name="email"
                   value={userDetails.email}
-                  className="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 bg-gray-50"
+                  className="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white"
                   disabled
                 />
               </div>
@@ -468,7 +491,7 @@ const UserProfile = () => {
               <div>
                 <label
                   htmlFor="position"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300"
                 >
                   Cargo que ocupa
                 </label>
@@ -478,17 +501,19 @@ const UserProfile = () => {
                   name="position"
                   value={userDetails.position}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
                 />
                 {errorCargo && (
-                  <span className="text-red-500">{errorCargo}</span>
+                  <span className="text-red-500 dark:text-red-400">
+                    {errorCargo}
+                  </span>
                 )}
               </div>
 
               <div>
                 <label
                   htmlFor="phone"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300"
                 >
                   Número de teléfono
                 </label>
@@ -498,17 +523,19 @@ const UserProfile = () => {
                   name="phone"
                   value={userDetails.phone}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
                 />
                 {errorTelefono && (
-                  <span className="text-red-500">{errorTelefono}</span>
+                  <span className="text-red-500 dark:text-red-400">
+                    {errorTelefono}
+                  </span>
                 )}
               </div>
 
               <div>
                 <label
                   htmlFor="role"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300"
                 >
                   Rol en el sistema
                 </label>
@@ -517,21 +544,21 @@ const UserProfile = () => {
                   id="role"
                   name="role"
                   value={userDetails.role}
-                  className="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 bg-gray-50"
+                  className="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white"
                   disabled
                 />
               </div>
             </div>
 
             <div className="space-y-6">
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
                 Cambiar la contraseña
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label
                     htmlFor="currentPassword"
-                    className="block text-sm font-medium text-gray-700"
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-300"
                   >
                     Contraseña actual
                   </label>
@@ -542,17 +569,17 @@ const UserProfile = () => {
                       name="currentPassword"
                       value={passwords.currentPassword}
                       onChange={handlePasswordChange}
-                      className="block w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
                     />
                     {errorPasswordActual && (
-                      <span className="text-red-500">
+                      <span className="text-red-500 dark:text-red-400">
                         {errorPasswordActual}
                       </span>
                     )}
                     <button
                       type="button"
                       onClick={() => togglePasswordVisibility("current")}
-                      className="absolute right-3 top-3.5 text-gray-400"
+                      className="absolute right-3 top-3.5 text-gray-400 dark:text-gray-500"
                       aria-label="Toggle password visibility"
                     >
                       {showPasswords.current ? <FiEyeOff /> : <FiEye />}
@@ -563,7 +590,7 @@ const UserProfile = () => {
                 <div>
                   <label
                     htmlFor="newPassword"
-                    className="block text-sm font-medium text-gray-700"
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-300"
                   >
                     Nueva contraseña
                   </label>
@@ -574,15 +601,17 @@ const UserProfile = () => {
                       name="newPassword"
                       value={passwords.newPassword}
                       onChange={handlePasswordChange}
-                      className="block w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
                     />
                     {errorPasswordNew && (
-                      <span className="text-red-500">{errorPasswordNew}</span>
+                      <span className="text-red-500 dark:text-red-400">
+                        {errorPasswordNew}
+                      </span>
                     )}
                     <button
                       type="button"
                       onClick={() => togglePasswordVisibility("new")}
-                      className="absolute right-3 top-3.5 text-gray-400"
+                      className="absolute right-3 top-3.5 text-gray-400 dark:text-gray-500"
                       aria-label="Toggle password visibility"
                     >
                       {showPasswords.new ? <FiEyeOff /> : <FiEye />}
@@ -593,7 +622,7 @@ const UserProfile = () => {
                 <div>
                   <label
                     htmlFor="confirmPassword"
-                    className="block text-sm font-medium text-gray-700"
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-300"
                   >
                     Confirmar nueva contraseña
                   </label>
@@ -604,15 +633,17 @@ const UserProfile = () => {
                       name="confirmPassword"
                       value={passwords.confirmPassword}
                       onChange={handlePasswordChange}
-                      className="block w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
                     />
                     {errorConfirmPAss && (
-                      <span className="text-red-500">{errorConfirmPAss}</span>
+                      <span className="text-red-500 dark:text-red-400">
+                        {errorConfirmPAss}
+                      </span>
                     )}
                     <button
                       type="button"
                       onClick={() => togglePasswordVisibility("confirm")}
-                      className="absolute right-3 top-3.5 text-gray-400"
+                      className="absolute right-3 top-3.5 text-gray-400 dark:text-gray-500"
                       aria-label="Toggle password visibility"
                     >
                       {showPasswords.confirm ? <FiEyeOff /> : <FiEye />}
@@ -626,7 +657,7 @@ const UserProfile = () => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center dark:bg-blue-700 dark:hover:bg-blue-800"
               >
                 {isLoading ? (
                   <>
@@ -650,11 +681,11 @@ const UserProfile = () => {
                   setPasswords({
                     currentPassword: "",
                     newPassword: "",
-                    confirmPassword: ""
-                  })
+                    confirmPassword: "",
+                  });
                   setPreviewImage(null);
                 }}
-                className="flex-1 px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                className="flex-1 px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
               >
                 Cancelar
               </button>
