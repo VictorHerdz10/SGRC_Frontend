@@ -391,7 +391,7 @@ const ContractTable = ({ tipoContrato }) => {
   const exportToPDF = (contratos) => {
     try {
       // Verificar si hay menos de 10 contratos
-      const isVertical = contratos.length < 10;
+      const isVertical = contractTypes.find(tipo=> tipo.nombre===tipoContrato).camposRequeridos.length < 10
 
       // Crear el documento en formato horizontal o vertical según el caso
       const doc = new jsPDF({
