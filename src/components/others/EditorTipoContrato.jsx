@@ -369,6 +369,7 @@ const ContractConfigPanel = () => {
                     </div>
                     <div className="flex space-x-2">
                       <button
+                      aria-label="Editar"
                         onClick={(e) => {
                           e.stopPropagation();
                           setContractToEdit(type);
@@ -386,6 +387,7 @@ const ContractConfigPanel = () => {
                         <FaEdit />
                       </button>
                       <button
+                      aria-label="Eliminar"
                         onClick={async (e) => {
                           e.stopPropagation();
                           setContractToDelete(type);

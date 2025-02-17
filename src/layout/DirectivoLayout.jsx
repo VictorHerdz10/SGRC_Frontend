@@ -29,7 +29,7 @@ const DirectivoLayout = () => {
       
        {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg w-96 shadow-md">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg w-96 shadow-md animate-slideIn">
             <h3 className="text-xl font-bold mb-4 text-center dark:text-white">
               Detalles de la Notificación
             </h3>

@@ -154,7 +154,7 @@ const PanelDireccion = () => {
               </thead>
               <tbody>
                 {direcciones.map((direccion, index) => (
-                  <tr key={direccion._id} className="dark:bg-gray-700">
+                  <tr key={direccion._id} className="dark:bg-gray-800">
                     <td className="py-2 border-l px-6 border-b border-r dark:border-gray-600">
                       {index + 1}
                     </td>

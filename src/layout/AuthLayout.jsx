@@ -1,5 +1,4 @@
 import { Outlet } from "react-router-dom"
-import imageUrl from "../images/register_bg_2.png";
 const AuthLayout = () => {
 
   return (

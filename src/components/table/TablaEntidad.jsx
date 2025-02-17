@@ -152,7 +152,7 @@ const PanelEntidad = () => {
               </thead>
               <tbody>
                 {entidades.map((entidad, index) => (
-                  <tr key={entidad._id} className="dark:bg-gray-700">
+                  <tr key={entidad._id} className="dark:bg-gray-800">
                     <td className="py-2 border-l px-6 border-b border-r dark:border-gray-600">
                       {index + 1}
                     </td>
