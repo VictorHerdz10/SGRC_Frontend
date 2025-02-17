@@ -391,45 +391,34 @@ const ContractTable = ({ tipoContrato }) => {
   const exportToPDF = (contratos) => {
     try {
       // Verificar si hay menos de 10 contratos
-      const isVertical = contractTypes.find(tipo=> tipo.nombre===tipoContrato).camposRequeridos.length < 10
-
+      const isVertical = contractTypes.find(tipo => tipo.nombre === tipoContrato).camposRequeridos.length < 10;
+  
       // Crear el documento en formato horizontal o vertical según el caso
       const doc = new jsPDF({
         orientation: isVertical ? "portrait" : "landscape", // Vertical si hay menos de 10 contratos
         unit: "mm",
         format: "a4",
       });
-
+  
       // Título del documento
-      const title =
-        "Registros de Contratos de la Dirección General de Servicios";
+      const title = "Registros de Contratos de la Dirección General de Servicios";
       doc.setFontSize(12); // Tamaño de fuente fijo
       doc.setFont("helvetica", "bold");
       const pageWidth = doc.internal.pageSize.getWidth();
-      const textWidth =
-        (doc.getStringUnitWidth(title) * doc.internal.getFontSize()) /
-        doc.internal.scaleFactor;
+      const textWidth = (doc.getStringUnitWidth(title) * doc.internal.getFontSize()) / doc.internal.scaleFactor;
       const textOffset = (pageWidth - textWidth) / 2;
       doc.text(title, textOffset, 10);
       doc.setFont("helvetica", "normal");
-
+  
       // Definir las columnas de la tabla dinámicamente
       const availableColumns = [
         { key: "tipoDeContrato", label: "Tipo de Contrato", width: 30 },
         { key: "objetoDelContrato", label: "Objeto del Contrato", width: 30 },
         { key: "entidad", label: "Entidad", width: 20 },
-        {
-          key: "direccionEjecuta",
-          label: "Dirección que lo ejecuta",
-          width: 20,
-        },
+        { key: "direccionEjecuta", label: "Dirección que lo ejecuta", width: 20 },
         { key: "aprobadoPorCC", label: "Aprobado por el CC", width: 15 },
         { key: "firmado", label: "Firmado", width: 15 },
-        {
-          key: "entregadoJuridica",
-          label: "Entregado al área jurídica",
-          width: 15,
-        },
+        { key: "entregadoJuridica", label: "Entregado al área jurídica", width: 15 },
         { key: "fechaRecibido", label: "Fecha Recibido", width: 15 },
         { key: "valorPrincipal", label: "Monto", width: 15 },
         { key: "valorDisponible", label: "Monto Disponible", width: 15 },
@@ -440,21 +429,15 @@ const ContractTable = ({ tipoContrato }) => {
         { key: "estado", label: "Estado", width: 15 },
         { key: "numeroDictamen", label: "No. de Dictamen", width: 15 },
       ];
-
+  
       // Filtrar columnas que tienen al menos un valor definido en los contratos
       const filteredColumns = availableColumns.filter((column) =>
-        contratos.some(
-          (contrato) =>
-            contrato[column.key] !== null && contrato[column.key] !== ""
-        )
+        contratos.some((contrato) => contrato[column.key] !== null && contrato[column.key] !== "")
       );
-
+  
       // Obtener las etiquetas de las columnas filtradas
-      const tableColumn = [
-        "No.",
-        ...filteredColumns.map((column) => column.label),
-      ];
-
+      const tableColumn = ["No.", ...filteredColumns.map((column) => column.label)];
+  
       // Mapear los datos de los contratos a las filas de la tabla
       const tableRows = contratos.map((contrato, index) => {
         const row = [index + 1]; // Número de fila
@@ -494,7 +477,15 @@ const ContractTable = ({ tipoContrato }) => {
         });
         return row;
       });
-
+  
+      // Calcular el ancho total disponible para la tabla
+      const totalWidth = doc.internal.pageSize.getWidth() - 20; // 10mm de margen a cada lado
+  
+      // Calcular el ancho de cada columna proporcionalmente
+      const columnWidths = filteredColumns.map((column) => {
+        return (column.width / availableColumns.reduce((sum, col) => sum + col.width, 0)) * totalWidth;
+      });
+  
       // Crear la tabla en el documento
       doc.autoTable({
         startY: 20, // Espacio adicional para el título
@@ -513,38 +504,33 @@ const ContractTable = ({ tipoContrato }) => {
           fontStyle: "bold",
         },
         theme: "striped",
-        margin: { horizontal: "auto" }, // Centrar la tabla horizontalmente
-        tableWidth: "wrap",
+        margin: { horizontal: 10 }, // Margen horizontal fijo
+        tableWidth: "auto",
         columnStyles: filteredColumns.reduce(
           (styles, column, index) => {
-            styles[index + 1] = { cellWidth: column.width }; // Ancho de las celdas sin cambios
+            styles[index + 1] = { cellWidth: columnWidths[index] }; // Ancho de las celdas proporcional
             return styles;
           },
-          { 0: { cellWidth: 8 } }
-        ), // Ancho fijo para la columna "No."
+          { 0: { cellWidth: 8 } } // Ancho fijo para la columna "No."
+        ),
         didDrawCell: (data) => {
           // Ajustar el alto de la celda de facturas si es necesario
-          if (
-            data.column.index === tableColumn.indexOf("Facturas") &&
-            data.cell.raw.includes("\n")
-          ) {
+          if (data.column.index === tableColumn.indexOf("Facturas") && data.cell.raw.includes("\n")) {
             const lines = data.cell.raw.split("\n").length;
             data.row.height = lines * 5; // Ajustar el alto de la fila según el número de líneas
           }
         },
       });
-
+  
       // Guardar el PDF
       let currentDate = new Date();
       const formattedDate = parcearDateFile(currentDate);
       doc.save(`contratos${formattedDate}.pdf`);
-
+  
       toast.success("PDF exportado exitosamente!");
     } catch (error) {
       console.error("Error al exportar PDF:", error);
-      toast.error(
-        "Ocurrió un error al exportar PDF. Por favor, inténtelo nuevamente."
-      );
+      toast.error("Ocurrió un error al exportar PDF. Por favor, inténtelo nuevamente.");
     }
   };
 
