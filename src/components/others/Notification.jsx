@@ -102,6 +102,7 @@ const Notification = () => {
         )}
         {showNotifications && (
           <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-10">
+            {/* Botón para cerrar notificaciones */}
             <a
               className="text-bold justify-end w-full text-xs text-end flex"
               onClick={handleCloseNotification}
@@ -110,48 +111,56 @@ const Notification = () => {
                 <IoClose size={20} />{" "}
               </p>
             </a>
-            {notifications.length > 0 ? (
-              <>
-                {notifications.map((notification) => (
-                  <div
-                    key={notification._id}
-                    className="flex items-center justify-between px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
-                  >
-                    <div>
-                      <p className="text-sm text-gray-700 dark:text-gray-200">
-                        {notification.description}
-                      </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">
-                        hace{" "}
-                        {calcularTiempoTranscurrido(
-                          restarCuatroHoras(new Date(notification.create)),
-                          horaatualcorr
-                        )}
-                      </p>
+
+            {/* Contenedor con scroll para las notificaciones */}
+            <div className="max-h-64 overflow-y-auto">
+              {" "}
+              {/* Altura máxima y scroll */}
+              {notifications.length > 0 ? (
+                <>
+                  {notifications.map((notification) => (
+                    <div
+                      key={notification._id}
+                      className="flex items-center justify-between px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    >
+                      <div>
+                        <p className="text-sm text-gray-700 dark:text-gray-200">
+                          {notification.description}
+                        </p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          hace{" "}
+                          {calcularTiempoTranscurrido(
+                            restarCuatroHoras(new Date(notification.create)),
+                            horaatualcorr
+                          )}
+                        </p>
+                      </div>
+                      <div className="flex space-x-2">
+                        <FaEye
+                          className="text-blue-500 cursor-pointer"
+                          onClick={() => {
+                            setSelectedNotification(notification);
+                            setShowModal(true);
+                          }}
+                        />
+                        <FaTrash
+                          className="text-red-500 cursor-pointer"
+                          onClick={() =>
+                            handleDeleteNotification(notification._id)
+                          }
+                        />
+                      </div>
                     </div>
-                    <div className="flex space-x-2">
-                      <FaEye
-                        className="text-blue-500 cursor-pointer"
-                        onClick={() => {
-                          setSelectedNotification(notification);
-                          setShowModal(true);
-                        }}
-                      />
-                      <FaTrash
-                        className="text-red-500 cursor-pointer"
-                        onClick={() =>
-                          handleDeleteNotification(notification._id)
-                        }
-                      />
-                    </div>
-                  </div>
-                ))}
-              </>
-            ) : (
-              <p className="text-clip text-gray-500 dark:text-gray-400 text-center w-full py-2">
-                No hay notificaciones
-              </p>
-            )}
+                  ))}
+                </>
+              ) : (
+                <p className="text-clip text-gray-500 dark:text-gray-400 text-center w-full py-2">
+                  No hay notificaciones
+                </p>
+              )}
+            </div>
+
+            {/* Botón para limpiar todas las notificaciones */}
             <button
               className="w-full text-center py-2 text-sm text-red-500 hover:bg-gray-100 dark:hover:bg-gray-700"
               onClick={() => setShowConfirmModal(true)}
@@ -171,7 +180,9 @@ const Notification = () => {
             >
               <IoClose size={24} />
             </button>
-            <h2 className="text-xl font-bold mb-4 dark:text-white">Advertencia</h2>
+            <h2 className="text-xl font-bold mb-4 dark:text-white">
+              Advertencia
+            </h2>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
               ¿Estás seguro de que deseas borrar todas las notificaciones?
             </p>

@@ -6,6 +6,8 @@ const ValidationContext = createContext();
 // eslint-disable-next-line react/prop-types
 const ValidationProvider = ({ children }) => {
   const [file, setFile] = useState(null);
+  const [isCreate, setIsCreate] = useState(null);
+  const [isSuplemento, setIsSuplemento] = useState(null);
   const [isOpen, setIsOpen] = useState(true);
   const [contratos, setContratos] = useState([]);
   const [direcciones, setDirecciones] = useState([]);
@@ -21,8 +23,15 @@ const ValidationProvider = ({ children }) => {
   const [backupHistory, setBackupHistory] = useState([]);
   const [notifications, setNotifications] = useState([]);
   const [users, setUsers] = useState([]);
-  const[trazas,setTrazas]=useState([]);
+  const [trazas, setTrazas] = useState([]);
   const [contractTypes, setContractTypes] = useState([]);
+  const [contratosMarco, setContratosMarco] = useState([]);
+  const [showSupplementModalEdit, setShowSupplementModalEdit] = useState(false);
+  const [showSupplementModal, setShowSupplementModal] = useState(false);
+  const [tipoContrato, setTipoContrato] = useState("");
+  const [selectedContract, setSelectedContract] = useState(null);
+    const [withSupplement, setWithSupplement] = useState(false);
+
   // 1. Obtener la hora actual
   function obtenerHoraActual() {
     return new Date();
@@ -128,7 +137,7 @@ const ValidationProvider = ({ children }) => {
         return "Por favor, ingrese una fecha válida.";
       }
     }
-    
+
     return "";
   };
   const obtenerUsuarios = async () => {
@@ -143,11 +152,29 @@ const ValidationProvider = ({ children }) => {
       const url = "usuario/obtener-usuarios";
       const respuesta = await clienteAxios(url, config);
       setUsers(respuesta.data);
-      
+    } catch (error) {}
+  };
+  const handleGetSupplements = async (contractId) => {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    try {
+      const { data } = await clienteAxios.get(
+        `/contratos/suplementos/${contractId}`, // Ajusta la ruta según tu API
+        config
+      );
+      return data;
     } catch (error) {
-      
+      console.error(error);
+      toast.error(error.response?.data?.msg || "Error al obtener suplementos");
+      throw error;
     }
   };
+
   const obtenerNotificaciones = async () => {
     const token = localStorage.getItem("token");
     const config = {
@@ -160,9 +187,7 @@ const ValidationProvider = ({ children }) => {
       const url = "contratos/notificacion-contratos";
       const response = await clienteAxios.get(url, config);
       await setNotifications(response.data);
-    } catch (error) {
-
-    }
+    } catch (error) {}
   };
   const obtenerPerfil = async () => {
     const token = localStorage.getItem("token");
@@ -243,7 +268,23 @@ const ValidationProvider = ({ children }) => {
       const response = await clienteAxios.get(url, config);
       setContractTypes(response.data);
     } catch (error) {
-        toast.error(error.response.data.msg)
+      toast.error(error.response.data.msg);
+    }
+  };
+  const obtenerContratosMarco = async () => {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    try {
+      const url = "/tipo-contrato/obtener-contratosMarcos";
+      const response = await clienteAxios.get(url, config);
+      setContratosMarco(response.data);
+    } catch (error) {
+      toast.error(error.response.data.msg);
     }
   };
   const obtenerBackup = async () => {
@@ -334,7 +375,24 @@ const ValidationProvider = ({ children }) => {
         trazas,
         contractTypes,
         setContractTypes,
-        obtenerTiposContrato
+        obtenerTiposContrato,
+        obtenerContratosMarco,
+        contratosMarco,
+        showSupplementModal,
+        setShowSupplementModal,
+        handleGetSupplements,
+        tipoContrato,
+        setTipoContrato,
+        showSupplementModalEdit,
+        setShowSupplementModalEdit,
+        setIsCreate,
+        isSuplemento,
+        isCreate,
+        setIsSuplemento,
+        selectedContract,
+        setSelectedContract,
+        withSupplement,
+        setWithSupplement
       }}
     >
       {children}

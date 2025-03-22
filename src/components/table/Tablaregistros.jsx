@@ -11,6 +11,7 @@ import {
   FaFilePdf,
   FaFileExcel,
   FaSearch,
+  FaPlusCircle,
 } from "react-icons/fa";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
@@ -19,8 +20,12 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { IoClose } from "react-icons/io5";
 import clienteAxios from "../../axios/axios";
-import useValidation from "../../hooks/useValidation";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import ViewSupplementsModal, {
+  SupplementViewerTrigger,
+} from "../modals/ViewSupplementsModal";
+import SupplementModal from "../modals/SupplementModal";
+import useValidation from "../../hooks/useValidation";
 
 const ContractTable = ({ tipoContrato }) => {
   const {
@@ -37,8 +42,22 @@ const ContractTable = ({ tipoContrato }) => {
     setIsEditing,
     obtenerNotificaciones,
     contractTypes,
+    handleGetSupplements,
+    setShowSupplementModal,
+    showSupplementModal,
+    setShowModalGetInfo,
+    setIsSuplemento,
+    isSuplemento,
+    isCreate,
+    setIsCreate,
+    selectedContract,
+    setSelectedContract,
   } = useValidation();
   let errores, errores2;
+  const [contractTypeSelect, setContractTypeSelect] = useState(null);
+  const [currentSupplements, setCurrentSupplements] = useState([]);
+  const [showSupplementsGetInfoModal, setShowSupplementsGetInfoModal] =
+    useState(false);
   const [totalItems, setTotalItems] = useState(contratos.length);
   const [pageSize, setPageSize] = useState(10);
   const totalPages = Math.ceil(contratos.length / pageSize);
@@ -55,7 +74,7 @@ const ContractTable = ({ tipoContrato }) => {
   const [actualMonto, setActualMonto] = useState(0);
   const [showModalUpdate, setShowModalUpdate] = useState(false);
   const [showModalCreate, setShowModalCreate] = useState(false);
-  const [errorMonto, setErrorMonto] = useState({});
+  const [errorMonto, setErrorMonto] = useState(null);
   const [id, setId] = useState("");
   const navigate = useNavigate();
   const [errorText, setErrorText] = useState();
@@ -63,15 +82,27 @@ const ContractTable = ({ tipoContrato }) => {
   const [filtarDireccion, setFiltrarDireccion] = useState("");
   const [filtarEntidad, setFiltrarEntidad] = useState("");
   const [filtarEstado, setFiltrarEstado] = useState("");
+  const [selectedSupplement, setSelectedSupplement] = useState(null);
+
   const indexOfLastItem = currentPage * pageSize;
   const indexOfFirstItem = indexOfLastItem - pageSize;
   const currentItems = contratos.slice(indexOfFirstItem, indexOfLastItem);
   const calculatePageIndex = (page, itemIndex) => {
     return (page - 1) * pageSize + itemIndex;
   };
+  useEffect(() => {
+    const verificar = async () => {
+      const suplemento = await handleGetSupplements(selectedContract._id);
+      setIsSuplemento(suplemento);
+      setIsCreate(false);
+    };
+
+    verificar();
+  }, [isCreate]);
+
   const parcearDateFile = (date) => {
     const dia = String(date.getDate()).padStart(2, "0");
-    const mes = String(date.getMonth() + 1).padStart(2, "0"); // Aseguramos que el mes tenga dos dígitos
+    const mes = String(date.getMonth() + 1).padStart(2, "0");
     const ano = date.getFullYear();
     const horas = String(date.getHours()).padStart(2, "0");
     const minutos = String(date.getMinutes()).padStart(2, "0");
@@ -157,7 +188,7 @@ const ContractTable = ({ tipoContrato }) => {
         return;
       }
 
-      if (link === null) {
+      if (link === null || link === " ") {
         toast.error("No hay archivo vinculado a este registro.", {
           position: "top-right",
           autoClose: 5000,
@@ -310,7 +341,7 @@ const ContractTable = ({ tipoContrato }) => {
     errores = validarInput(numeroDictamenNew, "text", "");
     errores2 = validarInput(monto, "number", "");
 
-    setErrorMonto({});
+    setErrorMonto(null);
     setErrorText(errores || "");
     setErrorText1(errores2 || "");
     if (errores || errores2) {
@@ -327,14 +358,18 @@ const ContractTable = ({ tipoContrato }) => {
 
     try {
       const url = `facturas/advertencia-monto-modificar`;
-      const response = await clienteAxios.post(url, { _id: id, monto }, config);
+      const response = await clienteAxios.post(
+        url,
+        { _id: id, numeroDictamen, monto },
+        config
+      );
       if (response.data) {
         setErrorMonto(response.data);
       }
     } catch (error) {
       console.error(error);
       setErrorMonto(error.response.data);
-
+      setIsCreate(true);
       return;
     }
     try {
@@ -346,7 +381,7 @@ const ContractTable = ({ tipoContrato }) => {
       );
       toast.success(response.data.msg);
       setShowModalUpdate(false);
-      setErrorMonto({});
+      setErrorMonto(null);
       setMonto("");
       setNumeroDictamen("");
       obtenerRegistros(tipoContrato);
@@ -391,34 +426,47 @@ const ContractTable = ({ tipoContrato }) => {
   const exportToPDF = (contratos) => {
     try {
       // Verificar si hay menos de 10 contratos
-      const isVertical = contractTypes.find(tipo => tipo.nombre === tipoContrato).camposRequeridos.length < 10;
-  
+      const isVertical =
+        contractTypes.find((tipo) => tipo.nombre === tipoContrato)
+          .camposRequeridos.length < 10;
+
       // Crear el documento en formato horizontal o vertical según el caso
       const doc = new jsPDF({
         orientation: isVertical ? "portrait" : "landscape", // Vertical si hay menos de 10 contratos
         unit: "mm",
         format: "a4",
       });
-  
+
       // Título del documento
-      const title = "Registros de Contratos de la Dirección General de Servicios";
+      const title =
+        "Registros de Contratos de la Dirección General de Servicios";
       doc.setFontSize(12); // Tamaño de fuente fijo
       doc.setFont("helvetica", "bold");
       const pageWidth = doc.internal.pageSize.getWidth();
-      const textWidth = (doc.getStringUnitWidth(title) * doc.internal.getFontSize()) / doc.internal.scaleFactor;
+      const textWidth =
+        (doc.getStringUnitWidth(title) * doc.internal.getFontSize()) /
+        doc.internal.scaleFactor;
       const textOffset = (pageWidth - textWidth) / 2;
       doc.text(title, textOffset, 10);
       doc.setFont("helvetica", "normal");
-  
+
       // Definir las columnas de la tabla dinámicamente
       const availableColumns = [
         { key: "tipoDeContrato", label: "Tipo de Contrato", width: 30 },
         { key: "objetoDelContrato", label: "Objeto del Contrato", width: 30 },
         { key: "entidad", label: "Entidad", width: 20 },
-        { key: "direccionEjecuta", label: "Dirección que lo ejecuta", width: 20 },
+        {
+          key: "direccionEjecuta",
+          label: "Dirección que lo ejecuta",
+          width: 20,
+        },
         { key: "aprobadoPorCC", label: "Aprobado por el CC", width: 15 },
         { key: "firmado", label: "Firmado", width: 15 },
-        { key: "entregadoJuridica", label: "Entregado al área jurídica", width: 15 },
+        {
+          key: "entregadoJuridica",
+          label: "Entregado al área jurídica",
+          width: 15,
+        },
         { key: "fechaRecibido", label: "Fecha Recibido", width: 15 },
         { key: "valorPrincipal", label: "Monto", width: 15 },
         { key: "valorDisponible", label: "Monto Disponible", width: 15 },
@@ -429,15 +477,21 @@ const ContractTable = ({ tipoContrato }) => {
         { key: "estado", label: "Estado", width: 15 },
         { key: "numeroDictamen", label: "No. de Dictamen", width: 15 },
       ];
-  
+
       // Filtrar columnas que tienen al menos un valor definido en los contratos
       const filteredColumns = availableColumns.filter((column) =>
-        contratos.some((contrato) => contrato[column.key] !== null && contrato[column.key] !== "")
+        contratos.some(
+          (contrato) =>
+            contrato[column.key] !== null && contrato[column.key] !== ""
+        )
       );
-  
+
       // Obtener las etiquetas de las columnas filtradas
-      const tableColumn = ["No.", ...filteredColumns.map((column) => column.label)];
-  
+      const tableColumn = [
+        "No.",
+        ...filteredColumns.map((column) => column.label),
+      ];
+
       // Mapear los datos de los contratos a las filas de la tabla
       const tableRows = contratos.map((contrato, index) => {
         const row = [index + 1]; // Número de fila
@@ -477,15 +531,19 @@ const ContractTable = ({ tipoContrato }) => {
         });
         return row;
       });
-  
+
       // Calcular el ancho total disponible para la tabla
       const totalWidth = doc.internal.pageSize.getWidth() - 20; // 10mm de margen a cada lado
-  
+
       // Calcular el ancho de cada columna proporcionalmente
       const columnWidths = filteredColumns.map((column) => {
-        return (column.width / availableColumns.reduce((sum, col) => sum + col.width, 0)) * totalWidth;
+        return (
+          (column.width /
+            availableColumns.reduce((sum, col) => sum + col.width, 0)) *
+          totalWidth
+        );
       });
-  
+
       // Crear la tabla en el documento
       doc.autoTable({
         startY: 20, // Espacio adicional para el título
@@ -515,22 +573,27 @@ const ContractTable = ({ tipoContrato }) => {
         ),
         didDrawCell: (data) => {
           // Ajustar el alto de la celda de facturas si es necesario
-          if (data.column.index === tableColumn.indexOf("Facturas") && data.cell.raw.includes("\n")) {
+          if (
+            data.column.index === tableColumn.indexOf("Facturas") &&
+            data.cell.raw.includes("\n")
+          ) {
             const lines = data.cell.raw.split("\n").length;
             data.row.height = lines * 5; // Ajustar el alto de la fila según el número de líneas
           }
         },
       });
-  
+
       // Guardar el PDF
       let currentDate = new Date();
       const formattedDate = parcearDateFile(currentDate);
       doc.save(`contratos${formattedDate}.pdf`);
-  
+
       toast.success("PDF exportado exitosamente!");
     } catch (error) {
       console.error("Error al exportar PDF:", error);
-      toast.error("Ocurrió un error al exportar PDF. Por favor, inténtelo nuevamente.");
+      toast.error(
+        "Ocurrió un error al exportar PDF. Por favor, inténtelo nuevamente."
+      );
     }
   };
 
@@ -702,7 +765,7 @@ const ContractTable = ({ tipoContrato }) => {
     errores = validarInput(numeroDictamen, "text", "");
     errores2 = validarInput(monto, "number", "");
 
-    setErrorMonto({});
+    setErrorMonto(null);
     setErrorText(errores || "");
     setErrorText1(errores2 || "");
     if (errores || errores2) {
@@ -719,8 +782,10 @@ const ContractTable = ({ tipoContrato }) => {
     try {
       const url = `facturas/advertencia-monto-crear`;
       const response = await clienteAxios.post(url, { _id: id, monto }, config);
-      if (response.data) {
+      if (!response.data.success) {
         setErrorMonto(response.data);
+        setIsCreate(true);
+        return;
       }
     } catch (error) {
       console.error(error);
@@ -736,7 +801,7 @@ const ContractTable = ({ tipoContrato }) => {
         config
       );
       toast.success(response.data.msg);
-      setErrorMonto({});
+      setErrorMonto(null);
       setErrorText("");
       setErrorText1("");
       setMonto("");
@@ -827,9 +892,21 @@ const ContractTable = ({ tipoContrato }) => {
                 <p className="font-semibold text-gray-800 dark:text-gray-200">
                   Monto:{" "}
                   <span className="text-gray-600 dark:text-gray-400">
-                    ${selectedInvoice?.monto}
+                    ${selectedInvoice?.monto.toLocaleString()}{" "}
+                    {/* Formatear el monto */}
                   </span>
                 </p>
+
+                {/* Mostrar monto de suplementos si existe */}
+                {selectedInvoice?.montoSuplement > 0 && (
+                  <p className="font-semibold text-gray-800 dark:text-gray-200">
+                    Cantidad utilizada de suplementos:{" "}
+                    <span className="text-gray-600 dark:text-gray-400">
+                      ${selectedInvoice?.montoSuplement.toLocaleString()}{" "}
+                      {/* Formatear el monto */}
+                    </span>
+                  </p>
+                )}
               </div>
             )}
             {modalType === "delete" && (
@@ -1169,6 +1246,9 @@ const ContractTable = ({ tipoContrato }) => {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                     Editar e info del Registro
                   </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
+                    Suplementos
+                  </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider border-r">
                     Crear Factura
                   </th>
@@ -1230,20 +1310,53 @@ const ContractTable = ({ tipoContrato }) => {
                     )}
                     {contract.valorPrincipal && (
                       <td className="px-6 py-4 whitespace-nowrap dark:text-gray-200">
-                        <div className="flex items-center">
-                          <div
-                            className={`w-3 h-3 rounded-full ${getValueColor(
-                              contract.valorPrincipal,
-                              contract.valorDisponible
-                            )} mr-2`}
-                          ></div>
-                          ${contract.valorDisponible}
+                        <div className="flex flex-col items-start">
+                          {/* Contenedor para el círculo y el valor disponible (en la misma línea) */}
+                          <div className="flex items-center">
+                            {/* Círculo de color */}
+                            <div
+                              className={`w-3 h-3 rounded-full ${getValueColor(
+                                contract.valorPrincipal,
+                                contract.valorDisponible
+                              )} mr-2`} // Margen derecho para separar el círculo del valor
+                            ></div>
+
+                            {/* Valor disponible */}
+                            <div className="block">
+                              ${contract.valorDisponible.toLocaleString()}
+                            </div>
+                          </div>
+
+                          {/* Suplementos */}
+                          {contract.supplement &&
+                            contract.supplement.length > 0 &&
+                            contract.supplement.filter((mont) => mont.monto > 0)
+                              .length > 0 && ( // Verifica si hay suplementos con monto > 0
+                              <>
+                                {contract.supplement
+                                  .filter((mont) => mont.monto > 0) // Filtra solo los suplementos con monto > 0
+                                  .map((mont, index) => (
+                                    <div
+                                      key={index}
+                                      className="block text-green-500"
+                                    >
+                                      + ${mont.monto.toLocaleString()}{" "}
+                                      {/* Agregamos el símbolo $ aquí */}
+                                    </div>
+                                  ))}
+
+                                {/* Texto "de suplemento" si hay suplementos con monto > 0 */}
+                                <div className="block text-green-500">
+                                  de suplemento{"(s)"}
+                                </div>
+                              </>
+                            )}
                         </div>
                       </td>
                     )}
                     {contract.valorPrincipal && (
                       <td className="px-6 py-4 whitespace-nowrap dark:text-gray-200">
-                        ${contract.valorGastado}
+                        ${contract.valorGastado.toLocaleString()}
                       </td>
                     )}
                     <td className="px-6 py-4 dark:text-gray-200">
@@ -1284,7 +1397,8 @@ const ContractTable = ({ tipoContrato }) => {
                                         setNumeroDictamen(
                                           factura?.numeroDictamen
                                         );
-                                        setErrorMonto({});
+                                        setSelectedContract(contract);
+                                        setErrorMonto(null);
                                         setActualMonto(factura?.monto);
                                         setShowModalUpdate(true);
                                         setId(contract._id);
@@ -1302,7 +1416,74 @@ const ContractTable = ({ tipoContrato }) => {
                     </td>
                     {contract.vigencia && (
                       <td className="px-6 whitespace-normal break-words max-w-xs dark:text-gray-200">
-                        {parseDuration(contract.vigencia)}
+                        {/* Vigencia principal */}
+                        <div className="block">
+                          {parseDuration(contract.vigencia)}
+                        </div>
+
+                        {/* Suplementos de tiempo */}
+                        {contract.supplement &&
+                          contract.supplement.length > 0 &&
+                          contract.supplement
+                            .filter((sup) => sup.tiempo) // Filtra solo los suplementos con tiempo
+                            .map((sup, index) => {
+                              const { days, months, years } = sup.tiempo;
+                              const tiempoSuplemento = [];
+
+                              // Agregar años si son mayores que 0
+                              if (years > 0) {
+                                tiempoSuplemento.push(
+                                  `${years} año${years > 1 ? "s" : ""}`
+                                );
+                              }
+
+                              // Agregar meses si son mayores que 0
+                              if (months > 0) {
+                                tiempoSuplemento.push(
+                                  `${months} mes${months > 1 ? "es" : ""}`
+                                );
+                              }
+
+                              // Agregar días si son mayores que 0
+                              if (days > 0) {
+                                tiempoSuplemento.push(
+                                  `${days} día${days > 1 ? "s" : ""}`
+                                );
+                              }
+
+                              // Si hay tiempo suplementario, mostrarlo
+                              if (tiempoSuplemento.length > 0) {
+                                return (
+                                  <div
+                                    key={index}
+                                    className="block text-blue-500"
+                                  >
+                                    {" "}
+                                    {/* Color azul para resaltar */}+{" "}
+                                    {tiempoSuplemento.join(", ")}{" "}
+                                    {/* Unir los elementos con comas */}
+                                  </div>
+                                );
+                              }
+
+                              return null; // Si no hay tiempo suplementario, no mostrar nada
+                            })}
+
+                        {/* Texto "de suplemento" si hay suplementos de tiempo */}
+                        {contract.supplement &&
+                          contract.supplement.some(
+                            (sup) =>
+                              sup.tiempo && // Verifica si hay tiempo
+                              (sup.tiempo.days > 0 ||
+                                sup.tiempo.months > 0 ||
+                                sup.tiempo.years > 0) // Verifica si el tiempo es válido
+                          ) && (
+                            <div className="block text-blue-500">
+                              {" "}
+                              {/* Color azul para resaltar */}
+                              de suplemento{"(s)"}
+                            </div>
+                          )}
                       </td>
                     )}
                     {contract.fechaVencimiento && (
@@ -1320,7 +1501,11 @@ const ContractTable = ({ tipoContrato }) => {
                         {contract.numeroDictamen}
                       </td>
                     )}
-                    {contract.subirPDF && (
+                    {contractTypes
+                      .find((ct) => ct.nombre === tipoContrato)
+                      ?.camposRequeridos.some(
+                        (campo) => campo.id === "subirPDF"
+                      ) && (
                       <td className="px-6 py-4 whitespace-nowrap">
                         <FaFileDownload
                           className="text-blue-500 cursor-pointer dark:text-blue-400"
@@ -1352,10 +1537,39 @@ const ContractTable = ({ tipoContrato }) => {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex space-x-2 justify-around">
+                        <button
+                          aria-label="Agregar suplemento"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setContractTypeSelect(contract);
+                            setShowSupplementModal(true);
+                          }}
+                          className="text-green-500 hover:text-green-700 dark:text-green-400 dark:hover:text-green-600"
+                        >
+                          <FaPlusCircle />
+                        </button>
+                        {contract?.isGotSupplement && (
+                          <SupplementViewerTrigger
+                            onClick={async () => {
+                              const suplemento = await handleGetSupplements(
+                                contract._id
+                              );
+                              setCurrentSupplements(suplemento);
+                              setSelectedContract(contract);
+                              setShowSupplementsGetInfoModal(true);
+                            }}
+                          />
+                        )}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
                       <button
                         onClick={async () => {
+                          setSelectedContract(contract);
                           setShowModalCreate(true);
                           await setId(contract._id);
+
                           setMonto("");
                           setNumeroDictamen("");
                         }}
@@ -1382,7 +1596,7 @@ const ContractTable = ({ tipoContrato }) => {
                       setNumeroDictamen("");
                       setNumeroDictamenNew("");
                       setMonto("");
-                      setErrorMonto({});
+                      setErrorMonto(null);
                       setErrorText("");
                       setErrorText1("");
                       setId("");
@@ -1441,15 +1655,73 @@ const ContractTable = ({ tipoContrato }) => {
                       </span>
                     )}
                     {errorMonto && (
-                      <span
-                        className={`${
-                          errorMonto.success === true
-                            ? "text-green-500 dark:text-green-400"
-                            : "text-red-500 dark:text-red-400"
-                        }`}
-                      >
-                        {errorMonto.msg}
-                      </span>
+                      <>
+                        <span
+                          className={`${
+                            errorMonto.success
+                              ? "text-green-500 dark:text-green-400"
+                              : "text-red-500 dark:text-red-400"
+                          }`}
+                        >
+                          {errorMonto.msg}
+                        </span>
+
+                        {/* Sección de acciones para suplementos */}
+                        <div className="mt-3 space-y-2 border-t pt-3 dark:border-gray-700">
+                          <p className="text-sm text-gray-600 dark:text-gray-400">
+                            ¿Desea resolver este error con suplementos?
+                          </p>
+
+                          <div className="flex gap-2">
+                            {/* Botón para usar suplementos existentes */}
+                            {isSuplemento?.length > 0 ||
+                            selectedContract?.isGotSupplement ? (
+                              <button
+                                onClick={async () => {
+                                  const suplemento = await handleGetSupplements(
+                                    selectedContract._id
+                                  );
+                                  setCurrentSupplements(suplemento);
+                                  setShowSupplementsGetInfoModal(true);
+                                }}
+                                className="px-3 py-1.5 text-sm bg-blue-100 text-blue-800 rounded-md hover:bg-blue-200 transition-colors dark:bg-blue-900/30 dark:text-blue-400"
+                              >
+                                🗂 Usar suplementos existentes
+                              </button>
+                            ) : (
+                              /* Botón para crear nuevo suplemento */
+                              <button
+                                onClick={() => {
+                                  setContractTypeSelect(selectedContract);
+                                  setShowSupplementModal(true);
+                                }}
+                                className="px-3 py-1.5 text-sm bg-green-100 text-green-800 rounded-md hover:bg-green-200 transition-colors dark:bg-green-900/30 dark:text-green-400"
+                              >
+                                ➕ Crear nuevo suplemento
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </>
+                    )}
+
+                    {/* Sección de suplementos existentes */}
+                    {selectedContract?.supplement && (
+                      <div className="mt-4 p-3 bg-gray-50 rounded-lg dark:bg-gray-700">
+                        <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
+                          Suplementos de monto en uso:
+                        </p>
+                        {selectedContract.supplement
+                          .filter((sup) => sup.monto)
+                          .map((sup, index) => (
+                            <div
+                              key={index}
+                              className="text-green-600 dark:text-green-400 text-sm"
+                            >
+                              + ${sup.monto.toLocaleString()}
+                            </div>
+                          ))}
+                      </div>
                     )}
                   </div>
                   <div className="flex justify-end space-x-4 mt-5">
@@ -1458,7 +1730,7 @@ const ContractTable = ({ tipoContrato }) => {
                         setShowModalUpdate(false);
                         setNumeroDictamen("");
                         setNumeroDictamenNew("");
-                        setErrorMonto({});
+                        setErrorMonto(null);
                         setErrorText("");
                         setErrorText1("");
                         setMonto("");
@@ -1489,7 +1761,7 @@ const ContractTable = ({ tipoContrato }) => {
                       setErrorText("");
                       setErrorText1("");
                       setId("");
-                      setErrorMonto({});
+                      setErrorMonto(null);
                       setMonto("");
                       setNumeroDictamen("");
                     }}
@@ -1498,6 +1770,7 @@ const ContractTable = ({ tipoContrato }) => {
                   >
                     <IoClose size={24} />
                   </button>
+
                   <h3 className="text-xl font-semibold mb-4 dark:text-white">
                     Registrar una nueva factura
                   </h3>
@@ -1547,25 +1820,84 @@ const ContractTable = ({ tipoContrato }) => {
                       </span>
                     )}
                     {errorMonto && (
-                      <span
-                        className={`${
-                          errorMonto.success === true
-                            ? "text-green-500 dark:text-green-400"
-                            : "text-red-500 dark:text-red-400"
-                        }`}
-                      >
-                        {errorMonto.msg}
-                      </span>
+                      <>
+                        <span
+                          className={`${
+                            errorMonto.success
+                              ? "text-green-500 dark:text-green-400"
+                              : "text-red-500 dark:text-red-400"
+                          }`}
+                        >
+                          {errorMonto.msg}
+                        </span>
+
+                        {/* Sección de acciones para suplementos */}
+                        <div className="mt-3 space-y-2 border-t pt-3 dark:border-gray-700">
+                          <p className="text-sm text-gray-600 dark:text-gray-400">
+                            ¿Desea resolver este error con suplementos?
+                          </p>
+
+                          <div className="flex gap-2">
+                            {/* Botón para usar suplementos existentes */}
+                            {isSuplemento?.length > 0 ||
+                            selectedContract?.isGotSupplement ? (
+                              <button
+                                onClick={async () => {
+                                  const suplemento = await handleGetSupplements(
+                                    selectedContract._id
+                                  );
+                                  setCurrentSupplements(suplemento);
+                                  setShowSupplementsGetInfoModal(true);
+                                }}
+                                className="px-3 py-1.5 text-sm bg-blue-100 text-blue-800 rounded-md hover:bg-blue-200 transition-colors dark:bg-blue-900/30 dark:text-blue-400"
+                              >
+                                🗂 Usar suplementos existentes
+                              </button>
+                            ) : (
+                              /* Botón para crear nuevo suplemento */
+                              <button
+                                onClick={() => {
+                                  setContractTypeSelect(selectedContract);
+                                  setShowSupplementModal(true);
+                                }}
+                                className="px-3 py-1.5 text-sm bg-green-100 text-green-800 rounded-md hover:bg-green-200 transition-colors dark:bg-green-900/30 dark:text-green-400"
+                              >
+                                ➕ Crear nuevo suplemento
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </>
+                    )}
+
+                    {/* Sección de suplementos existentes */}
+                    {selectedContract?.supplement && (
+                      <div className="mt-4 p-3 bg-gray-50 rounded-lg dark:bg-gray-700">
+                        <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
+                          Suplementos de monto en uso:
+                        </p>
+                        {selectedContract.supplement
+                          .filter((sup) => sup.monto)
+                          .map((sup, index) => (
+                            <div
+                              key={index}
+                              className="text-green-600 dark:text-green-400 text-sm"
+                            >
+                              + ${sup.monto.toLocaleString()}
+                            </div>
+                          ))}
+                      </div>
                     )}
                   </div>
                   <div className="flex justify-end space-x-4 mt-5">
                     <button
                       onClick={() => {
                         setShowModalCreate(false);
+                        setSelectedContract(null);
                         setErrorText("");
                         setErrorText1("");
                         setId("");
-                        setErrorMonto({});
+                        setErrorMonto(null);
                         setMonto("");
                         setNumeroDictamen("");
                       }}
@@ -1665,6 +1997,24 @@ const ContractTable = ({ tipoContrato }) => {
         </div>
       </div>
       {showModal && <Modal />}
+      {showSupplementModal && (
+        <SupplementModal
+          contratoSeleccionado={contractTypeSelect}
+          tipoContrato={tipoContrato}
+        />
+      )}
+      {showSupplementsGetInfoModal && (
+        <ViewSupplementsModal
+          supplements={currentSupplements}
+          contractName={selectedContract?.numeroDictamen}
+          contractId={selectedContract?._id}
+          onClose={async () => {
+            await obtenerRegistros(tipoContrato);
+            setShowSupplementsGetInfoModal(false);
+          }}
+          setErrorMonto={setErrorMonto}
+        />
+      )}
     </>
   );
 };
