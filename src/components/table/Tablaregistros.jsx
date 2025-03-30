@@ -92,9 +92,11 @@ const ContractTable = ({ tipoContrato }) => {
   };
   useEffect(() => {
     const verificar = async () => {
-      const suplemento = await handleGetSupplements(selectedContract._id);
-      setIsSuplemento(suplemento);
-      setIsCreate(false);
+      if (selectedContract) {
+        const suplemento = await handleGetSupplements(selectedContract._id);
+        setIsSuplemento(suplemento);
+        setIsCreate(false);
+      }
     };
 
     verificar();
@@ -381,6 +383,7 @@ const ContractTable = ({ tipoContrato }) => {
       );
       toast.success(response.data.msg);
       setShowModalUpdate(false);
+      setSelectedContract(null);
       setErrorMonto(null);
       setMonto("");
       setNumeroDictamen("");
@@ -801,6 +804,7 @@ const ContractTable = ({ tipoContrato }) => {
         config
       );
       toast.success(response.data.msg);
+      setSelectedContract(null);
       setErrorMonto(null);
       setErrorText("");
       setErrorText1("");
@@ -1593,6 +1597,7 @@ const ContractTable = ({ tipoContrato }) => {
                   <button
                     onClick={() => {
                       setShowModalUpdate(false);
+                      setSelectedContract(null);
                       setNumeroDictamen("");
                       setNumeroDictamenNew("");
                       setMonto("");
@@ -1728,6 +1733,7 @@ const ContractTable = ({ tipoContrato }) => {
                     <button
                       onClick={() => {
                         setShowModalUpdate(false);
+                        setSelectedContract(null);
                         setNumeroDictamen("");
                         setNumeroDictamenNew("");
                         setErrorMonto(null);
@@ -1758,6 +1764,7 @@ const ContractTable = ({ tipoContrato }) => {
                   <button
                     onClick={() => {
                       setShowModalCreate(false);
+                      setSelectedContract(null);
                       setErrorText("");
                       setErrorText1("");
                       setId("");
