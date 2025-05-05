@@ -109,12 +109,25 @@ const ValidationProvider = ({ children }) => {
       }
     }
     if (tipo === "telefono") {
-      if (
-        !/^(?:\+?(\d{1,3}[-\s.]*)?\(\d{3}\)[-\s.]*(\d{3})[-\s.]*(\d{4})|\(\d{3}[-\s.]*\d{3}[-\s.]*\d{4}|\d{7}|\d{10}|(\d{3}[-\s.]*(\d{3}|\d{4}))|(\d{3}[-\s.]*(\d{3}|\d{4})))$/.test(
-          valor
-        )
-      ) {
-        return "El formato del teléfono es inválido. Ejemplo: +1234567890 o (123) 456-7890";
+      // Primero verificar que no contenga letras ni caracteres no permitidos
+      if (/[a-zA-Z]/.test(valor)) {
+        return "El teléfono no puede contener letras";
+      }
+    
+      // Eliminar espacios, guiones, paréntesis (solo para limpieza)
+      const numeroLimpio = valor.replace(/[\s\-\(\)]/g, '');
+    
+      // Validación estricta:
+      if (numeroLimpio.startsWith('+')) {
+        // Internacional: exactamente +53 seguido de 8 dígitos (11 caracteres incluyendo el +)
+        if (!/^\+53\d{8}$/.test(numeroLimpio)) {
+          return "Teléfono internacional cubano inválido. Formato exacto: +53xxxxxxxx (8 dígitos)";
+        }
+      } else {
+        // Local: exactamente 8 dígitos, sin otros caracteres
+        if (!/^\d{8}$/.test(numeroLimpio)) {
+          return "Teléfono local cubano inválido. Debe tener exactamente 8 dígitos (ej: 78901234)";
+        }
       }
     }
     if (tipo === "password") {
