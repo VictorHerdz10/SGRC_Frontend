@@ -1261,7 +1261,7 @@ const ContractTable = ({ tipoContrato }) => {
                   </th>
                   {contractTypes.find((ct) => ct.nombre === tipoContrato)
                     ?.isMarco && (
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider ">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                       Contratos especificos
                     </th>
                   )}
@@ -1322,49 +1322,45 @@ const ContractTable = ({ tipoContrato }) => {
                         {parcearDate(new Date(contract.fechaRecibido))}
                       </td>
                     )}
-                    {contract.valorPrincipal && (
+                    {(contract.isMarco ||
+                      contract.valorPrincipal !== undefined) && (
                       <td className="px-6 py-4 whitespace-nowrap dark:text-gray-200">
-                        ${contract.valorPrincipal}
+                        ${contract.valorPrincipal?.toLocaleString() || "0"}
                       </td>
                     )}
-                    {contract.valorPrincipal && (
+
+                    {(contract.isMarco ||
+                      contract.valorDisponible !== undefined) && (
                       <td className="px-6 py-4 whitespace-nowrap dark:text-gray-200">
                         <div className="flex flex-col items-start">
-                          {/* Contenedor para el círculo y el valor disponible (en la misma línea) */}
                           <div className="flex items-center">
-                            {/* Círculo de color */}
                             <div
                               className={`w-3 h-3 rounded-full ${getValueColor(
-                                contract.valorPrincipal,
-                                contract.valorDisponible
-                              )} mr-2`} // Margen derecho para separar el círculo del valor
+                                contract.valorPrincipal || 0,
+                                contract.valorDisponible || 0
+                              )} mr-2`}
                             ></div>
-
-                            {/* Valor disponible */}
                             <div className="block">
-                              ${contract.valorDisponible.toLocaleString()}
+                              $
+                              {(contract.valorDisponible || 0).toLocaleString()}
                             </div>
                           </div>
 
-                          {/* Suplementos */}
                           {contract.supplement &&
                             contract.supplement.length > 0 &&
                             contract.supplement.filter((mont) => mont.monto > 0)
-                              .length > 0 && ( // Verifica si hay suplementos con monto > 0
+                              .length > 0 && (
                               <>
                                 {contract.supplement
-                                  .filter((mont) => mont.monto > 0) // Filtra solo los suplementos con monto > 0
+                                  .filter((mont) => mont.monto > 0)
                                   .map((mont, index) => (
                                     <div
                                       key={index}
                                       className="block text-green-500"
                                     >
-                                      + ${mont.monto.toLocaleString()}{" "}
-                                      {/* Agregamos el símbolo $ aquí */}
+                                      + ${mont.monto.toLocaleString()}
                                     </div>
                                   ))}
-
-                                {/* Texto "de suplemento" si hay suplementos con monto > 0 */}
                                 <div className="block text-green-500">
                                   de suplemento{"(s)"}
                                 </div>
@@ -1373,9 +1369,11 @@ const ContractTable = ({ tipoContrato }) => {
                         </div>
                       </td>
                     )}
-                    {contract.valorPrincipal && (
+
+                    {(contract.isMarco ||
+                      contract.valorGastado !== undefined) && (
                       <td className="px-6 py-4 whitespace-nowrap dark:text-gray-200">
-                        ${contract.valorGastado.toLocaleString()}
+                        ${contract.valorGastado?.toLocaleString() || "0"}
                       </td>
                     )}
                     {!contract.isMarco && (
@@ -1387,8 +1385,9 @@ const ContractTable = ({ tipoContrato }) => {
                             </p>
                           ) : (
                             <>
-                              {contract.factura.map((factura) =>
-                                factura.numeroDictamen ? (
+                              {contract.factura
+                                .filter((factura) => factura.numeroDictamen)
+                                .map((factura) => (
                                   <div
                                     key={factura._id}
                                     className="flex items-center space-x-2"
@@ -1426,10 +1425,7 @@ const ContractTable = ({ tipoContrato }) => {
                                       />
                                     </div>
                                   </div>
-                                ) : (
-                                  ""
-                                )
-                              )}
+                                ))}
                             </>
                           )}
                         </div>
@@ -1437,71 +1433,59 @@ const ContractTable = ({ tipoContrato }) => {
                     )}
                     {contract.vigencia && (
                       <td className="px-6 whitespace-normal break-words max-w-xs dark:text-gray-200">
-                        {/* Vigencia principal */}
                         <div className="block">
                           {parseDuration(contract.vigencia)}
                         </div>
 
-                        {/* Suplementos de tiempo */}
                         {contract.supplement &&
                           contract.supplement.length > 0 &&
                           contract.supplement
-                            .filter((sup) => sup.tiempo) // Filtra solo los suplementos con tiempo
+                            .filter((sup) => sup.tiempo)
                             .map((sup, index) => {
                               const { days, months, years } = sup.tiempo;
                               const tiempoSuplemento = [];
 
-                              // Agregar años si son mayores que 0
                               if (years > 0) {
                                 tiempoSuplemento.push(
                                   `${years} año${years > 1 ? "s" : ""}`
                                 );
                               }
 
-                              // Agregar meses si son mayores que 0
                               if (months > 0) {
                                 tiempoSuplemento.push(
                                   `${months} mes${months > 1 ? "es" : ""}`
                                 );
                               }
 
-                              // Agregar días si son mayores que 0
                               if (days > 0) {
                                 tiempoSuplemento.push(
                                   `${days} día${days > 1 ? "s" : ""}`
                                 );
                               }
 
-                              // Si hay tiempo suplementario, mostrarlo
                               if (tiempoSuplemento.length > 0) {
                                 return (
                                   <div
                                     key={index}
                                     className="block text-blue-500"
                                   >
-                                    {" "}
-                                    {/* Color azul para resaltar */}+{" "}
-                                    {tiempoSuplemento.join(", ")}{" "}
-                                    {/* Unir los elementos con comas */}
+                                    + {tiempoSuplemento.join(", ")}
                                   </div>
                                 );
                               }
 
-                              return null; // Si no hay tiempo suplementario, no mostrar nada
+                              return null;
                             })}
 
-                        {/* Texto "de suplemento" si hay suplementos de tiempo */}
                         {contract.supplement &&
                           contract.supplement.some(
                             (sup) =>
-                              sup.tiempo && // Verifica si hay tiempo
+                              sup.tiempo &&
                               (sup.tiempo.days > 0 ||
                                 sup.tiempo.months > 0 ||
-                                sup.tiempo.years > 0) // Verifica si el tiempo es válido
+                                sup.tiempo.years > 0)
                           ) && (
                             <div className="block text-blue-500">
-                              {" "}
-                              {/* Color azul para resaltar */}
                               de suplemento{"(s)"}
                             </div>
                           )}
