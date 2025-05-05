@@ -570,7 +570,7 @@ const ContractConfigPanel = () => {
                       Información del Contrato
                     </h3>
                     <div className="space-y-4">
-                      {requiredFields.map((field) => (
+                      {requiredFields.filter(field => !selectedType?.isMarco || field.id !== "monto").map((field) => (
                         <div
                           key={field.id}
                           className="flex items-center justify-between p-2 rounded transition-colors mb-4"

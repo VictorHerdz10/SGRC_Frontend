@@ -13,6 +13,7 @@ import {
   FaSearch,
   FaPlusCircle,
 } from "react-icons/fa";
+import { motion } from "framer-motion";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import * as XLSX from "xlsx";
@@ -26,6 +27,7 @@ import ViewSupplementsModal, {
 } from "../modals/ViewSupplementsModal";
 import SupplementModal from "../modals/SupplementModal";
 import useValidation from "../../hooks/useValidation";
+import ModalEspecificos from "../modals/ModalEspecificos";
 
 const ContractTable = ({ tipoContrato }) => {
   const {
@@ -55,6 +57,7 @@ const ContractTable = ({ tipoContrato }) => {
   } = useValidation();
   let errores, errores2;
   const [contractTypeSelect, setContractTypeSelect] = useState(null);
+  const [selectedMarco, setSelectedMarco] = useState(null);
   const [currentSupplements, setCurrentSupplements] = useState([]);
   const [showSupplementsGetInfoModal, setShowSupplementsGetInfoModal] =
     useState(false);
@@ -1172,36 +1175,45 @@ const ContractTable = ({ tipoContrato }) => {
                       Fecha Recibido
                     </th>
                   )}
-                  {contractTypes
-                    .find((ct) => ct.nombre === tipoContrato)
-                    ?.camposRequeridos.some(
-                      (campo) => campo.id === "monto"
-                    ) && (
+                  {(contractTypes.find((ct) => ct.nombre === tipoContrato)
+                    ?.isMarco ||
+                    contractTypes
+                      .find((ct) => ct.nombre === tipoContrato)
+                      ?.camposRequeridos.some(
+                        (campo) => campo.id === "monto"
+                      )) && (
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                       Monto
                     </th>
                   )}
-                  {contractTypes
-                    .find((ct) => ct.nombre === tipoContrato)
-                    ?.camposRequeridos.some(
-                      (campo) => campo.id === "monto"
-                    ) && (
+                  {(contractTypes.find((ct) => ct.nombre === tipoContrato)
+                    ?.isMarco ||
+                    contractTypes
+                      .find((ct) => ct.nombre === tipoContrato)
+                      ?.camposRequeridos.some(
+                        (campo) => campo.id === "monto"
+                      )) && (
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                       Monto Disponible
                     </th>
                   )}
-                  {contractTypes
-                    .find((ct) => ct.nombre === tipoContrato)
-                    ?.camposRequeridos.some(
-                      (campo) => campo.id === "monto"
-                    ) && (
+                  {(contractTypes.find((ct) => ct.nombre === tipoContrato)
+                    ?.isMarco ||
+                    contractTypes
+                      .find((ct) => ct.nombre === tipoContrato)
+                      ?.camposRequeridos?.some(
+                        (campo) => campo.id === "monto"
+                      )) && (
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                       Monto Gastado
                     </th>
                   )}
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                    Facturas
-                  </th>
+                  {!contractTypes.find((ct) => ct.nombre === tipoContrato)
+                    ?.isMarco && (
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
+                      Facturas
+                    </th>
+                  )}
                   {contractTypes
                     .find((ct) => ct.nombre === tipoContrato)
                     ?.camposRequeridos.some(
@@ -1229,9 +1241,9 @@ const ContractTable = ({ tipoContrato }) => {
                       Estado
                     </th>
                   )}
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                      No. de Dictamen
-                    </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
+                    No. de Dictamen
+                  </th>
                   {contractTypes
                     .find((ct) => ct.nombre === tipoContrato)
                     ?.camposRequeridos.some(
@@ -1247,9 +1259,18 @@ const ContractTable = ({ tipoContrato }) => {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                     Suplementos
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider border-r">
-                    Crear Factura
-                  </th>
+                  {contractTypes.find((ct) => ct.nombre === tipoContrato)
+                    ?.isMarco && (
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider ">
+                      Contratos especificos
+                    </th>
+                  )}
+                  {!contractTypes.find((ct) => ct.nombre === tipoContrato)
+                    ?.isMarco && (
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider border-r">
+                      Crear Factura
+                    </th>
+                  )}
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -1357,61 +1378,63 @@ const ContractTable = ({ tipoContrato }) => {
                         ${contract.valorGastado.toLocaleString()}
                       </td>
                     )}
-                    <td className="px-6 py-4 dark:text-gray-200">
-                      <div className="space-y-2">
-                        {contract.factura.length === 0 ? (
-                          <p className="text-clip text-gray-500 dark:text-gray-400">
-                            Sin facturas asociadas
-                          </p>
-                        ) : (
-                          <>
-                            {contract.factura.map((factura) =>
-                              factura.numeroDictamen ? (
-                                <div
-                                  key={factura._id}
-                                  className="flex items-center space-x-2"
-                                >
-                                  <span>Fac {factura.numeroDictamen}</span>
-                                  <div className="flex space-x-1">
-                                    <FaEye
-                                      className="text-blue-500 cursor-pointer dark:text-blue-400"
-                                      onClick={() =>
-                                        handleModal("view", factura, "")
-                                      }
-                                    />
-                                    <FaTrash
-                                      className="text-red-500 cursor-pointer dark:text-red-400"
-                                      onClick={() => {
-                                        handleModal("delete", factura, "");
-                                        setId(contract._id);
-                                      }}
-                                    />
-                                    <FaEdit
-                                      className="text-yellow-500 cursor-pointer dark:text-yellow-400"
-                                      onClick={() => {
-                                        setNumeroDictamenNew(
-                                          factura?.numeroDictamen
-                                        );
-                                        setNumeroDictamen(
-                                          factura?.numeroDictamen
-                                        );
-                                        setSelectedContract(contract);
-                                        setErrorMonto(null);
-                                        setActualMonto(factura?.monto);
-                                        setShowModalUpdate(true);
-                                        setId(contract._id);
-                                      }}
-                                    />
+                    {!contract.isMarco && (
+                      <td className="px-6 py-4 dark:text-gray-200">
+                        <div className="space-y-2">
+                          {contract.factura.length === 0 ? (
+                            <p className="text-clip text-gray-500 dark:text-gray-400">
+                              Sin facturas asociadas
+                            </p>
+                          ) : (
+                            <>
+                              {contract.factura.map((factura) =>
+                                factura.numeroDictamen ? (
+                                  <div
+                                    key={factura._id}
+                                    className="flex items-center space-x-2"
+                                  >
+                                    <span>Fac {factura.numeroDictamen}</span>
+                                    <div className="flex space-x-1">
+                                      <FaEye
+                                        className="text-blue-500 cursor-pointer dark:text-blue-400"
+                                        onClick={() =>
+                                          handleModal("view", factura, "")
+                                        }
+                                      />
+                                      <FaTrash
+                                        className="text-red-500 cursor-pointer dark:text-red-400"
+                                        onClick={() => {
+                                          handleModal("delete", factura, "");
+                                          setId(contract._id);
+                                        }}
+                                      />
+                                      <FaEdit
+                                        className="text-yellow-500 cursor-pointer dark:text-yellow-400"
+                                        onClick={() => {
+                                          setNumeroDictamenNew(
+                                            factura?.numeroDictamen
+                                          );
+                                          setNumeroDictamen(
+                                            factura?.numeroDictamen
+                                          );
+                                          setSelectedContract(contract);
+                                          setErrorMonto(null);
+                                          setActualMonto(factura?.monto);
+                                          setShowModalUpdate(true);
+                                          setId(contract._id);
+                                        }}
+                                      />
+                                    </div>
                                   </div>
-                                </div>
-                              ) : (
-                                ""
-                              )
-                            )}
-                          </>
-                        )}
-                      </div>
-                    </td>
+                                ) : (
+                                  ""
+                                )
+                              )}
+                            </>
+                          )}
+                        </div>
+                      </td>
+                    )}
                     {contract.vigencia && (
                       <td className="px-6 whitespace-normal break-words max-w-xs dark:text-gray-200">
                         {/* Vigencia principal */}
@@ -1561,24 +1584,46 @@ const ContractTable = ({ tipoContrato }) => {
                         )}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <button
-                        onClick={async () => {
-                          setSelectedContract(contract);
-                          setShowModalCreate(true);
-                          await setId(contract._id);
+                    {contract.isMarco && (
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex space-x-2 justify-around">
+                          <motion.div
+                            whileHover={{ scale: 1.1, rotate: 10 }}
+                            whileTap={{ scale: 0.9 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 400,
+                              damping: 10,
+                            }}
+                          >
+                            <FaEye
+                              className="text-blue-500 cursor-pointer dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
+                              onClick={() => setSelectedMarco(contract._id)}
+                            />
+                          </motion.div>
+                        </div>
+                      </td>
+                    )}
+                    {!contract.isMarco && (
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <button
+                          onClick={async () => {
+                            setSelectedContract(contract);
+                            setShowModalCreate(true);
+                            await setId(contract._id);
 
-                          setMonto("");
-                          setNumeroDictamen("");
-                        }}
-                        className="flex items-center space-x-1 px-1 py-1 bg-blue-700 text-white rounded hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700"
-                      >
-                        <FaPlus className="h-3 w-2" />
-                        <span className="text-white font-serif text-sm">
-                          Crear Factura
-                        </span>
-                      </button>
-                    </td>
+                            setMonto("");
+                            setNumeroDictamen("");
+                          }}
+                          className="flex items-center space-x-1 px-1 py-1 bg-blue-700 text-white rounded hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700"
+                        >
+                          <FaPlus className="h-3 w-2" />
+                          <span className="text-white font-serif text-sm">
+                            Crear Factura
+                          </span>
+                        </button>
+                      </td>
+                    )}
                   </tr>
                 ))}
               </tbody>
@@ -2014,6 +2059,12 @@ const ContractTable = ({ tipoContrato }) => {
             setShowSupplementsGetInfoModal(false);
           }}
           setErrorMonto={setErrorMonto}
+        />
+      )}
+      {selectedMarco && (
+        <ModalEspecificos
+          marcoId={selectedMarco}
+          onClose={() => setSelectedMarco(null)}
         />
       )}
     </>
