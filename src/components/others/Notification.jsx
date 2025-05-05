@@ -11,7 +11,6 @@ import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import clienteAxios from "../../axios/axios";
-import { data } from "autoprefixer";
 import useValidation from "../../hooks/useValidation";
 
 const Notification = () => {

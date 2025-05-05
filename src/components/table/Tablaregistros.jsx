@@ -861,7 +861,7 @@ const ContractTable = ({ tipoContrato }) => {
 
   useEffect(() => {
     obtenerRegistros(tipoContrato);
-  }, []);
+  }, [tipoContrato]);
 
   const Modal = () => {
     return (
@@ -1229,15 +1229,9 @@ const ContractTable = ({ tipoContrato }) => {
                       Estado
                     </th>
                   )}
-                  {contractTypes
-                    .find((ct) => ct.nombre === tipoContrato)
-                    ?.camposRequeridos.some(
-                      (campo) => campo.id === "numeroDictamen"
-                    ) && (
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                       No. de Dictamen
                     </th>
-                  )}
                   {contractTypes
                     .find((ct) => ct.nombre === tipoContrato)
                     ?.camposRequeridos.some(
@@ -1278,12 +1272,12 @@ const ContractTable = ({ tipoContrato }) => {
                       </td>
                     )}
                     {contract.entidad && (
-                      <td className="px-6 py-4 whitespace-normal break-words max-w-xs dark:text-gray-200">
+                      <td className="px-6 py-4 whitespace-normal break-words max-w-xs dark:text-gray-200 ">
                         {contract.entidad}
                       </td>
                     )}
                     {contract.direccionEjecuta && (
-                      <td className="px-6 py-4 whitespace-normal break-words max-w-xs dark:text-gray-200">
+                      <td className="px-6 py-4 whitespace-normal break-words max-w-xs dark:text-gray-200 ">
                         {contract.direccionEjecuta}
                       </td>
                     )}

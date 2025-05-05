@@ -133,11 +133,6 @@ const ContractConfigPanel = () => {
     { id: "vigencia", label: "Vigencia", tooltip: "Vigencia del contrato" },
     { id: "estado", label: "Estado", tooltip: "Estado actual del contrato" },
     {
-      id: "numeroDictamen",
-      label: "Número de Dictamen",
-      tooltip: "Número de dictamen asociado",
-    },
-    {
       id: "subirPDF",
       label: "Subir PDF",
       tooltip: "Subir archivo PDF del contrato",
