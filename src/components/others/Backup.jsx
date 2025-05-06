@@ -278,17 +278,7 @@ const BackupComponent = () => {
             </button>
           </div>
           <div className="mt-5">
-            <motion.div
-              whileHover={{ scale: 1.1, rotate: 10 }}
-              whileTap={{ scale: 0.9 }}
-              transition={{
-                type: "spring",
-                stiffness: 400,
-                damping: 10,
-              }}
-            >
-              <FileUploadInput showNotification={showNotification} />
-            </motion.div>
+            <FileUploadInput showNotification={showNotification} />
           </div>
         </div>
 
@@ -343,17 +333,8 @@ const BackupComponent = () => {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <motion.div
-                  whileHover={{ scale: 1.1, rotate: 10 }}
-                  whileTap={{ scale: 0.9 }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 400,
-                    damping: 10,
-                  }}
-                >
-                  <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-300" />
-                </motion.div>
+
+                <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-300" />
               </div>
               <div className="flex items-center space-x-2">
                 <motion.div

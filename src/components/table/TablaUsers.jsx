@@ -175,7 +175,7 @@ const PanelUsuario = () => {
                     </td>
                     <td className="py-2 px-4 border-b border-r dark:border-gray-600">
                       <div className="flex space-x-2">
-                        import { motion } from "framer-motion";<motion.div
+                        <motion.div
                             whileHover={{ scale: 1.1, rotate: 10 }}
                             whileTap={{ scale: 0.9 }}
                             transition={{

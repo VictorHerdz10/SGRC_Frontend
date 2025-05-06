@@ -38,7 +38,7 @@ export const ModalDetalleContrato = ({ contrato, onClose }) => {
 
   // Formateadores
   const formatDate = (date) => date ? new Date(date).toLocaleDateString('es-ES') : 'No especificado';
-  const formatMoney = (amount) => amount ? new Intl.NumberFormat('es-ES', {style: 'currency', currency: 'USD'}).format(amount) : 'No especificado';
+  const formatMoney = (amount) => amount ? `$${new Intl.NumberFormat('es-ES').format(amount)}` : 'No especificado';
 
   // Secciones colapsables
   const sections = [
@@ -66,7 +66,7 @@ export const ModalDetalleContrato = ({ contrato, onClose }) => {
                 >
                   <InfoRow small label="N° Dictamen" value={fact.numeroDictamen} />
                   <InfoRow small label="Monto" value={formatMoney(fact.monto)} />
-                  {fact.montoSuplement && <InfoRow small label="Suplemento" value={formatMoney(fact.montoSuplement)} />}
+                  {fact.montoSuplement && <InfoRow small label="Suplemento" value={formatMoney(fact.montoSuplement)} />}1
                 </motion.div>
               ))}
             </div>
