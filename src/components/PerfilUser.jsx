@@ -511,15 +511,7 @@ const UserProfile = () => {
                     className="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
                     required
                   />
-                  <motion.div
-                            whileHover={{ scale: 1.1, rotate: 10 }}
-                            whileTap={{ scale: 0.9 }}
-                            transition={{
-                              type: "spring",
-                              stiffness: 400,
-                              damping: 10,
-                            }}
-                          > <FiEdit2 className="absolute right-3 top-3.5 text-gray-400 dark:text-gray-500" /></motion.div>
+                   <FiEdit2 className="absolute right-3 top-3.5 text-gray-400 dark:text-gray-500" />
                   {errorName && (
                     <span className="text-red-500 dark:text-red-400">
                       {errorName}

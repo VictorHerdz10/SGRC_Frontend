@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { IoClose, IoWarningOutline } from "react-icons/io5";
-import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 
 const BackupWarning = () => {
@@ -54,15 +53,13 @@ const BackupWarning = () => {
       <div className="flex justify-between items-center">
         <IoWarningOutline size={24} className="text-red-600 mr-2" />
         <span>Realiza tu copia de seguridad local ahora !!!</span>
-        <motion.button
-          whileHover={{ rotate: 90 }}
-          whileTap={{ scale: 0.9 }}
+        <button
           onClick={handleCloseClick}
           className="ml-4 text-gray-700 hover:text-gray-900 transition-colors"
           aria-label="Close warning"
         >
           <IoClose size={24} />
-        </motion.button>
+        </button>
       </div>
       <button
         onClick={handleBackupClick}
