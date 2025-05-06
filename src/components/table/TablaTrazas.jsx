@@ -6,6 +6,7 @@ import {
   FaEye,
   FaSearch,
 } from "react-icons/fa";
+import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { IoClose } from "react-icons/io5";
@@ -206,7 +207,17 @@ const PanelTrazas = () => {
                           onClick={() => setSelectedJson(trazas.old_value)}
                           className="flex items-center space-x-1 bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700"
                         >
-                          <FaEye />
+                          <motion.div
+                            whileHover={{ scale: 1.1, rotate: 10 }}
+                            whileTap={{ scale: 0.9 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 400,
+                              damping: 10,
+                            }}
+                          >
+                            <FaEye />
+                          </motion.div>
                           <span>Ver detalles</span>
                         </button>
                       ) : (
@@ -219,7 +230,17 @@ const PanelTrazas = () => {
                           onClick={() => setSelectedJson(trazas.new_value)}
                           className="flex items-center space-x-1 bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700"
                         >
-                          <FaEye />
+                          <motion.div
+                            whileHover={{ scale: 1.1, rotate: 10 }}
+                            whileTap={{ scale: 0.9 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 400,
+                              damping: 10,
+                            }}
+                          >
+                            <FaEye />
+                          </motion.div>
                           <span>Ver detalles</span>
                         </button>
                       ) : (
@@ -249,7 +270,17 @@ const PanelTrazas = () => {
                           }
                           className="flex items-center space-x-1 bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700"
                         >
-                          <FaEye />
+                          <motion.div
+                            whileHover={{ scale: 1.1, rotate: 10 }}
+                            whileTap={{ scale: 0.9 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 400,
+                              damping: 10,
+                            }}
+                          >
+                            <FaEye />
+                          </motion.div>
                           <span>Ver detalles</span>
                         </button>
                       ) : (
@@ -258,13 +289,23 @@ const PanelTrazas = () => {
                     </td>
                     <td className="py-2 px-4 border-b border-r dark:border-gray-600">
                       <div className="flex space-x-2 justify-center">
-                        <FaTrash
-                          className="text-red-500 cursor-pointer dark:text-red-400"
-                          onClick={() => {
-                            setShowConfirmDelete(true);
-                            setTrazasId(trazas._id);
+                        <motion.div
+                          whileHover={{ scale: 1.1, rotate: 10 }}
+                          whileTap={{ scale: 0.9 }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 400,
+                            damping: 10,
                           }}
-                        />
+                        >
+                          <FaTrash
+                            className="text-red-500 cursor-pointer dark:text-red-400"
+                            onClick={() => {
+                              setShowConfirmDelete(true);
+                              setTrazasId(trazas._id);
+                            }}
+                          />
+                        </motion.div>
                       </div>
                     </td>
                   </tr>
@@ -279,7 +320,17 @@ const PanelTrazas = () => {
               disabled={currentPage === 1}
               className="px-3 py-1 mx-1 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
             >
-              <FaChevronLeft />
+              <motion.div
+                whileHover={{ scale: 1.1, rotate: 10 }}
+                whileTap={{ scale: 0.9 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 400,
+                  damping: 10,
+                }}
+              >
+                <FaChevronLeft />
+              </motion.div>
             </button>
             {Array.from({ length: endPage - startPage + 1 }, (_, i) => (
               <button
@@ -301,7 +352,17 @@ const PanelTrazas = () => {
               disabled={currentPage === totalPages}
               className="px-3 py-1 mx-1 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
             >
-              <FaChevronRight />
+              <motion.div
+                whileHover={{ scale: 1.1, rotate: 10 }}
+                whileTap={{ scale: 0.9 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 400,
+                  damping: 10,
+                }}
+              >
+                <FaChevronRight />
+              </motion.div>
             </button>
           </div>
         </div>
@@ -309,13 +370,15 @@ const PanelTrazas = () => {
         {showConfirmDelete && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
             <div className="relative w-full max-w-md p-6 bg-white rounded-lg shadow-xl animate-slideIn dark:bg-gray-800">
-              <button
+              <motion.button
+                whileHover={{ rotate: 90 }}
+                whileTap={{ scale: 0.9 }}
                 onClick={() => setShowConfirmDelete(false)}
                 className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors dark:text-gray-400 dark:hover:text-gray-200"
                 aria-label="Close confirmation"
               >
                 <IoClose size={24} />
-              </button>
+              </motion.button>
               <h2 className="text-xl font-bold mb-4 dark:text-white">
                 Advertencia
               </h2>
@@ -342,13 +405,15 @@ const PanelTrazas = () => {
         {selectedJson && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
             <div className="relative w-full max-w-md p-6 bg-white rounded-lg shadow-xl animate-slideIn dark:bg-gray-800">
-              <button
+              <motion.button
+                whileHover={{ rotate: 90 }}
+                whileTap={{ scale: 0.9 }}
                 onClick={() => setSelectedJson(null)}
                 className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors dark:text-gray-400 dark:hover:text-gray-200"
                 aria-label="Close JSON viewer"
               >
                 <IoClose size={24} />
-              </button>
+              </motion.button>
               <h2 className="text-xl font-bold mb-4 dark:text-white">
                 Detalles
               </h2>

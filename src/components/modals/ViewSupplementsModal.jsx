@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { FaFileContract, FaTrash, FaTimes, FaEdit } from "react-icons/fa";
 import { toast } from "react-toastify";
 import clienteAxios from "../../axios/axios";
@@ -20,7 +21,8 @@ const ViewSupplementsModal = ({
     handleGetSupplements,
     setShowSupplementModalEdit,
     showSupplementModalEdit,
-    setSelectedContract,setWithSupplement
+    setSelectedContract,
+    setWithSupplement,
   } = useValidation();
 
   const handleConfirmation = (supplement) => {
@@ -39,7 +41,7 @@ const ViewSupplementsModal = ({
         `contratos/suplementos/usar/${selectedSupplement}`,
         config
       );
-      setWithSupplement(true)
+      setWithSupplement(true);
       toast.success(data.msg);
       setSelectedContract(data.contract);
       setSelectedSupplement(null);
@@ -92,7 +94,17 @@ const ViewSupplementsModal = ({
                 onClick={onClose}
                 className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
               >
-                <FaTimes size={24} />
+                <motion.div
+                  whileHover={{ scale: 1.1, rotate: 10 }}
+                  whileTap={{ scale: 0.9 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 400,
+                    damping: 10,
+                  }}
+                >
+                  <FaTimes size={24} />
+                </motion.div>
               </button>
             </div>
 
@@ -115,7 +127,17 @@ const ViewSupplementsModal = ({
                         }}
                         className="text-yellow-500 hover:text-yellow-600"
                       >
-                        <FaEdit size={16} />
+                        <motion.div
+                          whileHover={{ scale: 1.1, rotate: 10 }}
+                          whileTap={{ scale: 0.9 }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 400,
+                            damping: 10,
+                          }}
+                        >
+                          <FaEdit size={16} />
+                        </motion.div>
                       </button>
                       <button
                         onClick={() => {
@@ -124,7 +146,17 @@ const ViewSupplementsModal = ({
                         }}
                         className="text-red-500 hover:text-red-700 dark:hover:text-red-400"
                       >
-                        <FaTrash size={16} />
+                        <motion.div
+                          whileHover={{ scale: 1.1, rotate: 10 }}
+                          whileTap={{ scale: 0.9 }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 400,
+                            damping: 10,
+                          }}
+                        >
+                          <FaTrash size={16} />
+                        </motion.div>
                       </button>
                     </div>
                     <div className="absolute bottom-2 right-2">
@@ -141,7 +173,17 @@ const ViewSupplementsModal = ({
 
                     <div className="space-y-2">
                       <div className="flex items-center text-sm font-medium dark:text-gray-200">
-                        <FaFileContract className="mr-2 text-blue-500" />
+                        <motion.div
+                          whileHover={{ scale: 1.1, rotate: 10 }}
+                          whileTap={{ scale: 0.9 }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 400,
+                            damping: 10,
+                          }}
+                        >
+                          <FaFileContract className="mr-2 text-blue-500" />{" "}
+                        </motion.div>
                         Dedicado a: {supplement.nombre}
                       </div>
 
@@ -291,10 +333,20 @@ export const SupplementViewerTrigger = ({ onClick }) => (
     onClick={onClick}
     className="cursor-pointer p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-all transform hover:scale-110"
   >
-    <FaFileContract
-      className="text-purple-500 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300"
-      size={16}
-    />
+    <motion.div
+      whileHover={{ scale: 1.1, rotate: 10 }}
+      whileTap={{ scale: 0.9 }}
+      transition={{
+        type: "spring",
+        stiffness: 400,
+        damping: 10,
+      }}
+    >
+      <FaFileContract
+        className="text-purple-500 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300"
+        size={16}
+      />
+    </motion.div>
   </div>
 );
 

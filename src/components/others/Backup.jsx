@@ -15,6 +15,7 @@ import useValidation from "../../hooks/useValidation";
 import clienteAxios from "../../axios/axios";
 import { IoClose } from "react-icons/io5";
 import { toast } from "react-toastify";
+import { motion } from "framer-motion";
 import FileUploadInput from "../../components/others/FileUploadInput";
 
 const BackupComponent = () => {
@@ -231,7 +232,17 @@ const BackupComponent = () => {
                 </>
               ) : (
                 <>
-                  <FiRefreshCw className="-ml-1 mr-2 h-6 w-6" />
+                  <motion.div
+                    whileHover={{ scale: 1.1, rotate: 10 }}
+                    whileTap={{ scale: 0.9 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 400,
+                      damping: 10,
+                    }}
+                  >
+                    <FiRefreshCw className="-ml-1 mr-2 h-6 w-6" />
+                  </motion.div>
                   Crear copia de seguridad ahora
                 </>
               )}
@@ -250,14 +261,34 @@ const BackupComponent = () => {
                 </>
               ) : (
                 <>
-                  <FiRefreshCw className="-ml-1 mr-2 h-6 w-6" />
+                  <motion.div
+                    whileHover={{ scale: 1.1, rotate: 10 }}
+                    whileTap={{ scale: 0.9 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 400,
+                      damping: 10,
+                    }}
+                  >
+                    <FiRefreshCw className="-ml-1 mr-2 h-6 w-6" />
+                  </motion.div>
                   Crear copia de seguridad local ahora
                 </>
               )}
             </button>
           </div>
           <div className="mt-5">
-            <FileUploadInput showNotification={showNotification} />
+            <motion.div
+              whileHover={{ scale: 1.1, rotate: 10 }}
+              whileTap={{ scale: 0.9 }}
+              transition={{
+                type: "spring",
+                stiffness: 400,
+                damping: 10,
+              }}
+            >
+              <FileUploadInput showNotification={showNotification} />
+            </motion.div>
           </div>
         </div>
 
@@ -272,9 +303,29 @@ const BackupComponent = () => {
           >
             <div className="flex items-center">
               {notification.type === "success" ? (
-                <FiCheck className="h-5 w-5 mr-2" />
+                <motion.div
+                  whileHover={{ scale: 1.1, rotate: 10 }}
+                  whileTap={{ scale: 0.9 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 400,
+                    damping: 10,
+                  }}
+                >
+                  <FiCheck className="h-5 w-5 mr-2" />
+                </motion.div>
               ) : (
-                <FiAlertCircle className="h-5 w-5 mr-2" />
+                <motion.div
+                  whileHover={{ scale: 1.1, rotate: 10 }}
+                  whileTap={{ scale: 0.9 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 400,
+                    damping: 10,
+                  }}
+                >
+                  <FiAlertCircle className="h-5 w-5 mr-2" />
+                </motion.div>
               )}
               <span>{notification.message}</span>
             </div>
@@ -292,10 +343,30 @@ const BackupComponent = () => {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-300" />
+                <motion.div
+                  whileHover={{ scale: 1.1, rotate: 10 }}
+                  whileTap={{ scale: 0.9 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 400,
+                    damping: 10,
+                  }}
+                >
+                  <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-300" />
+                </motion.div>
               </div>
               <div className="flex items-center space-x-2">
-                <FiFilter className="text-gray-400 dark:text-gray-300" />
+                <motion.div
+                  whileHover={{ scale: 1.1, rotate: 10 }}
+                  whileTap={{ scale: 0.9 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 400,
+                    damping: 10,
+                  }}
+                >
+                  <FiFilter className="text-gray-400 dark:text-gray-300" />
+                </motion.div>
                 <span className="text-sm text-gray-600 dark:text-gray-300">
                   Filtrar
                 </span>
@@ -343,7 +414,18 @@ const BackupComponent = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
                       <span className="inline-flex items-center text-green-600 dark:text-green-400">
-                        <FiLock className="mr-1" /> Encriptado
+                        <motion.div
+                          whileHover={{ scale: 1.1, rotate: 10 }}
+                          whileTap={{ scale: 0.9 }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 400,
+                            damping: 10,
+                          }}
+                        >
+                          <FiLock className="mr-1" />
+                        </motion.div>{" "}
+                        Encriptado
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
@@ -365,7 +447,18 @@ const BackupComponent = () => {
                         className="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transform hover:scale-105 transition-transform duration-200 dark:bg-red-500 dark:hover:bg-red-600"
                         disabled={isLoading}
                       >
-                        <FiTrash2 className="-ml-0.5 mr-1 h-4 w-4" /> Eliminar
+                        <motion.div
+                          whileHover={{ scale: 1.1, rotate: 10 }}
+                          whileTap={{ scale: 0.9 }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 400,
+                            damping: 10,
+                          }}
+                        >
+                          <FiTrash2 className="-ml-0.5 mr-1 h-4 w-4" />
+                        </motion.div>{" "}
+                        Eliminar
                       </button>
                     </td>
                   </tr>
@@ -378,7 +471,9 @@ const BackupComponent = () => {
       {showEliminarModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="relative w-full max-w-md p-6 bg-white rounded-lg shadow-xl animate-slideIn dark:bg-gray-800">
-            <button
+            <motion.button
+              whileHover={{ rotate: 90 }}
+              whileTap={{ scale: 0.9 }}
               onClick={() => {
                 setId("");
                 setShowEliminarModal(false);
@@ -387,7 +482,7 @@ const BackupComponent = () => {
               aria-label="Close confirmation"
             >
               <IoClose size={24} />
-            </button>
+            </motion.button>
             <h2 className="text-xl font-bold mb-4 dark:text-white">
               Advertencia
             </h2>
@@ -418,7 +513,9 @@ const BackupComponent = () => {
       {showRestoreModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="relative w-full max-w-md p-6 bg-white rounded-lg shadow-xl animate-slideIn dark:bg-gray-800">
-            <button
+            <motion.button
+              whileHover={{ rotate: 90 }}
+              whileTap={{ scale: 0.9 }}
               onClick={() => {
                 setDropboxPath("");
                 setShowRestoreModal(false);
@@ -427,7 +524,7 @@ const BackupComponent = () => {
               aria-label="Close confirmation"
             >
               <IoClose size={24} />
-            </button>
+            </motion.button>
             <h2 className="text-xl font-bold mb-4 dark:text-white">
               Advertencia
             </h2>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import {
   FaBriefcase,
   FaHandshake,
@@ -214,7 +215,7 @@ const ContractConfigPanel = () => {
       setContractAsociation(response.data);
     } catch (error) {}
   };
-  
+
   // Guardar los cambios en los campos requeridos
   const handleSave = async () => {
     if (!selectedType) return;
@@ -399,7 +400,17 @@ const ContractConfigPanel = () => {
                   : "bg-gray-400 cursor-not-allowed"
               }`}
             >
-              <IoSaveOutline className="text-xl" />
+              <motion.div
+                whileHover={{ scale: 1.1, rotate: 10 }}
+                whileTap={{ scale: 0.9 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 400,
+                  damping: 10,
+                }}
+              >
+                <IoSaveOutline className="text-xl" />
+              </motion.div>
               <span>Guardar Cambios</span>
             </button>
           </div>
@@ -442,9 +453,19 @@ const ContractConfigPanel = () => {
                               : "text-gray-600 dark:text-gray-400"
                           }`}
                         >
-                          {availableIcons
-                            .find((icon) => icon.name === type.icon)
-                            ?.icon()}
+                          <motion.div
+                            whileHover={{ scale: 1.1, rotate: 10 }}
+                            whileTap={{ scale: 0.9 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 400,
+                              damping: 10,
+                            }}
+                          >
+                            {availableIcons
+                              .find((icon) => icon.name === type.icon)
+                              ?.icon()}
+                          </motion.div>
                         </div>
                         <div>
                           <h3 className="font-medium text-gray-800 dark:text-gray-200">
@@ -458,12 +479,34 @@ const ContractConfigPanel = () => {
                             <div className="flex space-x-2 mt-2">
                               {type.isMarco && (
                                 <span className="text-xs bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-2 py-1 rounded-full flex items-center">
-                                  <FaBook className="mr-1" /> Marco
+                                  <motion.div
+                                    whileHover={{ scale: 1.1, rotate: 10 }}
+                                    whileTap={{ scale: 0.9 }}
+                                    transition={{
+                                      type: "spring",
+                                      stiffness: 400,
+                                      damping: 10,
+                                    }}
+                                  >
+                                    <FaBook className="mr-1" />
+                                  </motion.div>{" "}
+                                  Marco
                                 </span>
                               )}
                               {type.isEspecifico && (
                                 <span className="text-xs bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 px-2 py-1 rounded-full flex items-center">
-                                  <FaFileContract className="mr-1" /> Específico
+                                  <motion.div
+                                    whileHover={{ scale: 1.1, rotate: 10 }}
+                                    whileTap={{ scale: 0.9 }}
+                                    transition={{
+                                      type: "spring",
+                                      stiffness: 400,
+                                      damping: 10,
+                                    }}
+                                  >
+                                    <FaFileContract className="mr-1" />
+                                  </motion.div>{" "}
+                                  Específico
                                   <div
                                     className="ml-2 relative"
                                     onMouseEnter={() => {
@@ -479,7 +522,17 @@ const ContractConfigPanel = () => {
                                       setRelatedMarco(null);
                                     }}
                                   >
-                                    <FaEye className="text-gray-500 dark:text-gray-300 cursor-pointer" />
+                                    <motion.div
+                                      whileHover={{ scale: 1.1, rotate: 10 }}
+                                      whileTap={{ scale: 0.9 }}
+                                      transition={{
+                                        type: "spring",
+                                        stiffness: 400,
+                                        damping: 10,
+                                      }}
+                                    >
+                                      <FaEye className="text-gray-500 dark:text-gray-300 cursor-pointer" />
+                                    </motion.div>
                                     {relatedMarco &&
                                       relatedMarco._id === type.marcoId && (
                                         <div className="absolute z-50 -top-2 -right-16 bg-white dark:bg-gray-800 p-3 rounded-lg shadow-lg text-sm text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-700 min-w-[200px] max-w-[300px]">
@@ -521,10 +574,19 @@ const ContractConfigPanel = () => {
                           }}
                           className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-600"
                         >
-                          <FaEdit />
+                          <motion.div
+                            whileHover={{ scale: 1.1, rotate: 10 }}
+                            whileTap={{ scale: 0.9 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 400,
+                              damping: 10,
+                            }}
+                          >
+                            <FaEdit />
+                          </motion.div>
                         </button>
 
-                       
                         <button
                           aria-label="Eliminar"
                           onClick={async (e) => {
@@ -535,18 +597,37 @@ const ContractConfigPanel = () => {
                           }}
                           className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-600"
                         >
-                          <FaTrash />
+                          <motion.div
+                            whileHover={{ scale: 1.1, rotate: 10 }}
+                            whileTap={{ scale: 0.9 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 400,
+                              damping: 10,
+                            }}
+                          >
+                            <FaTrash />
+                          </motion.div>
                         </button>
                       </div>
                     </div>
-                    
                   </div>
                 ))}
                 <button
                   onClick={() => setShowModalCreate(true)}
                   className="flex items-center justify-center p-4 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900 transition-all"
                 >
-                  <FaPlus className="text-gray-500 dark:text-gray-400 mr-2" />
+                  <motion.div
+                    whileHover={{ scale: 1.1, rotate: 10 }}
+                    whileTap={{ scale: 0.9 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 400,
+                      damping: 10,
+                    }}
+                  >
+                    <FaPlus className="text-gray-500 dark:text-gray-400 mr-2" />
+                  </motion.div>
                   <span className="text-gray-700 dark:text-gray-300">
                     Agregar Tipo de Contrato
                   </span>
@@ -570,40 +651,55 @@ const ContractConfigPanel = () => {
                       Información del Contrato
                     </h3>
                     <div className="space-y-4">
-                      {requiredFields.filter(field => !selectedType?.isMarco || field.id !== "monto").map((field) => (
-                        <div
-                          key={field.id}
-                          className="flex items-center justify-between p-2 rounded transition-colors mb-4"
-                        >
-                          <div className="flex items-center space-x-3">
-                            <input
-                              type="checkbox"
-                              id={`${selectedType._id}-${field.id}`}
-                              checked={selectedFields.includes(field.id)}
-                              onChange={() => handleFieldToggle(field.id)}
-                              className="w-4 h-4 text-green-600 rounded focus:ring-green-500 border-green-300 dark:border-green-500"
-                            />
-                            <label
-                              htmlFor={`${selectedType._id}-${field.id}`}
-                              className="text-gray-700 dark:text-gray-300"
-                            >
-                              {field.label}
-                            </label>
-                          </div>
+                      {requiredFields
+                        .filter(
+                          (field) =>
+                            !selectedType?.isMarco || field.id !== "monto"
+                        )
+                        .map((field) => (
                           <div
-                            className="relative"
-                            onMouseEnter={() => setHoveredField(field.id)}
-                            onMouseLeave={() => setHoveredField(null)}
+                            key={field.id}
+                            className="flex items-center justify-between p-2 rounded transition-colors mb-4"
                           >
-                            <BsInfoCircle className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 cursor-pointer" />
-                            {hoveredField === field.id && (
-                              <span className="absolute right-0 top-6 w-48 p-2 bg-gray-800 dark:bg-gray-700 text-white text-sm rounded-md z-10">
-                                {field.tooltip}
-                              </span>
-                            )}
+                            <div className="flex items-center space-x-3">
+                              <input
+                                type="checkbox"
+                                id={`${selectedType._id}-${field.id}`}
+                                checked={selectedFields.includes(field.id)}
+                                onChange={() => handleFieldToggle(field.id)}
+                                className="w-4 h-4 text-green-600 rounded focus:ring-green-500 border-green-300 dark:border-green-500"
+                              />
+                              <label
+                                htmlFor={`${selectedType._id}-${field.id}`}
+                                className="text-gray-700 dark:text-gray-300"
+                              >
+                                {field.label}
+                              </label>
+                            </div>
+                            <div
+                              className="relative"
+                              onMouseEnter={() => setHoveredField(field.id)}
+                              onMouseLeave={() => setHoveredField(null)}
+                            >
+                              <motion.div
+                                whileHover={{ scale: 1.1, rotate: 10 }}
+                                whileTap={{ scale: 0.9 }}
+                                transition={{
+                                  type: "spring",
+                                  stiffness: 400,
+                                  damping: 10,
+                                }}
+                              >
+                                <BsInfoCircle className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 cursor-pointer" />
+                              </motion.div>
+                              {hoveredField === field.id && (
+                                <span className="absolute right-0 top-6 w-48 p-2 bg-gray-800 dark:bg-gray-700 text-white text-sm rounded-md z-10">
+                                  {field.tooltip}
+                                </span>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        ))}
                     </div>
                   </div>
                 </div>
@@ -616,7 +712,9 @@ const ContractConfigPanel = () => {
         {showModalCreate && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
             <div className="relative w-full max-w-md p-6 bg-white dark:bg-gray-800 rounded-lg shadow-xl animate-slideIn">
-              <button
+              <motion.button
+                whileHover={{ rotate: 90 }}
+                whileTap={{ scale: 0.9 }}
                 onClick={() => {
                   setShowModalCreate(false);
                   setErrorText("");
@@ -632,7 +730,7 @@ const ContractConfigPanel = () => {
                 aria-label="Close modal"
               >
                 <IoClose size={24} />
-              </button>
+              </motion.button>
               <h3 className="text-lg font-semibold mb-4 dark:text-gray-200">
                 Crear Tipo de Contrato
               </h3>
@@ -715,7 +813,17 @@ const ContractConfigPanel = () => {
                           : "border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-500"
                       }`}
                     >
-                      <icon.icon className="text-2xl text-gray-600 dark:text-gray-400" />
+                      <motion.div
+                        whileHover={{ scale: 1.1, rotate: 10 }}
+                        whileTap={{ scale: 0.9 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 400,
+                          damping: 10,
+                        }}
+                      >
+                        <icon.icon className="text-2xl text-gray-600 dark:text-gray-400" />
+                      </motion.div>
                     </div>
                   ))}
                 </div>
@@ -752,7 +860,9 @@ const ContractConfigPanel = () => {
         {showModalUpdate && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 overflow-y-auto">
             <div className="relative w-full max-w-2xl p-6 bg-white dark:bg-gray-800 rounded-lg shadow-xl animate-slideIn my-8 mx-4">
-              <button
+              <motion.button
+                whileHover={{ rotate: 90 }}
+                whileTap={{ scale: 0.9 }}
                 onClick={() => {
                   setShowModalUpdate(false);
                   setErrorText("");
@@ -768,7 +878,7 @@ const ContractConfigPanel = () => {
                 aria-label="Close modal"
               >
                 <IoClose size={24} />
-              </button>
+              </motion.button>
               <h3 className="text-lg font-semibold mb-4 dark:text-gray-200">
                 Editar Tipo de Contrato
               </h3>
@@ -887,7 +997,17 @@ const ContractConfigPanel = () => {
                       : "border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-500"
                   }`}
                       >
-                        <icon.icon className="text-2xl text-gray-600 dark:text-gray-400" />
+                        <motion.div
+                          whileHover={{ scale: 1.1, rotate: 10 }}
+                          whileTap={{ scale: 0.9 }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 400,
+                            damping: 10,
+                          }}
+                        >
+                          <icon.icon className="text-2xl text-gray-600 dark:text-gray-400" />
+                        </motion.div>
                       </div>
                     ))}
                   </div>
@@ -922,7 +1042,9 @@ const ContractConfigPanel = () => {
         {showModalDelete && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
             <div className="relative w-full max-w-md p-6 bg-white dark:bg-gray-800 rounded-lg shadow-xl animate-slideIn">
-              <button
+              <motion.button
+                whileHover={{ rotate: 90 }}
+                whileTap={{ scale: 0.9 }}
                 onClick={() => {
                   setContractAsociation(0);
                   setShowModalDelete(false);
@@ -931,7 +1053,7 @@ const ContractConfigPanel = () => {
                 aria-label="Close modal"
               >
                 <IoClose size={24} />
-              </button>
+              </motion.button>
               <h3 className="text-lg font-semibold mb-4 dark:text-gray-200">
                 Eliminar Tipo de Contrato
               </h3>
@@ -1007,7 +1129,9 @@ const ContractConfigPanel = () => {
         {showRelacionModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
             <div className="relative w-full max-w-md p-6 bg-white dark:bg-gray-800 rounded-lg shadow-xl animate-slideIn">
-              <button
+              <motion.button
+                whileHover={{ rotate: 90 }}
+                whileTap={{ scale: 0.9 }}
                 onClick={() => {
                   if (showModalCreate) {
                     setIsEspecifico(false);
@@ -1019,7 +1143,7 @@ const ContractConfigPanel = () => {
                 aria-label="Close modal"
               >
                 <IoClose size={24} />
-              </button>
+              </motion.button>
               <h3 className="text-lg font-semibold mb-4 dark:text-gray-200">
                 Contratos Marcos existentes
               </h3>
@@ -1085,7 +1209,6 @@ const ContractConfigPanel = () => {
             </div>
           </div>
         )}
-        
       </div>
     </>
   );

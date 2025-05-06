@@ -68,33 +68,34 @@ const FormularioContrato = ({ tipoContrato }) => {
     if (!contract) return;
 
     // Divide la vigencia si existe
+    if(contract.vigencia){
     const [part1, part2] = contract.vigencia
       ? contract.vigencia.split(" ")
       : [null, null];
-
+      
+    if (vigencia && part2 !== null) setTimeVigencia(part2);
+    if (vigencia && part1 !== null) setVigencia(part1);
+}
     // Setea los valores solo si existen en contract
-    if (contract.tipoDeContrato !== undefined)
-      setTipoDeContrato(contract.tipoDeContrato);
-    if (contract.objetoDelContrato !== undefined)
+    if (contract.tipoDeContrato !== null){
+      setTipoDeContrato(contract.tipoDeContrato);}
+    if (contract.objetoDelContrato !== null)
       setObjetoDelContrato(contract.objetoDelContrato);
-    if (contract.entidad !== undefined) setEntidad(contract.entidad);
-    if (contract.direccionEjecuta !== undefined)
+    if (contract.entidad !== null) setEntidad(contract.entidad);
+    if (contract.direccionEjecuta !== null)
       setDireccionEjecuta(contract.direccionEjecuta);
-    if (contract.aprobadoPorCC !== undefined)
+    if (contract.aprobadoPorCC !== null)
       setAprobadoPorCC(formatDate(contract.aprobadoPorCC));
-    if (contract.firmado !== undefined)
+    if (contract.firmado !== null)
       setFirmado(formatDate(contract.firmado));
-    if (contract.entregadoJuridica !== undefined)
+    if (contract.entregadoJuridica !== null)
       setEntregadoJuridica(formatDate(contract.entregadoJuridica));
-    if (contract.fechaRecibido !== undefined)
+    if (contract.fechaRecibido !== null)
       setFechaRecibido(formatDate(contract.fechaRecibido));
-    if (contract.valorPrincipal !== undefined)
+    if (contract.valorPrincipal !== null)
       setValor(contract.valorPrincipal);
-    if (part1 !== null) setVigencia(part1);
-    if (contract.estado !== undefined) setEstado(contract.estado);
-    if (contract.numeroDictamen !== undefined)
-      setNumeroDictamen(contract.numeroDictamen);
-    if (part2 !== null) setTimeVigencia(part2);
+    if (contract.estado !== null) setEstado(contract.estado);
+    if (contract.numeroDictamen !== null){setNumeroDictamen(contract.numeroDictamen);}
   };
   useEffect(() => {
     setTipoDeContrato(tipoContrato);
@@ -335,6 +336,18 @@ const FormularioContrato = ({ tipoContrato }) => {
             obtenerRegistros(tipoContrato);
             setShowForm(false);
             setFile(null);
+            setErrorTipoDeContrato("");
+            setErrorObjetoDelContrato("");
+            setErrorEntidad("");
+            setErrorDireccionEjecuta("");
+            setErrorAprobadoPorCC("");
+            setErrorFirmado("");
+            setErrorEntregadoJuridica("");
+            setErrorFechaRecibido("");
+            setErrorValor("");
+            setErrorVigencia("");
+            setErrorEstado("");
+            setErrorNumeroDictamen("");
           }, 500);
         } catch (error) {
           console.error(error);
@@ -368,6 +381,8 @@ const FormularioContrato = ({ tipoContrato }) => {
           setEstado("");
           setNumeroDictamen("");
           setFile(null);
+          setSelectContrato({});
+          setIsEditing(false);
         }}
       >
         <FaPlus className="inline mr-2" />

@@ -1,6 +1,7 @@
 import useAuth from "../../hooks/useAuth";
 import useValidation from "../../hooks/useValidation";
 import { IoClose } from "react-icons/io5";
+import { motion } from "framer-motion";
 
 const Cerrar = () => {
   const {
@@ -19,13 +20,15 @@ const Cerrar = () => {
     <>
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
         <div className="relative w-full max-w-md p-6 bg-white dark:bg-gray-800 rounded-lg shadow-xl animate-slideIn sm:max-w-sm">
-          <button
-            onClick={() => setShowConfirmModal(false)}
-            className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
-            aria-label="Close confirmation"
-          >
-            <IoClose size={24} />
-          </button>
+         
+            
+          <motion.button
+                whileHover={{ rotate: 90 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={() => setShowConfirmModal(false)}
+                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+              aria-label="Close confirmation"
+              ><IoClose size={24} /></motion.button> 
           <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200">
             Advertencia
           </h2>

@@ -4,6 +4,7 @@ import AsideAdmin from "../components/aside/AsideAdmin";
 import useValidation from "../hooks/useValidation";
 import PanelUsuario from "../components/table/TablaUsers";
 import { IoClose } from "react-icons/io5";
+import { motion } from "framer-motion";
 import clienteAxios from "../axios/axios";
 import { toast } from "react-toastify";
 import useAuth from "../hooks/useAuth";
@@ -73,7 +74,9 @@ const GestionUser = () => {
         {mostrarModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
             <div className="relative w-full max-w-md p-6 bg-white dark:bg-gray-800 rounded-lg shadow-xl animate-slideIn">
-              <button
+            <motion.button
+                whileHover={{ rotate: 90 }}
+                whileTap={{ scale: 0.9 }}
                 onClick={() => {
                   setMostrarModal(false);
                   setAccesToken("");
@@ -82,7 +85,7 @@ const GestionUser = () => {
                 aria-label="Close confirmation"
               >
                 <IoClose size={24} />
-              </button>
+                </motion.button>
               <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-200">
                 Actualizar Token
               </h3>

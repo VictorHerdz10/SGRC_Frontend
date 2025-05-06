@@ -1,35 +1,39 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { IoClose, IoWarningOutline } from 'react-icons/io5';
-import { toast } from 'react-toastify';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { IoClose, IoWarningOutline } from "react-icons/io5";
+import { motion } from "framer-motion";
+import { toast } from "react-toastify";
 
 const BackupWarning = () => {
   const [visible, setVisible] = useState(true);
   const navigate = useNavigate();
 
   const handleBackupClick = () => {
-    navigate('/admin/respaldo-datos');
+    navigate("/admin/respaldo-datos");
     setVisible(false);
     const nextShowTime = Date.now() + 5 * 60 * 60 * 1000; // 5 horas
-    localStorage.setItem('nextShowTime', nextShowTime);
+    localStorage.setItem("nextShowTime", nextShowTime);
   };
 
   const handleCloseClick = () => {
     setVisible(false);
-    toast.info(`La copia de seguridad ha sido pospuesta por 10 minutos    
-        ¡Recuerda realizar tu copia de seguridad local!`, {
+    toast.info(
+      `La copia de seguridad ha sido pospuesta por 10 minutos    
+        ¡Recuerda realizar tu copia de seguridad local!`,
+      {
         autoClose: 5000,
-    });
+      }
+    );
     const nextShowTime = Date.now() + 10 * 60 * 1000; // 10 minutos
-    localStorage.setItem('nextShowTime', nextShowTime);
+    localStorage.setItem("nextShowTime", nextShowTime);
   };
 
   useEffect(() => {
     const interval = setInterval(() => {
-      const nextShowTime = localStorage.getItem('nextShowTime');
+      const nextShowTime = localStorage.getItem("nextShowTime");
       if (nextShowTime && Date.now() >= nextShowTime) {
         setVisible(true);
-        localStorage.removeItem('nextShowTime');
+        localStorage.removeItem("nextShowTime");
       }
     }, 1000); // Verificar cada segundo
 
@@ -37,7 +41,7 @@ const BackupWarning = () => {
   }, []);
 
   useEffect(() => {
-    const nextShowTime = localStorage.getItem('nextShowTime');
+    const nextShowTime = localStorage.getItem("nextShowTime");
     if (nextShowTime && Date.now() < nextShowTime) {
       setVisible(false);
     }
@@ -50,13 +54,15 @@ const BackupWarning = () => {
       <div className="flex justify-between items-center">
         <IoWarningOutline size={24} className="text-red-600 mr-2" />
         <span>Realiza tu copia de seguridad local ahora !!!</span>
-        <button
+        <motion.button
+          whileHover={{ rotate: 90 }}
+          whileTap={{ scale: 0.9 }}
           onClick={handleCloseClick}
           className="ml-4 text-gray-700 hover:text-gray-900 transition-colors"
           aria-label="Close warning"
         >
           <IoClose size={24} />
-        </button>
+        </motion.button>
       </div>
       <button
         onClick={handleBackupClick}

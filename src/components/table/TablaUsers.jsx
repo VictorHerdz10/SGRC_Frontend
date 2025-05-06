@@ -7,6 +7,7 @@ import {
   FaEdit,
   FaUserPlus,
 } from "react-icons/fa";
+import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { IoClose } from "react-icons/io5";
@@ -174,17 +175,43 @@ const PanelUsuario = () => {
                     </td>
                     <td className="py-2 px-4 border-b border-r dark:border-gray-600">
                       <div className="flex space-x-2">
-                        <FaEye
+                        import { motion } from "framer-motion";<motion.div
+                            whileHover={{ scale: 1.1, rotate: 10 }}
+                            whileTap={{ scale: 0.9 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 400,
+                              damping: 10,
+                            }}
+                          ><FaEye
                           className="text-blue-500 cursor-pointer dark:text-blue-400"
                           onClick={() => handleViewUser(user._id)}
-                        />
+                        /> </motion.div>
+                        <motion.div
+                            whileHover={{ scale: 1.1, rotate: 10 }}
+                            whileTap={{ scale: 0.9 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 400,
+                              damping: 10,
+                            }}
+                          > 
                         <FaTrash
                           className="text-red-500 cursor-pointer dark:text-red-400"
                           onClick={() => {
                             setShowComfirmDelete(true);
                             setUserId(user._id);
                           }}
-                        />
+                        /></motion.div>
+                        <motion.div
+                            whileHover={{ scale: 1.1, rotate: 10 }}
+                            whileTap={{ scale: 0.9 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 400,
+                              damping: 10,
+                            }}
+                          > 
                         <FaUserPlus
                           className="text-purple-500 cursor-pointer dark:text-purple-400"
                           onClick={() => {
@@ -198,7 +225,7 @@ const PanelUsuario = () => {
                               )
                             );
                           }}
-                        />
+                        /></motion.div>
                       </div>
                     </td>
                   </tr>
@@ -210,13 +237,15 @@ const PanelUsuario = () => {
         {showConfirmDelete && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
             <div className="relative w-full max-w-md p-6 bg-white rounded-lg shadow-xl animate-slideIn dark:bg-gray-800">
-              <button
+            <motion.button
+                whileHover={{ rotate: 90 }}
+                whileTap={{ scale: 0.9 }}
                 onClick={() => setShowComfirmDelete(false)}
                 className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors dark:text-gray-400 dark:hover:text-gray-200"
                 aria-label="Close confirmation"
               >
                 <IoClose size={24} />
-              </button>
+                </motion.button>
               <h2 className="text-xl font-bold mb-4 dark:text-white">
                 Advertencia
               </h2>
@@ -305,7 +334,9 @@ const PanelUsuario = () => {
         {showConfirmUpdate && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
             <div className="relative w-full max-w-md p-6 bg-white rounded-lg shadow-xl animate-slideIn dark:bg-gray-800">
-              <button
+            <motion.button
+                whileHover={{ rotate: 90 }}
+                whileTap={{ scale: 0.9 }}
                 onClick={() => {
                   setRol("");
                   setSelectedDirector("");
@@ -315,7 +346,7 @@ const PanelUsuario = () => {
                 aria-label="Cerrar confirmación"
               >
                 <IoClose size={24} />
-              </button>
+                </motion.button>
               <h2 className="text-xl font-bold mb-4 dark:text-white">
                 Asignar Rol
               </h2>

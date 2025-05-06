@@ -5,7 +5,7 @@ import {
   FaBuilding,
   FaIndustry,
 } from "react-icons/fa";
-
+import { motion } from "framer-motion";
 import { RiDashboardFill, RiLogoutBoxRLine } from "react-icons/ri";
 import { BsFileEarmarkText } from "react-icons/bs";
 import useValidation from "../../hooks/useValidation";
@@ -210,7 +210,17 @@ const AsideEspecialista = () => {
                   aria-label={item.label}
                 >
                   <span className="flex items-center justify-center">
-                    {item.icon}
+                    <motion.div
+                      whileHover={{ scale: 1.1, rotate: 10 }}
+                      whileTap={{ scale: 0.9 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 10,
+                      }}
+                    >
+                      {item.icon}
+                    </motion.div>
                   </span>
                   <span
                     className={`ml-3 font-medium transition-opacity duration-200 ${

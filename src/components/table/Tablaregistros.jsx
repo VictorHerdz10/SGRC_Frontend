@@ -1088,13 +1088,29 @@ const ContractTable = ({ tipoContrato }) => {
             onClick={() => exportToPDF(contratos)}
             className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors dark:bg-red-700 dark:hover:bg-red-800"
           >
-            <FaFilePdf /> Export PDF
+            <motion.div
+                            whileHover={{ scale: 1.1, rotate: 10 }}
+                            whileTap={{ scale: 0.9 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 400,
+                              damping: 10,
+                            }}
+                          ><FaFilePdf /></motion.div> Export PDF
           </button>
           <button
             onClick={() => exportToExcel(contratos)}
             className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors dark:bg-green-700 dark:hover:bg-green-800"
           >
-            <FaFileExcel /> Export Excel
+            <motion.div
+                            whileHover={{ scale: 1.1, rotate: 10 }}
+                            whileTap={{ scale: 0.9 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 400,
+                              damping: 10,
+                            }}
+                          ><FaFileExcel /></motion.div> Export Excel
           </button>
         </div>
         <div className="overflow-x-auto">
@@ -1226,7 +1242,7 @@ const ContractTable = ({ tipoContrato }) => {
                   {contractTypes
                     .find((ct) => ct.nombre === tipoContrato)
                     ?.camposRequeridos.some(
-                      (campo) => campo.id === "fechaRecibido"
+                      (campo) => campo.id === "vigencia"
                     ) && (
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                       Fecha de Vencimiento
@@ -1322,15 +1338,14 @@ const ContractTable = ({ tipoContrato }) => {
                         {parcearDate(new Date(contract.fechaRecibido))}
                       </td>
                     )}
-                    {(contract.isMarco ||
-                      contract.valorPrincipal !== undefined) && (
+                    {(contract.isMarco || contract.valorPrincipal !== null) && (
                       <td className="px-6 py-4 whitespace-nowrap dark:text-gray-200">
                         ${contract.valorPrincipal?.toLocaleString() || "0"}
                       </td>
                     )}
 
                     {(contract.isMarco ||
-                      contract.valorDisponible !== undefined) && (
+                      contract.valorDisponible !== null) && (
                       <td className="px-6 py-4 whitespace-nowrap dark:text-gray-200">
                         <div className="flex flex-col items-start">
                           <div className="flex items-center">
@@ -1371,7 +1386,7 @@ const ContractTable = ({ tipoContrato }) => {
                     )}
 
                     {(contract.isMarco ||
-                      contract.valorGastado !== undefined) && (
+                      contract.valorDisponible !== null) && (
                       <td className="px-6 py-4 whitespace-nowrap dark:text-gray-200">
                         ${contract.valorGastado?.toLocaleString() || "0"}
                       </td>
@@ -1393,36 +1408,67 @@ const ContractTable = ({ tipoContrato }) => {
                                     className="flex items-center space-x-2"
                                   >
                                     <span>Fac {factura.numeroDictamen}</span>
+
                                     <div className="flex space-x-1">
-                                      <FaEye
-                                        className="text-blue-500 cursor-pointer dark:text-blue-400"
-                                        onClick={() =>
-                                          handleModal("view", factura, "")
-                                        }
-                                      />
-                                      <FaTrash
-                                        className="text-red-500 cursor-pointer dark:text-red-400"
-                                        onClick={() => {
-                                          handleModal("delete", factura, "");
-                                          setId(contract._id);
+                                      <motion.div
+                                        whileHover={{ scale: 1.1, rotate: 10 }}
+                                        whileTap={{ scale: 0.9 }}
+                                        transition={{
+                                          type: "spring",
+                                          stiffness: 400,
+                                          damping: 10,
                                         }}
-                                      />
-                                      <FaEdit
-                                        className="text-yellow-500 cursor-pointer dark:text-yellow-400"
-                                        onClick={() => {
-                                          setNumeroDictamenNew(
-                                            factura?.numeroDictamen
-                                          );
-                                          setNumeroDictamen(
-                                            factura?.numeroDictamen
-                                          );
-                                          setSelectedContract(contract);
-                                          setErrorMonto(null);
-                                          setActualMonto(factura?.monto);
-                                          setShowModalUpdate(true);
-                                          setId(contract._id);
+                                      >
+                                        <FaEye
+                                          className="text-blue-500 cursor-pointer dark:text-blue-400"
+                                          onClick={() =>
+                                            handleModal("view", factura, "")
+                                          }
+                                        />
+                                      </motion.div>
+                                      <motion.div
+                                        whileHover={{ scale: 1.1, rotate: 10 }}
+                                        whileTap={{ scale: 0.9 }}
+                                        transition={{
+                                          type: "spring",
+                                          stiffness: 400,
+                                          damping: 10,
                                         }}
-                                      />
+                                      >
+                                        <FaTrash
+                                          className="text-red-500 cursor-pointer dark:text-red-400"
+                                          onClick={() => {
+                                            handleModal("delete", factura, "");
+                                            setId(contract._id);
+                                          }}
+                                        />
+                                      </motion.div>
+                                      <motion.div
+                                        whileHover={{ scale: 1.1, rotate: 10 }}
+                                        whileTap={{ scale: 0.9 }}
+                                        transition={{
+                                          type: "spring",
+                                          stiffness: 400,
+                                          damping: 10,
+                                        }}
+                                      >
+                                        <FaEdit
+                                          className="text-yellow-500 cursor-pointer dark:text-yellow-400"
+                                          onClick={() => {
+                                            setNumeroDictamenNew(
+                                              factura?.numeroDictamen
+                                            );
+                                            setNumeroDictamen(
+                                              factura?.numeroDictamen
+                                            );
+                                            setSelectedContract(contract);
+                                            setErrorMonto(null);
+                                            setActualMonto(factura?.monto);
+                                            setShowModalUpdate(true);
+                                            setId(contract._id);
+                                          }}
+                                        />
+                                      </motion.div>
                                     </div>
                                   </div>
                                 ))}
@@ -1491,7 +1537,7 @@ const ContractTable = ({ tipoContrato }) => {
                           )}
                       </td>
                     )}
-                    {contract.fechaVencimiento && (
+                    {contract.vigencia && (
                       <td className="px-6 py-4 whitespace-nowrap dark:text-gray-200">
                         {parcearDate(new Date(contract.fechaVencimiento))}
                       </td>
@@ -1512,14 +1558,32 @@ const ContractTable = ({ tipoContrato }) => {
                         (campo) => campo.id === "subirPDF"
                       ) && (
                       <td className="px-6 py-4 whitespace-nowrap">
+                        <motion.div
+                            whileHover={{ scale: 1.1, rotate: 10 }}
+                            whileTap={{ scale: 0.9 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 400,
+                              damping: 10,
+                            }}
+                          >
                         <FaFileDownload
                           className="text-blue-500 cursor-pointer dark:text-blue-400"
                           onClick={() => handleDownload(contract._id)}
-                        />
+                        /></motion.div>
                       </td>
                     )}
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex space-x-2 justify-around">
+                      <motion.div
+                            whileHover={{ scale: 1.1, rotate: 10 }}
+                            whileTap={{ scale: 0.9 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 400,
+                              damping: 10,
+                            }}
+                          >
                         <FaPencilAlt
                           className="text-blue-500 cursor-pointer dark:text-blue-400"
                           onClick={() => {
@@ -1528,6 +1592,16 @@ const ContractTable = ({ tipoContrato }) => {
                             setIsEditing(true);
                           }}
                         />
+                        </motion.div>
+                        <motion.div
+                            whileHover={{ scale: 1.1, rotate: 10 }}
+                            whileTap={{ scale: 0.9 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 400,
+                              damping: 10,
+                            }}
+                          >
                         <FaTrash
                           className="text-red-500 cursor-pointer dark:text-red-400"
                           onClick={() => {
@@ -1535,10 +1609,21 @@ const ContractTable = ({ tipoContrato }) => {
                             setId(contract._id);
                           }}
                         />
+                        </motion.div>
+                        <motion.div
+                            whileHover={{ scale: 1.1, rotate: 10 }}
+                            whileTap={{ scale: 0.9 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 400,
+                              damping: 10,
+                            }}
+                          >
+                        
                         <FaInfoCircle
                           className="text-blue-500 cursor-pointer dark:text-blue-400"
                           onClick={() => handleModal("info", contract, "")}
-                        />
+                        /></motion.div>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -1552,7 +1637,15 @@ const ContractTable = ({ tipoContrato }) => {
                           }}
                           className="text-green-500 hover:text-green-700 dark:text-green-400 dark:hover:text-green-600"
                         >
-                          <FaPlusCircle />
+                          <motion.div
+                            whileHover={{ scale: 1.1, rotate: 10 }}
+                            whileTap={{ scale: 0.9 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 400,
+                              damping: 10,
+                            }}
+                          ><FaPlusCircle /></motion.div>
                         </button>
                         {contract?.isGotSupplement && (
                           <SupplementViewerTrigger

@@ -11,6 +11,7 @@ import {
   FiPhone,
   FiShield,
 } from "react-icons/fi";
+import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import useValidation from "../hooks/useValidation";
@@ -321,7 +322,15 @@ const UserProfile = () => {
                   {userDetails.position}
                 </p>
                 <div className="mt-2 flex items-center bg-blue-100  px-3 py-1 rounded-full">
-                  <FiShield className="text-blue-600 w-4 h-4 mr-2" />
+                <motion.div
+                            whileHover={{ scale: 1.1, rotate: 10 }}
+                            whileTap={{ scale: 0.9 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 400,
+                              damping: 10,
+                            }}
+                          > <FiShield className="text-blue-600 w-4 h-4 mr-2" /></motion.div> 
                   <span className="text-blue-600 dark:text-blue-800 text-sm font-medium">
                     {rolname}
                   </span>
@@ -330,7 +339,15 @@ const UserProfile = () => {
 
               <div className="space-y-6">
                 <div className="flex items-center space-x-4">
-                  <FiMail className="text-gray-400 w-6 h-6" />
+                <motion.div
+                            whileHover={{ scale: 1.1, rotate: 10 }}
+                            whileTap={{ scale: 0.9 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 400,
+                              damping: 10,
+                            }}
+                          ><FiMail className="text-gray-400 w-6 h-6" /> </motion.div>
                   <div>
                     <p className="text-sm text-gray-500 dark:text-gray-200">
                       Dirección de correo electrónico
@@ -342,7 +359,15 @@ const UserProfile = () => {
                 </div>
 
                 <div className="flex items-center space-x-4">
-                  <FiBriefcase className="text-gray-400 w-6 h-6" />
+                <motion.div
+                            whileHover={{ scale: 1.1, rotate: 10 }}
+                            whileTap={{ scale: 0.9 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 400,
+                              damping: 10,
+                            }}
+                          > <FiBriefcase className="text-gray-400 w-6 h-6" /></motion.div>
                   <div>
                     <p className="text-sm text-gray-500 dark:text-gray-200">
                       Cargo que ocupa
@@ -364,7 +389,15 @@ const UserProfile = () => {
                 </div>
 
                 <div className="flex items-center space-x-4">
-                  <FiPhone className="text-gray-400 w-6 h-6" />
+                <motion.div
+                            whileHover={{ scale: 1.1, rotate: 10 }}
+                            whileTap={{ scale: 0.9 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 400,
+                              damping: 10,
+                            }}
+                          > <FiPhone className="text-gray-400 w-6 h-6" /> </motion.div>
                   <div>
                     <p className="text-sm text-gray-500 dark:text-gray-200">
                       Número de teléfono
@@ -391,7 +424,15 @@ const UserProfile = () => {
                   onClick={() => setIsEditing(true)}
                   className="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center justify-center"
                 >
-                  <FiEdit2 className="mr-2" />
+                  <motion.div
+                            whileHover={{ scale: 1.1, rotate: 10 }}
+                            whileTap={{ scale: 0.9 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 400,
+                              damping: 10,
+                            }}
+                          > <FiEdit2 className="mr-2" /></motion.div>
                   Editar Perfil
                 </button>
               </div>
@@ -431,7 +472,15 @@ const UserProfile = () => {
                   className="absolute bottom-0 right-0 bg-blue-600 dark:bg-blue-700 p-2 rounded-full text-white hover:bg-blue-700 dark:hover:bg-blue-800 transition-colors"
                   aria-label="Change profile picture"
                 >
-                  <FiCamera className="w-5 h-5" />
+                  <motion.div
+                            whileHover={{ scale: 1.1, rotate: 10 }}
+                            whileTap={{ scale: 0.9 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 400,
+                              damping: 10,
+                            }}
+                          > <FiCamera className="w-5 h-5" /></motion.div>
                 </button>
                 <input
                   type="file"
@@ -462,7 +511,15 @@ const UserProfile = () => {
                     className="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
                     required
                   />
-                  <FiEdit2 className="absolute right-3 top-3.5 text-gray-400 dark:text-gray-500" />
+                  <motion.div
+                            whileHover={{ scale: 1.1, rotate: 10 }}
+                            whileTap={{ scale: 0.9 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 400,
+                              damping: 10,
+                            }}
+                          > <FiEdit2 className="absolute right-3 top-3.5 text-gray-400 dark:text-gray-500" /></motion.div>
                   {errorName && (
                     <span className="text-red-500 dark:text-red-400">
                       {errorName}
@@ -582,7 +639,15 @@ const UserProfile = () => {
                       className="absolute right-3 top-3.5 text-gray-400 dark:text-gray-500"
                       aria-label="Toggle password visibility"
                     >
-                      {showPasswords.current ? <FiEyeOff /> : <FiEye />}
+                      <motion.div
+                            whileHover={{ scale: 1.1, rotate: 10 }}
+                            whileTap={{ scale: 0.9 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 400,
+                              damping: 10,
+                            }}
+                          >{showPasswords.current ? <FiEyeOff /> : <FiEye />}</motion.div>
                     </button>
                   </div>
                 </div>
@@ -614,7 +679,15 @@ const UserProfile = () => {
                       className="absolute right-3 top-3.5 text-gray-400 dark:text-gray-500"
                       aria-label="Toggle password visibility"
                     >
-                      {showPasswords.new ? <FiEyeOff /> : <FiEye />}
+                      <motion.div
+                            whileHover={{ scale: 1.1, rotate: 10 }}
+                            whileTap={{ scale: 0.9 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 400,
+                              damping: 10,
+                            }}
+                          > {showPasswords.new ? <FiEyeOff /> : <FiEye />}</motion.div>
                     </button>
                   </div>
                 </div>
@@ -646,7 +719,15 @@ const UserProfile = () => {
                       className="absolute right-3 top-3.5 text-gray-400 dark:text-gray-500"
                       aria-label="Toggle password visibility"
                     >
-                      {showPasswords.confirm ? <FiEyeOff /> : <FiEye />}
+                      <motion.div
+                            whileHover={{ scale: 1.1, rotate: 10 }}
+                            whileTap={{ scale: 0.9 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 400,
+                              damping: 10,
+                            }}
+                          > {showPasswords.confirm ? <FiEyeOff /> : <FiEye />}</motion.div>
                     </button>
                   </div>
                 </div>

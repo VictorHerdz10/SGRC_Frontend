@@ -1,5 +1,6 @@
 import { IoClose } from "react-icons/io5";
 import { FaBell, FaCheck, FaTimes } from "react-icons/fa";
+import { motion } from "framer-motion";
 import clienteAxios from "../../axios/axios";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -60,9 +61,29 @@ const ValidationModal = () => {
               {code && (
                 <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
                   {isValidCode ? (
-                    <FaCheck className="text-green-500" />
+                    <motion.div
+                      whileHover={{ scale: 1.1, rotate: 10 }}
+                      whileTap={{ scale: 0.9 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 10,
+                      }}
+                    >
+                      <FaCheck className="text-green-500" />
+                    </motion.div>
                   ) : (
-                    <FaTimes className="text-red-500" />
+                    <motion.div
+                      whileHover={{ scale: 1.1, rotate: 10 }}
+                      whileTap={{ scale: 0.9 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 10,
+                      }}
+                    >
+                      <FaTimes className="text-red-500" />
+                    </motion.div>
                   )}
                 </div>
               )}
