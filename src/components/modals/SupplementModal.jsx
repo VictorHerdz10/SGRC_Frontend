@@ -62,7 +62,6 @@ const SupplementModal = ({ contratoSeleccionado, tipoContrato }) => {
     // Preparar datos para enviar
     const supplementData = {
       nombre: supplementName,
-      contratoId: selectedContractForSupplement?._id,
       ...(supplementTypes.tiempo && {
         tiempo: {
           days: Number(timeSupplement.days),
@@ -72,31 +71,31 @@ const SupplementModal = ({ contratoSeleccionado, tipoContrato }) => {
       }),
       ...(supplementTypes.monto && {
         monto: Number(amountSupplement),
+        montoOriginal: Number(amountSupplement),
       }),
     };
 
-    // Manejador para obtener suplementos de un contrato
-    const token = localStorage.getItem("token");
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-
     try {
+      const token = localStorage.getItem("token");
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
       const { data } = await clienteAxios.post(
         `/contratos/suplementos/${selectedContractForSupplement?._id}`,
         supplementData,
         config
       );
+
       toast.success(data.msg);
       await obtenerRegistros(tipoContrato);
       setIsCreate(true);
       handleCloseModal();
     } catch (error) {
       console.error(error);
-      toast.error(error.response?.data?.msg || "Error al obtener suplementos");
-      throw error;
+      toast.error(error.response?.data?.msg || "Error al crear suplemento");
     }
   };
 
@@ -123,7 +122,6 @@ const SupplementModal = ({ contratoSeleccionado, tipoContrato }) => {
           <div className="relative w-full max-w-md p-6 bg-white dark:bg-gray-800 rounded-lg shadow-xl animate-slideIn">
             <motion.button
               whileHover={{ rotate: 90 }}
-              whileTap={{ scale: 0.9 }}
               onClick={handleCloseModal}
               className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
               aria-label="Close modal"
@@ -135,6 +133,15 @@ const SupplementModal = ({ contratoSeleccionado, tipoContrato }) => {
               Agregar Suplemento al contrato N.Dictamen={">"} #{" "}
               {selectedContractForSupplement?.numeroDictamen || "#"}
             </h3>
+            {selectedContractForSupplement?.isMarco ? (
+              <span className="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-purple-900 dark:text-purple-300 mb-2 inline-block">
+                Suplemento Global
+              </span>
+            ) : (
+              <span className="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300 mb-2 inline-block">
+                Suplemento Local
+              </span>
+            )}
             <div className="mb-4">
               <label className="block text-gray-700 dark:text-gray-300 text-sm font-semibold mb-2">
                 Razon del Suplemento

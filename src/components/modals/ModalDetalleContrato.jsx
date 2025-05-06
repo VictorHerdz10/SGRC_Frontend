@@ -15,6 +15,27 @@ export const ModalDetalleContrato = ({ contrato, onClose }) => {
     height: window.innerHeight
   });
 
+  const parcearVigencia = (vigencia) => {
+    if (typeof vigencia !== "string") return vigencia;
+    let newValue = vigencia;
+
+    if (vigencia.toLowerCase().includes("months")) {
+      newValue = vigencia.replace("months", "meses");
+    } else if (vigencia.toLowerCase().includes("years")) {
+      newValue = vigencia.replace("years", "años");
+    } else if (vigencia.toLowerCase().includes("month")) {
+      newValue = vigencia.replace("month", "mes");
+    } else if (vigencia.toLowerCase().includes("year")) {
+      newValue = vigencia.replace("year", "año");
+    }
+
+    if (vigencia.startsWith("1 ")) {
+      newValue = newValue.replace("meses", "mes").replace("años", "año");
+    }
+
+    return newValue;
+  };
+
   useEffect(() => {
     const handleResize = () => {
       setWindowSize({
@@ -27,10 +48,9 @@ export const ModalDetalleContrato = ({ contrato, onClose }) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
   
-    // Función para alternar secciones - ¡ESTA ES LA FUNCIÓN QUE FALTABA!
-    const toggleSection = (sectionId) => {
-        setActiveSection(activeSection === sectionId ? null : sectionId);
-      };
+  const toggleSection = (sectionId) => {
+    setActiveSection(activeSection === sectionId ? null : sectionId);
+  };
 
   // Ajustes responsivos
   const maxWidth = windowSize.width > 768 ? 'max-w-xl' : 'max-w-md';
@@ -62,11 +82,11 @@ export const ModalDetalleContrato = ({ contrato, onClose }) => {
                   key={index}
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="ml-4 mb-3 p-2 bg-gray-100 dark:bg-gray-700 rounded-lg"
+                  className="ml-4 mb-3 p-2 bg-gray-100 dark:bg-gray-700 rounded-lg dark:text-white"
                 >
                   <InfoRow small label="N° Dictamen" value={fact.numeroDictamen} />
                   <InfoRow small label="Monto" value={formatMoney(fact.monto)} />
-                  {fact.montoSuplement && <InfoRow small label="Suplemento" value={formatMoney(fact.montoSuplement)} />}1
+                  {fact.montoSuplement && <InfoRow small label="Suplemento" value={formatMoney(fact.montoSuplement)} />}
                 </motion.div>
               ))}
             </div>
@@ -97,7 +117,7 @@ export const ModalDetalleContrato = ({ contrato, onClose }) => {
           <InfoRow icon={<FaBuilding />} label="Entidad" value={contrato.entidad} />
           <InfoRow icon={<FaBuilding />} label="Dirección Ejecutora" value={contrato.direccionEjecuta} />
           <InfoRow longText icon={<FaFileAlt />} label="Objeto del Contrato" value={contrato.objetoDelContrato} />
-          <InfoRow icon={<FaPercentage />} label="Vigencia" value={contrato.vigencia} />
+          <InfoRow icon={<FaPercentage />} label="Vigencia" value={parcearVigencia(contrato.vigencia)} />
           <InfoRow icon={<FaFileAlt />} label="Estado" value={
             <span className={`px-2 py-1 rounded-full text-xs ${
               contrato.estado === 'Ejecución' 
@@ -146,13 +166,13 @@ export const ModalDetalleContrato = ({ contrato, onClose }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+        className="fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center p-4 z-50"
       >
         <motion.div
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 50, opacity: 0 }}
-          className={`bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full ${maxWidth} max-h-[90vh] overflow-hidden flex flex-col`}
+          className={`bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full ${maxWidth} max-h-[90vh] overflow-hidden flex flex-col border dark:border-gray-700`}
         >
           {/* Encabezado */}
           <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-4 text-white">
@@ -163,18 +183,16 @@ export const ModalDetalleContrato = ({ contrato, onClose }) => {
               </div>
               <motion.button
                 whileHover={{ rotate: 90 }}
-                whileTap={{ scale: 0.9 }}
                 onClick={onClose}
-                className="p-1 rounded-full hover:bg-white hover:bg-opacity-20"
+                className="p-1 rounded-full hover:bg-white/20 transition-colors"
               >
-                <FaTimes />
+                <FaTimes className="text-white" />
               </motion.button>
             </div>
           </div>
 
-          {/* Contenido desplazable */}
+          {/* Contenido */}
           <div className="overflow-y-auto p-4 flex-1">
-            {/* Secciones colapsables */}
             {sections.map((section) => (
               <motion.div 
                 key={section.id}
@@ -185,14 +203,17 @@ export const ModalDetalleContrato = ({ contrato, onClose }) => {
               >
                 <motion.button
                   whileHover={{ x: 3, backgroundColor: 'rgba(0,0,0,0.05)' }}
+                  whileTap={{ backgroundColor: 'rgba(0,0,0,0.1)' }}
                   onClick={() => toggleSection(section.id)}
-                  className="w-full flex justify-between items-center p-3 bg-gray-100 dark:bg-gray-700 rounded-lg"
+                  className="w-full flex justify-between items-center p-3 bg-gray-100 dark:bg-gray-700/80 rounded-lg hover:dark:bg-gray-700 transition-colors"
                 >
                   <div className="flex items-center">
                     <span className="mr-2">{section.icon}</span>
-                    <span className="font-medium">{section.title}</span>
+                    <span className="font-medium text-gray-800 dark:text-gray-200">{section.title}</span>
                   </div>
-                  {activeSection === section.id ? <FaChevronUp /> : <FaChevronDown />}
+                  {activeSection === section.id ? 
+                    <FaChevronUp className="text-gray-600 dark:text-gray-300" /> : 
+                    <FaChevronDown className="text-gray-600 dark:text-gray-300" />}
                 </motion.button>
 
                 <AnimatePresence>
@@ -223,7 +244,7 @@ export const ModalDetalleContrato = ({ contrato, onClose }) => {
               >
                 <FaFilePdf className="text-red-500 mr-3 text-xl" />
                 <div className="flex-1">
-                  <p className="font-medium">Documento PDF</p>
+                  <p className="font-medium text-gray-800 dark:text-gray-200">Documento PDF</p>
                   <a 
                     href={contrato.subirPDF} 
                     target="_blank" 
@@ -238,12 +259,12 @@ export const ModalDetalleContrato = ({ contrato, onClose }) => {
           </div>
 
           {/* Pie del modal */}
-          <div className="p-3 border-t border-gray-200 dark:border-gray-700">
+          <div className="p-3 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={onClose}
-              className="w-full py-2 bg-blue-600 text-white rounded-lg font-medium"
+              className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
             >
               Cerrar
             </motion.button>
@@ -268,8 +289,8 @@ const InfoRow = ({ icon, label, value, small = false, longText = false }) => {
       `}
     >
       <div className="flex items-start min-w-[120px] max-w-[40%]">
-        {icon && <span className="mr-2 flex-shrink-0">{icon}</span>}
-        <span className="font-medium text-gray-600 dark:text-gray-300 truncate">
+        {icon && <span className="mr-2 flex-shrink-0 text-gray-600 dark:text-gray-400">{icon}</span>}
+        <span className="font-medium text-gray-600 dark:text-gray-400 truncate">
           {label}:
         </span>
       </div>

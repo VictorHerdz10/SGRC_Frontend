@@ -74,7 +74,6 @@ const SupplementModalEdit = ({
     // Preparar datos para enviar
     const supplementData = {
       nombre: supplementName,
-      contratoId: contractId,
       ...(supplementTypes.tiempo && {
         tiempo: {
           days: Number(timeSupplement.days),
@@ -84,23 +83,25 @@ const SupplementModalEdit = ({
       }),
       ...(supplementTypes.monto && {
         monto: Number(amountSupplement),
+        // Solo actualizar montoOriginal si es global
+        ...(suplemento.isGlobal && { montoOriginal: Number(amountSupplement) }),
       }),
     };
 
-    // Manejador para obtener suplementos de un contrato
-    const token = localStorage.getItem("token");
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-
     try {
+      const token = localStorage.getItem("token");
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
       const { data } = await clienteAxios.put(
         `/contratos/suplementos/${suplemento._id}`,
         supplementData,
         config
       );
+
       toast.success(data.msg);
       const actualizacion = await handleGetSupplements(contractId);
       setActualSupplement(actualizacion);
@@ -108,8 +109,9 @@ const SupplementModalEdit = ({
       handleCloseModal();
     } catch (error) {
       console.error(error);
-      toast.error(error.response?.data?.msg || "Error al obtener suplementos");
-      throw error;
+      toast.error(
+        error.response?.data?.msg || "Error al actualizar suplemento"
+      );
     }
   };
 
@@ -136,7 +138,6 @@ const SupplementModalEdit = ({
           <div className="relative w-full max-w-md p-6 bg-white dark:bg-gray-800 rounded-lg shadow-xl animate-slideIn">
             <motion.button
               whileHover={{ rotate: 90 }}
-              whileTap={{ scale: 0.9 }}
               onClick={handleCloseModal}
               className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
               aria-label="Close modal"
@@ -148,6 +149,15 @@ const SupplementModalEdit = ({
               Actualizar suplemento del contrato N.Dictamen={">"} #{" "}
               {contractName || "#"}
             </h3>
+            {selectedContractForSupplement?.isMarco ? (
+              <span className="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-purple-900 dark:text-purple-300 mb-2 inline-block">
+                Suplemento Global
+              </span>
+            ) : (
+              <span className="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300 mb-2 inline-block">
+                Suplemento Local
+              </span>
+            )}
             <div className="mb-4">
               <label className="block text-gray-700 dark:text-gray-300 text-sm font-semibold mb-2">
                 Razon del Suplemento

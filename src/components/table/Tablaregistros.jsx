@@ -104,6 +104,18 @@ const ContractTable = ({ tipoContrato }) => {
 
     verificar();
   }, [isCreate]);
+  
+  const hasTime = (tiempo) => {
+    return tiempo && (tiempo.days > 0 || tiempo.months > 0 || tiempo.years > 0);
+  };
+  
+  const formatTime = (tiempo) => {
+    const parts = [];
+    if (tiempo.years > 0) parts.push(`${tiempo.years} año${tiempo.years > 1 ? 's' : ''}`);
+    if (tiempo.months > 0) parts.push(`${tiempo.months} mes${tiempo.months > 1 ? 'es' : ''}`);
+    if (tiempo.days > 0) parts.push(`${tiempo.days} día${tiempo.days > 1 ? 's' : ''}`);
+    return parts.join(", ");
+  };
 
   const parcearDateFile = (date) => {
     const dia = String(date.getDate()).padStart(2, "0");
@@ -1089,28 +1101,34 @@ const ContractTable = ({ tipoContrato }) => {
             className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors dark:bg-red-700 dark:hover:bg-red-800"
           >
             <motion.div
-                            whileHover={{ scale: 1.1, rotate: 10 }}
-                            whileTap={{ scale: 0.9 }}
-                            transition={{
-                              type: "spring",
-                              stiffness: 400,
-                              damping: 10,
-                            }}
-                          ><FaFilePdf /></motion.div> Export PDF
+              whileHover={{ scale: 1.1, rotate: 10 }}
+              whileTap={{ scale: 0.9 }}
+              transition={{
+                type: "spring",
+                stiffness: 400,
+                damping: 10,
+              }}
+            >
+              <FaFilePdf />
+            </motion.div>{" "}
+            Export PDF
           </button>
           <button
             onClick={() => exportToExcel(contratos)}
             className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors dark:bg-green-700 dark:hover:bg-green-800"
           >
             <motion.div
-                            whileHover={{ scale: 1.1, rotate: 10 }}
-                            whileTap={{ scale: 0.9 }}
-                            transition={{
-                              type: "spring",
-                              stiffness: 400,
-                              damping: 10,
-                            }}
-                          ><FaFileExcel /></motion.div> Export Excel
+              whileHover={{ scale: 1.1, rotate: 10 }}
+              whileTap={{ scale: 0.9 }}
+              transition={{
+                type: "spring",
+                stiffness: 400,
+                damping: 10,
+              }}
+            >
+              <FaFileExcel />
+            </motion.div>{" "}
+            Export Excel
           </button>
         </div>
         <div className="overflow-x-auto">
@@ -1353,7 +1371,7 @@ const ContractTable = ({ tipoContrato }) => {
                               className={`w-3 h-3 rounded-full ${getValueColor(
                                 contract.valorPrincipal || 0,
                                 contract.valorDisponible || 0
-                              )} mr-2`}
+                              )}} mr-2`}
                             ></div>
                             <div className="block">
                               $
@@ -1361,24 +1379,37 @@ const ContractTable = ({ tipoContrato }) => {
                             </div>
                           </div>
 
-                          {contract.supplement &&
-                            contract.supplement.length > 0 &&
-                            contract.supplement.filter((mont) => mont.monto > 0)
-                              .length > 0 && (
+                          {/* Mostrar suplementos GLOBALES (marco) */}
+                          {contract.isMarco &&
+                            contract.supplement?.some((s) => s.isGlobal) && (
                               <>
                                 {contract.supplement
-                                  .filter((mont) => mont.monto > 0)
-                                  .map((mont, index) => (
+                                  .filter((s) => s.isGlobal && s.monto > 0)
+                                  .map((sup, i) => (
                                     <div
-                                      key={index}
-                                      className="block text-green-500"
+                                      key={`global-${i}`}
+                                      className="block text-purple-500"
                                     >
-                                      + ${mont.monto.toLocaleString()}
+                                      + ${sup.monto.toLocaleString()} (Global)
                                     </div>
                                   ))}
-                                <div className="block text-green-500">
-                                  de suplemento{"(s)"}
-                                </div>
+                              </>
+                            )}
+
+                          {/* Mostrar suplementos ESPECÍFICOS (si no es marco) */}
+                          {!contract.isMarco &&
+                            contract.supplement?.length > 0 && (
+                              <>
+                                {contract.supplement
+                                  .filter((sup) => sup.monto > 0)
+                                  .map((sup, i) => (
+                                    <div
+                                      key={`local-${i}`}
+                                      className="block text-green-500"
+                                    >
+                                      + ${sup.monto.toLocaleString()}
+                                    </div>
+                                  ))}
                               </>
                             )}
                         </div>
@@ -1483,58 +1514,37 @@ const ContractTable = ({ tipoContrato }) => {
                           {parseDuration(contract.vigencia)}
                         </div>
 
-                        {contract.supplement &&
-                          contract.supplement.length > 0 &&
+                        {/* Mostrar extensiones GLOBALES */}
+                        {contract.isMarco &&
+                          contract.supplement?.some(
+                            (s) => s.isGlobal && s.tiempo
+                          ) &&
                           contract.supplement
-                            .filter((sup) => sup.tiempo)
-                            .map((sup, index) => {
-                              const { days, months, years } = sup.tiempo;
-                              const tiempoSuplemento = [];
+                            .filter(
+                              (sup) => sup.isGlobal && hasTime(sup.tiempo)
+                            )
+                            .map((sup, i) => (
+                              <div
+                                key={`global-time-${i}`}
+                                className="block text-purple-500"
+                              >
+                                + {formatTime(sup.tiempo)} (Global)
+                              </div>
+                            ))}
 
-                              if (years > 0) {
-                                tiempoSuplemento.push(
-                                  `${years} año${years > 1 ? "s" : ""}`
-                                );
-                              }
-
-                              if (months > 0) {
-                                tiempoSuplemento.push(
-                                  `${months} mes${months > 1 ? "es" : ""}`
-                                );
-                              }
-
-                              if (days > 0) {
-                                tiempoSuplemento.push(
-                                  `${days} día${days > 1 ? "s" : ""}`
-                                );
-                              }
-
-                              if (tiempoSuplemento.length > 0) {
-                                return (
-                                  <div
-                                    key={index}
-                                    className="block text-blue-500"
-                                  >
-                                    + {tiempoSuplemento.join(", ")}
-                                  </div>
-                                );
-                              }
-
-                              return null;
-                            })}
-
-                        {contract.supplement &&
-                          contract.supplement.some(
-                            (sup) =>
-                              sup.tiempo &&
-                              (sup.tiempo.days > 0 ||
-                                sup.tiempo.months > 0 ||
-                                sup.tiempo.years > 0)
-                          ) && (
-                            <div className="block text-blue-500">
-                              de suplemento{"(s)"}
-                            </div>
-                          )}
+                        {/* Mostrar extensiones ESPECÍFICAS */}
+                        {!contract.isMarco &&
+                          contract.supplement?.some((s) => hasTime(s.tiempo)) &&
+                          contract.supplement
+                            .filter((sup) => hasTime(sup.tiempo))
+                            .map((sup, i) => (
+                              <div
+                                key={`local-time-${i}`}
+                                className="block text-blue-500"
+                              >
+                                + {formatTime(sup.tiempo)}
+                              </div>
+                            ))}
                       </td>
                     )}
                     {contract.vigencia && (
@@ -1559,71 +1569,72 @@ const ContractTable = ({ tipoContrato }) => {
                       ) && (
                       <td className="px-6 py-4 whitespace-nowrap">
                         <motion.div
-                            whileHover={{ scale: 1.1, rotate: 10 }}
-                            whileTap={{ scale: 0.9 }}
-                            transition={{
-                              type: "spring",
-                              stiffness: 400,
-                              damping: 10,
-                            }}
-                          >
-                        <FaFileDownload
-                          className="text-blue-500 cursor-pointer dark:text-blue-400"
-                          onClick={() => handleDownload(contract._id)}
-                        /></motion.div>
+                          whileHover={{ scale: 1.1, rotate: 10 }}
+                          whileTap={{ scale: 0.9 }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 400,
+                            damping: 10,
+                          }}
+                        >
+                          <FaFileDownload
+                            className="text-blue-500 cursor-pointer dark:text-blue-400"
+                            onClick={() => handleDownload(contract._id)}
+                          />
+                        </motion.div>
                       </td>
                     )}
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex space-x-2 justify-around">
-                      <motion.div
-                            whileHover={{ scale: 1.1, rotate: 10 }}
-                            whileTap={{ scale: 0.9 }}
-                            transition={{
-                              type: "spring",
-                              stiffness: 400,
-                              damping: 10,
-                            }}
-                          >
-                        <FaPencilAlt
-                          className="text-blue-500 cursor-pointer dark:text-blue-400"
-                          onClick={() => {
-                            setShowForm(true);
-                            setSelectContrato(contract);
-                            setIsEditing(true);
+                        <motion.div
+                          whileHover={{ scale: 1.1, rotate: 10 }}
+                          whileTap={{ scale: 0.9 }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 400,
+                            damping: 10,
                           }}
-                        />
+                        >
+                          <FaPencilAlt
+                            className="text-blue-500 cursor-pointer dark:text-blue-400"
+                            onClick={() => {
+                              setShowForm(true);
+                              setSelectContrato(contract);
+                              setIsEditing(true);
+                            }}
+                          />
                         </motion.div>
                         <motion.div
-                            whileHover={{ scale: 1.1, rotate: 10 }}
-                            whileTap={{ scale: 0.9 }}
-                            transition={{
-                              type: "spring",
-                              stiffness: 400,
-                              damping: 10,
-                            }}
-                          >
-                        <FaTrash
-                          className="text-red-500 cursor-pointer dark:text-red-400"
-                          onClick={() => {
-                            setShowEliminarModal(true);
-                            setId(contract._id);
+                          whileHover={{ scale: 1.1, rotate: 10 }}
+                          whileTap={{ scale: 0.9 }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 400,
+                            damping: 10,
                           }}
-                        />
+                        >
+                          <FaTrash
+                            className="text-red-500 cursor-pointer dark:text-red-400"
+                            onClick={() => {
+                              setShowEliminarModal(true);
+                              setId(contract._id);
+                            }}
+                          />
                         </motion.div>
                         <motion.div
-                            whileHover={{ scale: 1.1, rotate: 10 }}
-                            whileTap={{ scale: 0.9 }}
-                            transition={{
-                              type: "spring",
-                              stiffness: 400,
-                              damping: 10,
-                            }}
-                          >
-                        
-                        <FaInfoCircle
-                          className="text-blue-500 cursor-pointer dark:text-blue-400"
-                          onClick={() => handleModal("info", contract, "")}
-                        /></motion.div>
+                          whileHover={{ scale: 1.1, rotate: 10 }}
+                          whileTap={{ scale: 0.9 }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 400,
+                            damping: 10,
+                          }}
+                        >
+                          <FaInfoCircle
+                            className="text-blue-500 cursor-pointer dark:text-blue-400"
+                            onClick={() => handleModal("info", contract, "")}
+                          />
+                        </motion.div>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -1645,7 +1656,9 @@ const ContractTable = ({ tipoContrato }) => {
                               stiffness: 400,
                               damping: 10,
                             }}
-                          ><FaPlusCircle /></motion.div>
+                          >
+                            <FaPlusCircle />
+                          </motion.div>
                         </button>
                         {contract?.isGotSupplement && (
                           <SupplementViewerTrigger
