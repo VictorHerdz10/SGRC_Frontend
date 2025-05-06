@@ -454,7 +454,6 @@ const BackupComponent = () => {
           <div className="relative w-full max-w-md p-6 bg-white rounded-lg shadow-xl animate-slideIn dark:bg-gray-800">
             <motion.button
               whileHover={{ rotate: 90 }}
-              whileTap={{ scale: 0.9 }}
               onClick={() => {
                 setId("");
                 setShowEliminarModal(false);
@@ -496,7 +495,6 @@ const BackupComponent = () => {
           <div className="relative w-full max-w-md p-6 bg-white rounded-lg shadow-xl animate-slideIn dark:bg-gray-800">
             <motion.button
               whileHover={{ rotate: 90 }}
-              whileTap={{ scale: 0.9 }}
               onClick={() => {
                 setDropboxPath("");
                 setShowRestoreModal(false);

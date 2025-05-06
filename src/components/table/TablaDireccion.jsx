@@ -246,7 +246,6 @@ const PanelDireccion = () => {
             <div className="relative w-full max-w-md p-6 bg-white rounded-lg shadow-xl animate-slideIn dark:bg-gray-800">
               <motion.button
                 whileHover={{ rotate: 90 }}
-                whileTap={{ scale: 0.9 }}
                 onClick={() => setShowComfirmDelete(false)}
                 className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors dark:text-gray-400 dark:hover:text-gray-200"
                 aria-label="Close confirmation"
@@ -284,7 +283,6 @@ const PanelDireccion = () => {
             <div className="relative w-full max-w-md p-6 bg-white rounded-lg shadow-xl animate-slideIn dark:bg-gray-800">
               <motion.button
                 whileHover={{ rotate: 90 }}
-                whileTap={{ scale: 0.9 }}
                 onClick={() => {
                   setShowModal(false);
                   setErrorText("");
@@ -350,7 +348,6 @@ const PanelDireccion = () => {
             <div className="relative w-full max-w-md p-6 bg-white rounded-lg shadow-xl animate-slideIn dark:bg-gray-800">
               <motion.button
                 whileHover={{ rotate: 90 }}
-                whileTap={{ scale: 0.9 }}
                 onClick={() => {
                   setShowModalUpdate(false);
                   setErrorText("");

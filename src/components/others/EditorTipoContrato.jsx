@@ -714,7 +714,6 @@ const ContractConfigPanel = () => {
             <div className="relative w-full max-w-md p-6 bg-white dark:bg-gray-800 rounded-lg shadow-xl animate-slideIn">
               <motion.button
                 whileHover={{ rotate: 90 }}
-                whileTap={{ scale: 0.9 }}
                 onClick={() => {
                   setShowModalCreate(false);
                   setErrorText("");
@@ -862,7 +861,6 @@ const ContractConfigPanel = () => {
             <div className="relative w-full max-w-2xl p-6 bg-white dark:bg-gray-800 rounded-lg shadow-xl animate-slideIn my-8 mx-4">
               <motion.button
                 whileHover={{ rotate: 90 }}
-                whileTap={{ scale: 0.9 }}
                 onClick={() => {
                   setShowModalUpdate(false);
                   setErrorText("");
@@ -1044,7 +1042,6 @@ const ContractConfigPanel = () => {
             <div className="relative w-full max-w-md p-6 bg-white dark:bg-gray-800 rounded-lg shadow-xl animate-slideIn">
               <motion.button
                 whileHover={{ rotate: 90 }}
-                whileTap={{ scale: 0.9 }}
                 onClick={() => {
                   setContractAsociation(0);
                   setShowModalDelete(false);
@@ -1131,7 +1128,6 @@ const ContractConfigPanel = () => {
             <div className="relative w-full max-w-md p-6 bg-white dark:bg-gray-800 rounded-lg shadow-xl animate-slideIn">
               <motion.button
                 whileHover={{ rotate: 90 }}
-                whileTap={{ scale: 0.9 }}
                 onClick={() => {
                   if (showModalCreate) {
                     setIsEspecifico(false);

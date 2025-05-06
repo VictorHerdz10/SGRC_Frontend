@@ -24,7 +24,6 @@ const Cerrar = () => {
             
           <motion.button
                 whileHover={{ rotate: 90 }}
-                whileTap={{ scale: 0.9 }}
                 onClick={() => setShowConfirmModal(false)}
                 className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
               aria-label="Close confirmation"
