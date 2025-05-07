@@ -104,16 +104,19 @@ const ContractTable = ({ tipoContrato }) => {
 
     verificar();
   }, [isCreate]);
-  
+
   const hasTime = (tiempo) => {
     return tiempo && (tiempo.days > 0 || tiempo.months > 0 || tiempo.years > 0);
   };
-  
+
   const formatTime = (tiempo) => {
     const parts = [];
-    if (tiempo.years > 0) parts.push(`${tiempo.years} año${tiempo.years > 1 ? 's' : ''}`);
-    if (tiempo.months > 0) parts.push(`${tiempo.months} mes${tiempo.months > 1 ? 'es' : ''}`);
-    if (tiempo.days > 0) parts.push(`${tiempo.days} día${tiempo.days > 1 ? 's' : ''}`);
+    if (tiempo.years > 0)
+      parts.push(`${tiempo.years} año${tiempo.years > 1 ? "s" : ""}`);
+    if (tiempo.months > 0)
+      parts.push(`${tiempo.months} mes${tiempo.months > 1 ? "es" : ""}`);
+    if (tiempo.days > 0)
+      parts.push(`${tiempo.days} día${tiempo.days > 1 ? "s" : ""}`);
     return parts.join(", ");
   };
 
@@ -1369,9 +1372,9 @@ const ContractTable = ({ tipoContrato }) => {
                           <div className="flex items-center">
                             <div
                               className={`w-3 h-3 rounded-full ${getValueColor(
-                                contract.valorPrincipal || 0,
-                                contract.valorDisponible || 0
-                              )}} mr-2`}
+                                +contract.valorPrincipal || 0,
+                                +contract.valorDisponible || 0
+                              )} mr-2`}
                             ></div>
                             <div className="block">
                               $

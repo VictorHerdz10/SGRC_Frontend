@@ -149,7 +149,7 @@ const SupplementModalEdit = ({
               Actualizar suplemento del contrato N.Dictamen={">"} #{" "}
               {contractName || "#"}
             </h3>
-            {selectedContractForSupplement?.isMarco ? (
+            {suplemento?.isGlobal ? (
               <span className="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-purple-900 dark:text-purple-300 mb-2 inline-block">
                 Suplemento Global
               </span>
