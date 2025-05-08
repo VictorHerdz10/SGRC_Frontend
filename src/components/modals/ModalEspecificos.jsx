@@ -9,6 +9,15 @@ const ModalEspecificos = ({ marcoId, onClose }) => {
   const [loading, setLoading] = useState(true);
   const [selectedContrato, setSelectedContrato] = useState(null);
 
+  const getValueColor = (totalValue, remainingValue) => {
+    if (remainingValue >= totalValue * 0.5) {
+      return "bg-green-500"; // Más del 50%
+    } else if (remainingValue >= totalValue * 0.3) {
+      return "bg-yellow-500"; // Entre el 30% y el 50%
+    } else {
+      return "bg-red-500"; // Menos del 30%
+    }
+  };
   useEffect(() => {
     const fetchEspecificos = async () => {
       try {
@@ -81,13 +90,13 @@ const ModalEspecificos = ({ marcoId, onClose }) => {
                   Tipo
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Valor Principal
+                  Monto
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Disponible
+                  Monto Disponible
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Gastado
+                  Monto Gastado
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                   Estado
@@ -109,9 +118,57 @@ const ModalEspecificos = ({ marcoId, onClose }) => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                     ${contrato.valorPrincipal?.toLocaleString() || "0"}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                    ${contrato.valorDisponible?.toLocaleString() || "0"}
-                  </td>
+                  {(contrato.isMarco || contrato.valorDisponible !== null) && (
+                    <td className="px-6 py-4 whitespace-nowrap dark:text-gray-200">
+                      <div className="flex flex-col items-start">
+                        <div className="flex items-center">
+                          <div
+                            className={`w-3 h-3 rounded-full ${getValueColor(
+                              +contrato.valorPrincipal || 0,
+                              +contrato.valorDisponible || 0
+                            )} mr-2`}
+                          ></div>
+                          <div className="block">
+                            ${(contrato.valorDisponible || 0).toLocaleString()}
+                          </div>
+                        </div>
+
+                        {/* Mostrar suplementos GLOBALES (marco) */}
+                        {contrato.isMarco &&
+                          contrato.supplement?.some((s) => s.isGlobal) && (
+                            <>
+                              {contrato.supplement
+                                .filter((s) => s.isGlobal && s.monto > 0)
+                                .map((sup, i) => (
+                                  <div
+                                    key={`global-${i}`}
+                                    className="block text-purple-500"
+                                  >
+                                    + ${sup.monto.toLocaleString()} (Global)
+                                  </div>
+                                ))}
+                            </>
+                          )}
+
+                        {/* Mostrar suplementos ESPECÍFICOS (si no es marco) */}
+                        {!contrato.isMarco &&
+                          contrato.supplement?.length > 0 && (
+                            <>
+                              {contrato.supplement
+                                .filter((sup) => sup.monto > 0)
+                                .map((sup, i) => (
+                                  <div
+                                    key={`local-${i}`}
+                                    className="block text-green-500"
+                                  >
+                                    + ${sup.monto.toLocaleString()}
+                                  </div>
+                                ))}
+                            </>
+                          )}
+                      </div>
+                    </td>
+                  )}
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                     ${contrato.valorGastado?.toLocaleString() || "0"}
                   </td>
