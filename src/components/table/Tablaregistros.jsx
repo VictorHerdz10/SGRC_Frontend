@@ -1382,29 +1382,40 @@ const ContractTable = ({ tipoContrato }) => {
                             </div>
                           </div>
 
-                          {/* Mostrar suplementos GLOBALES (marco) */}
+                          {/* Para contratos MARCO - mostrar todos los suplementos */}
                           {contract.isMarco &&
-                            contract.supplement?.some((s) => s.isGlobal) && (
+                            contract.supplement?.length > 0 && (
                               <>
                                 {contract.supplement
-                                  .filter((s) => s.isGlobal && s.monto > 0)
+                                  .filter((sup) => sup.monto > 0)
                                   .map((sup, i) => (
                                     <div
-                                      key={`global-${i}`}
-                                      className="block text-purple-500"
+                                      key={`sup-${i}`}
+                                      className={`block ${
+                                        sup.isGlobal
+                                          ? "text-purple-500"
+                                          : "text-blue-500"
+                                      }`}
                                     >
-                                      + ${sup.monto.toLocaleString()} (Global)
+                                      + ${sup.monto.toLocaleString()}
+                                      {sup.isGlobal
+                                        ? " (Global)"
+                                        : ` (De ${sup.nombre || "específico"})`}
                                     </div>
                                   ))}
                               </>
                             )}
 
-                          {/* Mostrar suplementos ESPECÍFICOS (si no es marco) */}
+                          {/* Para contratos ESPECÍFICOS - mostrar solo sus suplementos locales */}
                           {!contract.isMarco &&
-                            contract.supplement?.length > 0 && (
+                            contract.supplement?.filter(
+                              (sup) => sup.monto > 0 && !sup.isGlobal
+                            ).length > 0 && (
                               <>
                                 {contract.supplement
-                                  .filter((sup) => sup.monto > 0)
+                                  .filter(
+                                    (sup) => sup.monto > 0 && !sup.isGlobal
+                                  )
                                   .map((sup, i) => (
                                     <div
                                       key={`local-${i}`}
